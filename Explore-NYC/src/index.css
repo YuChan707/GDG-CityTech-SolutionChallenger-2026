@@ -23,7 +23,10 @@
 }
 
 body {
-  background-color: #EDEDEE;
+  background-image: url('./assets/BACKGROUND.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   font-family: Futura, 'Trebuchet MS', sans-serif;
   min-height: 100vh;
 }

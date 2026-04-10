@@ -4,13 +4,14 @@ export default function StartScreen() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#EDEDEE] flex items-center justify-center p-6">
+    <div className="min-h-screen flex items-center justify-center p-6">
       <div
         className="w-full max-w-2xl rounded-3xl flex flex-col items-center"
         style={{
           backgroundColor: '#AD2B0B',
           minHeight: '420px',
           padding: '48px 20px 48px',
+          boxShadow: '0 10px 20px rgba(0, 0, 0, 0.5)',
         }}
       >
         {/* Logo — bigger title */}

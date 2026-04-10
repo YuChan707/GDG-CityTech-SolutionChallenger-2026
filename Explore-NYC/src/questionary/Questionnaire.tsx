@@ -93,7 +93,7 @@ export default function Questionnaire() {
   // ── Loading screen ────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#EDEDEE] flex items-center justify-center p-6">
+      <div className="min-h-screen flex items-center justify-center p-6">
         <div
           className="w-full max-w-sm rounded-3xl flex flex-col items-center"
           style={{ backgroundColor: '#AD2B0B', padding: '48px 24px' }}
@@ -138,7 +138,7 @@ export default function Questionnaire() {
 
   // ── Questionnaire ─────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#EDEDEE] flex items-center justify-center p-6">
+    <div className="min-h-screen flex items-center justify-center p-6">
       <div
         className="w-full max-w-2xl rounded-3xl flex flex-col"
         style={{ backgroundColor: '#AD2B0B', padding: '15px' }}

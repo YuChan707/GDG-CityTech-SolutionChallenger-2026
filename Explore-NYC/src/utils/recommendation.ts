@@ -99,8 +99,14 @@ export function filterEvents(
     if (date && event.date !== date) return false;
     if (time && event.time < time) return false;
     if (pricePreference === 'free' && !event.is_free) return false;
-    if (pricePreference === 'up20' && !event.is_free && (event.min_price === undefined || event.min_price > 20)) return false;
-    if (pricePreference === 'up50' && !event.is_free && (event.min_price === undefined || event.min_price > 50)) return false;
+    if (pricePreference === 'up20') {
+      if (event.is_free) return false;
+      if (event.min_price === undefined || event.min_price > 20) return false;
+    }
+    if (pricePreference === 'up50') {
+      if (event.is_free) return false;
+      if (event.min_price === undefined || event.min_price > 50) return false;
+    }
     return true;
   });
 }

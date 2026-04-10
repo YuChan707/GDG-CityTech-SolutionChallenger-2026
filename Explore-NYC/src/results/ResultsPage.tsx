@@ -67,7 +67,7 @@ export default function ResultsPage() {
 
   return (
     <div
-      className="min-h-screen bg-[#EDEDEE] flex flex-col items-center"
+      className="min-h-screen flex flex-col items-center"
       style={{ padding: '32px 24px' }}
     >
       <div className="w-full max-w-3xl flex flex-col">
