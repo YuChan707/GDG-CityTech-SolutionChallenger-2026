@@ -74,7 +74,7 @@ export default function Questionnaire() {
        * }).then(() => navigate('/filter', { state: { preferences: prefs } }));
        */
       setTimeout(() => {
-        navigate('/filter', { state: { preferences: prefs } });
+        navigate('/results', { state: { preferences: prefs } });
       }, 2200);
     }
   }
@@ -269,14 +269,14 @@ export default function Questionnaire() {
             <div style={{ height: '14px' }} />
 
             {/* Predefined tags */}
-            <div className="flex flex-wrap gap-3">
+            <div className="grid grid-cols-4 gap-2">
               {INTEREST_TAGS.map(tag => (
                 <button
                   key={tag}
                   onClick={() => toggleInterest(tag)}
-                  className="rounded-full text-xs font-medium tracking-wide transition-all duration-150"
+                  className="w-full rounded-full text-xs font-medium tracking-wide text-center transition-all duration-150 hover:opacity-90"
                   style={{
-                    padding: '5px 20px',
+                    height: '36px',
                     backgroundColor: prefs.interests.includes(tag) ? '#F04251' : 'rgba(255,255,255,0.15)',
                     color: prefs.interests.includes(tag) ? '#fff' : 'rgba(255,255,255,0.75)',
                   }}

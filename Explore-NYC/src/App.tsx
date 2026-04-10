@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import StartScreen from './home/StartScreen';
 import Questionnaire from './questionary/Questionnaire';
-import FilterScreen from './filter/FilterScreen';
 import ResultsPage from './results/ResultsPage';
 
 function App() {
@@ -10,7 +9,6 @@ function App() {
       <Routes>
         <Route path="/" element={<StartScreen />} />
         <Route path="/questionnaire" element={<Questionnaire />} />
-        <Route path="/filter" element={<FilterScreen />} />
         <Route path="/results" element={<ResultsPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

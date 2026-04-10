@@ -81,13 +81,14 @@ export function scoreEvents(events: Event[], preferences: UserPreferences): Even
 }
 
 /**
- * Filter events by search query, date, and time.
+ * Filter events by search query, date, time, and price preference.
  */
 export function filterEvents(
   events: Event[],
   search: string,
   date: string,
   time: string,
+  pricePreference = 'any',
 ): Event[] {
   const q = search.toLowerCase();
   return events.filter(event => {
@@ -97,6 +98,9 @@ export function filterEvents(
     }
     if (date && event.date !== date) return false;
     if (time && event.time < time) return false;
+    if (pricePreference === 'free' && !event.is_free) return false;
+    if (pricePreference === 'up20' && !event.is_free && (event.min_price === undefined || event.min_price > 20)) return false;
+    if (pricePreference === 'up50' && !event.is_free && (event.min_price === undefined || event.min_price > 50)) return false;
     return true;
   });
 }
