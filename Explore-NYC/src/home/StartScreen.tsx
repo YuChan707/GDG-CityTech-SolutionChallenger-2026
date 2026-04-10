@@ -10,44 +10,56 @@ export default function StartScreen() {
         style={{
           backgroundColor: '#AD2B0B',
           minHeight: '420px',
-          padding: '48px 20px 10px',
+          padding: '48px 20px 48px',
         }}
       >
-        {/* Logo */}
-        <div className="text-center mb-2">
+        {/* Logo — bigger title */}
+        <div className="text-center">
           <div
-            className="text-2xl font-bold tracking-widest uppercase"
-            style={{ color: 'rgba(255,255,255,0.9)', fontFamily: 'Playfair Display, Baskerville, Georgia, serif' }}
+            style={{
+              fontSize: '40px',
+              fontWeight: '700',
+              letterSpacing: '0.2em',
+              color: 'rgba(255,255,255,0.9)',
+              fontFamily: 'Playfair Display, Baskerville, Georgia, serif',
+              lineHeight: 1.1,
+            }}
           >
             EXPLORE
           </div>
           <div
-            className="text-4xl font-bold tracking-widest uppercase"
-            style={{ color: 'rgba(255,255,255,0.9)', fontFamily: 'Playfair Display, Baskerville, Georgia, serif' }}
+            style={{
+              fontSize: '72px',
+              fontWeight: '800',
+              letterSpacing: '0.15em',
+              color: 'rgba(255,255,255,0.9)',
+              fontFamily: 'Playfair Display, Baskerville, Georgia, serif',
+              lineHeight: 1,
+            }}
           >
             NYC
           </div>
         </div>
 
-        {/* Subtitle */}
+        {/* QUESTIONNAIRE — lighter but distinct from the title */}
         <p
-          className="text-xs tracking-[0.25em] uppercase mt-2 mb-1"
-          style={{ color: '#c44027' }}
+          className="uppercase tracking-[0.3em]"
+          style={{ fontSize: '11px', color: 'rgba(255,255,255,0.45)', marginTop: '10px' }}
         >
           QUESTIONNAIRE
         </p>
 
         {/* Hero space */}
-        <div className="flex-1 flex items-center justify-center w-full my-6">
+        <div className="flex-1 flex items-center justify-center w-full" style={{ margin: '24px 0' }}>
           <p
             className="text-center text-sm max-w-xs leading-relaxed"
             style={{ color: 'rgba(255,255,255,0.45)' }}
           >
-            Discover local events, pop-ups &amp; hidden gems in New York City (just for you).
+            Discover local events, pop-ups &amp; hidden gems in New York City — just for you.
           </p>
         </div>
 
-        {/* Start button */}
+        {/* START button — bottom padding matches top (48px) */}
         <button
           onClick={() => navigate('/questionnaire')}
           className="rounded-full text-sm font-semibold tracking-[0.2em] uppercase transition-all duration-200 hover:scale-105 active:scale-95"
