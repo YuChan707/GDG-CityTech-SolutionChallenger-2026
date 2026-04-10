@@ -1,75 +1,98 @@
-# React + TypeScript + Vite
+# Explore NYC
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Explore NYC** is a web application that helps users discover local events, pop-ups, and hidden gems in New York City — tailored to their personal preferences through a short questionnaire and an AI-powered recommendation system.
 
-Currently, two official plugins are available:
+## About the Project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Built for the **GDG CityTech Solution Challenger 2026**, Explore NYC targets:
 
-## React Compiler
+- Tourists visiting New York City
+- Locals looking for something fun to do
+- Groups of friends planning an outing
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### How it works
 
-Note: This will impact Vite dev & build performances.
+1. **Questionnaire** — Users answer 4 short questions about their vibe, group type, interests, and budget.
+2. **Filter** — Optionally filter results by date and time.
+3. **Results** — Events are scored and ranked by relevance using a recommendation engine, then displayed in a browsable card grid.
+4. **Event Detail** — Tap any card to see full details, set a reminder, or visit the event link.
 
-## Expanding the ESLint configuration
+### Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 19 + TypeScript + Vite |
+| Styling | TailwindCSS v4 |
+| Routing | React Router v6 |
+| Backend | Node.js + Express |
+| Database | Firestore *(placeholder — add your credentials)* |
+| AI | Vertex AI / Gemini *(placeholder — add your credentials)* |
+| Analytics | BigQuery *(placeholder — add your credentials)* |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Project Structure
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+```
+Explore-NYC/          ← Frontend (React + Vite)
+  src/
+    home/             ← Start screen
+    questionary/      ← 4-step questionnaire flow
+    filter/           ← Date & time filter screen
+    results/          ← Event results grid
+    components/       ← EventCard, EventDetail (modal)
+    data/             ← Mock event dataset (10 events)
+    utils/            ← Recommendation scoring logic
+    types/            ← TypeScript interfaces
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+backend/              ← Backend (Node.js + Express)
+  routes/
+    events.js         ← GET /api/events
+    recommendations.js← POST /api/recommendations (Vertex AI placeholder)
+  data/
+    events.json       ← Sample event dataset
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Important — How to Run
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Frontend
+
+```bash
+cd "c:\Users\[your account]\Google Solution Challenger\try1\GDG-CityTech-SolutionChallenger-2026\Explore-NYC"
+npm install
+npm run dev
 ```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+### Backend
+
+```bash
+cd "c:\Users\[your account]\Google Solution Challenger\try1\GDG-CityTech-SolutionChallenger-2026\backend"
+npm install
+npm start
+```
+
+API runs on [http://localhost:3001](http://localhost:3001).
+
+---
+
+## Google Cloud Integration (Coming Soon)
+
+The following placeholders are ready in the code — add your project credentials to activate them:
+
+- **Firestore** — store events and user preferences (`backend/server.js`)
+- **Vertex AI** — AI-powered event recommendations (`backend/routes/recommendations.js`)
+- **BigQuery** — analytics and trend detection (`backend/server.js`)
+
+---
+
+## Color Scheme
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| Primary | `#AD2B0B` | Backgrounds, cards |
+| Accent | `#F04251` | Buttons, highlights |
+| Card Light | `#65CDB6` | Event cards (even) |
+| Card Dark | `#2D8B76` | Event cards (odd) |
+| Background | `#EDEDEE` | Page background |
