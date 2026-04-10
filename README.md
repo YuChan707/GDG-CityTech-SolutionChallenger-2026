@@ -29,7 +29,7 @@ Built for the **GDG CityTech Solution Challenger 2026**, Explore NYC targets:
 ### Frontend
 
 ```bash
-cd "c:\Users\[your account]\Google Solution Challenger\try1\GDG-CityTech-SolutionChallenger-2026\Explore-NYC"
+cd "c:\Users\[your account]\GDG-CityTech-SolutionChallenger-2026\Explore-NYC"
 npm install
 npm run dev
 ```
@@ -38,8 +38,31 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ### Backend
 
+*
 ```bash
-cd "c:\Users\[your account]\Google Solution Challenger\try1\GDG-CityTech-SolutionChallenger-2026\backend"
+cd "c:\Users\[your account]\GDG-CityTech-SolutionChallenger-2026\backend"
+npm install
+npm start
+```
+
+API runs on [http://localhost:3001](http://localhost:3001).
+
+### macOS
+
+#### Frontend
+
+```bash
+cd "/Users/[your account]/GDG-CityTech-SolutionChallenger-2026/Explore-NYC"
+npm install
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+#### Backend
+
+```bash
+cd "/Users/[your account]/GDG-CityTech-SolutionChallenger-2026/backend"
 npm install
 npm start
 ```
