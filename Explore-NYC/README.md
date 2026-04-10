@@ -12,10 +12,10 @@ Built for the **GDG CityTech Solution Challenger 2026**, Explore NYC targets:
 
 ### How it works
 
-1. **Questionnaire** — Users answer 4 short questions about their vibe, group type, interests, and budget.
-2. **Filter** — Optionally filter results by date and time.
-3. **Results** — Events are scored and ranked by relevance using a recommendation engine, then displayed in a browsable card grid.
-4. **Event Detail** — Tap any card to see full details, set a reminder, or visit the event link.
+1. **Questionnaire** - Users answer 4 short questions about their vibe, group type, interests, and budget.
+2. **Filter** - Optionally filter results by date and time.
+3. **Results** - Events are scored and ranked by relevance using a recommendation engine, then displayed in a browsable card grid.
+4. **Event Detail** - Tap any card to see full details, set a reminder, or visit the event link.
 
 
 ### Project Structure
