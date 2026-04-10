@@ -1,6 +1,6 @@
 # Explore NYC
 
-**Explore NYC** is a web application that helps users discover local events, pop-ups, and hidden gems in New York City — tailored to their personal preferences through a short questionnaire and an AI-powered recommendation system.
+**Explore NYC** is a web application that helps users discover local events, pop-ups, and hidden gems in New York City tailored to their personal preferences through a short questionnaire and an AI-powered recommendation system (making the searches).
 
 ## About the Project
 
@@ -24,7 +24,7 @@ Built for the **GDG CityTech Solution Challenger 2026**, Explore NYC targets:
 | Analytics | BigQuery  |
 
 
-## Important — How to Run
+## Important How to Run
 
 ### Window
 
@@ -75,11 +75,11 @@ API runs on [http://localhost:3001](http://localhost:3001).
 
 ## Google Cloud Integration (Coming Soon)
 
-The following placeholders are ready in the code — add your project credentials to activate them:
+The following placeholders are ready in the code. Add your project credentials to activate them:
 
-- **Firestore** — store events and user preferences (`backend/server.js`)
-- **Vertex AI** — AI-powered event recommendations (`backend/routes/recommendations.js`)
-- **BigQuery** — analytics and trend detection (`backend/server.js`)
+- **Firestore**, store events and user preferences (`backend/server.js`)
+- **Vertex AI**,  AI-powered event recommendations (`backend/routes/recommendations.js`)
+- **BigQuery**,  analytics and trend detection (`backend/server.js`)
 
 ---
 
