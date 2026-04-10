@@ -5,7 +5,25 @@ interface Props {
   onClose: () => void;
 }
 
-export default function EventDetail({ event, onClose }: Props) {
+// Must match EventCard colors so the modal header reflects the category
+const CATEGORY_COLORS: Record<string, string> = {
+  'pop-up':         '#65CDB6',
+  'festival':       '#5BB8D4',
+  'sports':         '#D4B843',
+  'educational':    '#2D8B76',
+  'wellness':       '#7BB8A4',
+  'gaming':         '#E07B5A',
+  'leader meeting': '#9B7EC8',
+  'marathon':       '#D4B843',
+};
+
+function getCategoryColor(category: string): string {
+  return CATEGORY_COLORS[category.toLowerCase()] ?? '#8FA8B4';
+}
+
+export default function EventDetail({ event, onClose }: Readonly<Props>) {
+  const headerColor = getCategoryColor(event.category);
+
   function formatDate(d: string) {
     const date = new Date(d + 'T00:00:00');
     return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -21,7 +39,6 @@ export default function EventDetail({ event, onClose }: Props) {
   function handleRemind() {
     alert(`Reminder set for "${event.name}" on ${formatDate(event.date)} at ${formatTime(event.time)}!`);
     // TODO: Integrate with Firestore to save reminders
-    // db.collection('reminders').add({ eventId: event.id, userId: currentUser.uid, ... })
   }
 
   return (
@@ -35,22 +52,20 @@ export default function EventDetail({ event, onClose }: Props) {
         style={{ backgroundColor: '#F7F5FA' }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Header */}
-        <div
-          className="px-6 pt-6 pb-5"
-          style={{ backgroundColor: '#2D8B76' }}
-        >
+        {/* Header — uses the category color */}
+        <div style={{ backgroundColor: headerColor, padding: '20px 20px 16px' }}>
           <div className="flex items-start justify-between">
-            <div className="flex-1 pr-4">
+            <div className="flex-1 pr-3">
               <span
-                className="text-xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full"
-                style={{ backgroundColor: 'rgba(0,0,0,0.15)', color: 'rgba(255,255,255,0.85)' }}
+                className="text-xs font-semibold uppercase tracking-wider rounded-full"
+                style={{ padding: '3px 10px', backgroundColor: 'rgba(0,0,0,0.15)', color: 'rgba(255,255,255,0.9)' }}
               >
                 {event.category}
               </span>
+              <div style={{ height: '8px' }} />
               <h2
-                className="text-xl font-bold mt-2 leading-snug"
-                style={{ color: '#fff', fontFamily: 'Playfair Display, Baskerville, Georgia, serif' }}
+                className="font-bold leading-snug"
+                style={{ fontSize: '18px', color: '#fff', fontFamily: 'Playfair Display, Baskerville, Georgia, serif' }}
               >
                 {event.name}
               </h2>
@@ -60,19 +75,20 @@ export default function EventDetail({ event, onClose }: Props) {
               className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 hover:opacity-70 transition-opacity"
               style={{ backgroundColor: 'rgba(0,0,0,0.2)' }}
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path d="M18 6L6 18M6 6l12 12" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </button>
           </div>
         </div>
 
         {/* Body */}
-        <div className="px-6 py-5 flex flex-col gap-4">
-          {/* Date & time row */}
-          <div className="flex items-center gap-4">
+        <div style={{ padding: '20px 20px 16px' }} className="flex flex-col">
+
+          {/* Date & time */}
+          <div className="flex items-center gap-5">
             <div className="flex items-center gap-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                 <rect x="3" y="4" width="18" height="18" rx="2" stroke="#AD2B0B" strokeWidth="2" />
                 <path d="M3 10h18M8 2v4M16 2v4" stroke="#AD2B0B" strokeWidth="2" strokeLinecap="round" />
               </svg>
@@ -81,7 +97,7 @@ export default function EventDetail({ event, onClose }: Props) {
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="12" r="9" stroke="#AD2B0B" strokeWidth="2" />
                 <path d="M12 7v5l3 3" stroke="#AD2B0B" strokeWidth="2" strokeLinecap="round" />
               </svg>
@@ -91,19 +107,24 @@ export default function EventDetail({ event, onClose }: Props) {
             </div>
           </div>
 
+          <div style={{ height: '14px' }} />
+
           {/* Location */}
           <div className="flex items-start gap-2">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="mt-0.5 flex-shrink-0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="mt-0.5 flex-shrink-0">
               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#AD2B0B" />
             </svg>
             <span className="text-sm" style={{ color: '#555' }}>{event.location}</span>
           </div>
 
-          {/* Price */}
-          <div className="flex items-center gap-2">
+          <div style={{ height: '14px' }} />
+
+          {/* Price + audience */}
+          <div className="flex items-center gap-3">
             <span
-              className="px-3 py-1.5 rounded-full text-sm font-semibold"
+              className="rounded-full text-sm font-semibold"
               style={{
+                padding: '4px 14px',
                 backgroundColor: event.is_free ? '#65CDB6' : '#FFE19D',
                 color: event.is_free ? '#fff' : '#6b3a00',
               }}
@@ -117,30 +138,36 @@ export default function EventDetail({ event, onClose }: Props) {
             </span>
           </div>
 
+          <div style={{ height: '14px' }} />
+
           {/* Description */}
           <p className="text-sm leading-relaxed" style={{ color: '#444' }}>
             {event.description}
           </p>
 
+          <div style={{ height: '14px' }} />
+
           {/* Tags */}
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex flex-wrap gap-2">
             {event.tags.map(tag => (
               <span
                 key={tag}
-                className="px-2.5 py-1 rounded-full text-xs"
-                style={{ backgroundColor: '#EDEDEE', color: '#666' }}
+                className="text-xs rounded-full"
+                style={{ padding: '4px 12px', backgroundColor: '#EDEDEE', color: '#666' }}
               >
                 {tag}
               </span>
             ))}
           </div>
 
+          <div style={{ height: '18px' }} />
+
           {/* Action buttons */}
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-3">
             <button
               onClick={handleRemind}
-              className="flex-1 py-3 rounded-full text-sm font-semibold tracking-wide transition-all hover:opacity-90"
-              style={{ backgroundColor: '#AD2B0B', color: '#fff' }}
+              className="flex-1 rounded-full text-sm font-semibold tracking-wide transition-all hover:opacity-90"
+              style={{ padding: '5px 20px', backgroundColor: '#AD2B0B', color: '#fff' }}
             >
               Remind Me
             </button>
@@ -148,12 +175,13 @@ export default function EventDetail({ event, onClose }: Props) {
               href={event.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 py-3 rounded-full text-sm font-semibold tracking-wide text-center transition-all hover:opacity-90"
-              style={{ backgroundColor: '#F04251', color: '#fff' }}
+              className="flex-1 rounded-full text-sm font-semibold tracking-wide text-center transition-all hover:opacity-90"
+              style={{ padding: '5px 20px', backgroundColor: '#F04251', color: '#fff' }}
             >
               Learn More ↗
             </a>
           </div>
+
         </div>
       </div>
     </div>
