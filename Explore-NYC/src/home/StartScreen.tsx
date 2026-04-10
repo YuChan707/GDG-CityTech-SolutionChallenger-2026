@@ -43,7 +43,7 @@ export default function StartScreen() {
             className="text-center text-sm max-w-xs leading-relaxed"
             style={{ color: 'rgba(255,255,255,0.45)' }}
           >
-            Discover local events, pop-ups &amp; hidden gems in New York City — tailored just for you.
+            Discover local events, pop-ups &amp; hidden gems in New York City (just for you).
           </p>
         </div>
 

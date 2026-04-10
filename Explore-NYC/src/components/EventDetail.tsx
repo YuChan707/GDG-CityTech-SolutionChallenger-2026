@@ -52,7 +52,7 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
         style={{ backgroundColor: '#F7F5FA' }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Header — uses the category color */}
+        {/* Header, uses the category color */}
         <div style={{ backgroundColor: headerColor, padding: '20px 20px 16px' }}>
           <div className="flex items-start justify-between">
             <div className="flex-1 pr-3">
