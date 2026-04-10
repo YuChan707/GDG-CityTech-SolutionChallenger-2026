@@ -26,7 +26,9 @@ Built for the **GDG CityTech Solution Challenger 2026**, Explore NYC targets:
 
 ## Important — How to Run
 
-### Frontend
+### Window
+
+#### Frontend
 
 ```bash
 cd "c:\Users\[your account]\GDG-CityTech-SolutionChallenger-2026\Explore-NYC"
@@ -36,7 +38,7 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### Backend
+#### Backend
 
 *
 ```bash
