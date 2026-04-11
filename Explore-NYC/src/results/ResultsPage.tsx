@@ -7,6 +7,8 @@ import { scoreEvents, filterEvents } from '../utils/recommendation';
 import EventCard from '../components/EventCard';
 import EventDetail from '../components/EventDetail';
 import CalendarPicker from '../components/CalendarPicker';
+import { CiSaveDown1 } from 'react-icons/ci';
+import { exportExperiencesToPDF } from '../utils/exportToPDF';
 
 const PAGE_SIZE = 8;
 
@@ -107,23 +109,33 @@ export default function ResultsPage() {
     <div className="min-h-screen flex flex-col items-center" style={{ padding: '32px 24px' }}>
       <div className="w-full max-w-3xl flex flex-col">
 
-        {/* Search bar */}
-        <div className="flex items-center gap-3 rounded-full" style={{ backgroundColor: '#AD2B0B', padding: '5px 20px' }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
-            <circle cx="11" cy="11" r="7" stroke="rgba(255,255,255,0.7)" strokeWidth="2" />
-            <path d="M16.5 16.5L21 21" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" />
-          </svg>
-          <input
-            type="text"
-            placeholder="Search events..."
-            value={search}
-            onChange={e => handleSearchChange(e.target.value)}
-            className="flex-1 bg-transparent outline-none text-sm"
-            style={{ color: '#fff', caretColor: '#fff' }}
-          />
-          {search && (
-            <button onClick={() => handleSearchChange('')} style={{ color: 'rgba(255,255,255,0.5)' }}>✕</button>
-          )}
+        {/* Search bar + export button */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 rounded-full flex-1" style={{ backgroundColor: '#AD2B0B', padding: '5px 20px' }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+              <circle cx="11" cy="11" r="7" stroke="rgba(255,255,255,0.7)" strokeWidth="2" />
+              <path d="M16.5 16.5L21 21" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search experiences..."
+              value={search}
+              onChange={e => handleSearchChange(e.target.value)}
+              className="flex-1 bg-transparent outline-none text-sm"
+              style={{ color: '#fff', caretColor: '#fff' }}
+            />
+            {search && (
+              <button onClick={() => handleSearchChange('')} style={{ color: 'rgba(255,255,255,0.5)' }}>✕</button>
+            )}
+          </div>
+          <button
+            onClick={() => exportExperiencesToPDF(allEvents)}
+            title="Save results as PDF"
+            className="flex-shrink-0 flex items-center justify-center rounded-full transition-all hover:opacity-80 active:scale-95"
+            style={{ width: '42px', height: '42px', backgroundColor: '#AD2B0B' }}
+          >
+            <CiSaveDown1 size={22} color="#fff" />
+          </button>
         </div>
 
         <div style={{ height: '12px' }} />
