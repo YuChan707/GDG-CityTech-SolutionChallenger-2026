@@ -11,7 +11,7 @@ We recognize that NYC is vast and diverse. It's not just Manhattan. Brooklyn, Br
 - **Community Promotion:** Highlight and promote local communities and events across all boroughs.
 
 
-### V2 - Backend design (upcming)
+### V2 - Backend design (upcoming)
 Plan idea:
 - Using Google Cloud products, make massive search events based on social media, official page, Luma, and Meet Up.
 - Goal tools: Vertex AI, Gemini AI, and Big Query

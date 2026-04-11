@@ -73,7 +73,7 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-##### Backend
+##### Backend (still working)
 
 ```bash
 cd "/Users/[your account]/GDG-CityTech-SolutionChallenger-2026/backend"
@@ -97,7 +97,9 @@ The `default-data` folder contains fake data for testing the frontend. Replace w
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request.
+Team members:
+- Taimor
+- Catherine
 
 ## License
 
