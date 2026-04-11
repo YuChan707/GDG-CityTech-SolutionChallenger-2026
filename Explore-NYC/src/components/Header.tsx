@@ -15,13 +15,15 @@ export default function Header() {
     }
   }
 
-  const homeActive = ['/', '/questionnaire', '/results'].includes(location.pathname);
+  const homeActive      = ['/', '/questionnaire', '/results'].includes(location.pathname);
+  const educationActive = location.pathname.startsWith('/education');
 
   const navItems = [
-    { label: 'Home page',           onClick: handleHome,                       active: homeActive },
-    { label: 'About the project',   onClick: () => navigate('/about'),          active: location.pathname === '/about' },
-    { label: 'Review people',       onClick: () => navigate('/reviews'),        active: location.pathname === '/reviews' },
-    { label: 'Submit request',      onClick: () => navigate('/submit'),         active: location.pathname === '/submit' },
+    { label: 'Home page',         onClick: handleHome,                        active: homeActive },
+    { label: 'High Education',    onClick: () => navigate('/education'),       active: educationActive },
+    { label: 'About the project', onClick: () => navigate('/about'),           active: location.pathname === '/about' },
+    { label: 'Review people',     onClick: () => navigate('/reviews'),         active: location.pathname === '/reviews' },
+    { label: 'Submit request',    onClick: () => navigate('/submit'),          active: location.pathname === '/submit' },
   ];
 
   return (
