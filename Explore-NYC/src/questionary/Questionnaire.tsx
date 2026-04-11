@@ -227,14 +227,14 @@ export default function Questionnaire() {
 
         {/* ── Step 2: Group type ── */}
         {step === 2 && (
-          <div className="flex flex-col flex-1 justify-between">
+          <div className="flex flex-col flex-1">
             <h2
               className="text-2xl font-bold tracking-wide"
               style={{ color: 'rgba(255,255,255,0.95)' }}
             >
               Who are you exploring with?
             </h2>
-            <div className="flex justify-center pb-4">
+            <div className="flex-1 flex items-center justify-center">
               <div className="grid grid-cols-2 gap-3 w-full max-w-xs">
                 {GROUP_TYPES.map(g => (
                   <button
