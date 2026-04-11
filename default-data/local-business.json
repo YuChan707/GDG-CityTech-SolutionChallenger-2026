@@ -1,0 +1,102 @@
+[
+  {
+    "name-business": "Hudson Coffee Roasters",
+    "description": "Cozy coffee shop offering specialty brews, pastries, and free Wi-Fi.",
+    "hours-business": "Mon-Fri 7:00-18:00, Sat-Sun 8:00-16:00",
+    "location": "Hoboken, NJ",
+    "category-business": "cafe",
+    "focus-business": "young adults",
+    "link": "https://hudsoncoffeeroasters.com",
+    "owner-labels": "local entrepreneur"
+  },
+  {
+    "name-business": "Brooklyn Street Bites",
+    "description": "Food truck serving fusion street food inspired by global cuisines.",
+    "hours-business": "Daily 12:00-22:00",
+    "location": "Brooklyn, NY",
+    "category-business": "food truck",
+    "focus-business": "all ages",
+    "link": "",
+    "owner-labels": "immigrant-owned"
+  },
+  {
+    "name-business": "SoHo Fit Lab",
+    "description": "Modern fitness studio offering HIIT classes, personal training, and yoga.",
+    "hours-business": "Mon-Sun 6:00-21:00",
+    "location": "SoHo, NYC",
+    "category-business": "fitness",
+    "focus-business": "adults",
+    "link": "https://sohofitlab.com",
+    "owner-labels": "women-owned"
+  },
+  {
+    "name-business": "Queens Tech Repair",
+    "description": "Affordable electronics repair shop specializing in phones and laptops.",
+    "hours-business": "Mon-Sat 10:00-19:00",
+    "location": "Queens, NY",
+    "category-business": "tech services",
+    "focus-business": "all ages",
+    "link": "",
+    "owner-labels": "minority-owned"
+  },
+  {
+    "name-business": "Harlem Book Haven",
+    "description": "Independent bookstore featuring local authors, poetry nights, and events.",
+    "hours-business": "Tue-Sun 10:00-18:00",
+    "location": "Harlem, NYC",
+    "category-business": "bookstore",
+    "focus-business": "students",
+    "link": "https://harlembookhaven.com",
+    "owner-labels": "community-based"
+  },
+  {
+    "name-business": "Bronx Fresh Market",
+    "description": "Local grocery store with fresh produce, organic options, and deli section.",
+    "hours-business": "Daily 8:00-20:00",
+    "location": "Bronx, NY",
+    "category-business": "grocery",
+    "focus-business": "families",
+    "link": "",
+    "owner-labels": "family-owned"
+  },
+  {
+    "name-business": "Midtown Gamer Hub",
+    "description": "Gaming lounge with PCs, consoles, and esports tournaments.",
+    "hours-business": "Mon-Sun 12:00-00:00",
+    "location": "Midtown Manhattan, NYC",
+    "category-business": "gaming",
+    "focus-business": "young adults",
+    "link": "https://midtowngamerhub.com",
+    "owner-labels": "startup"
+  },
+  {
+    "name-business": "Chelsea Art Studio",
+    "description": "Creative studio offering painting classes and gallery space for artists.",
+    "hours-business": "Wed-Sun 11:00-19:00",
+    "location": "Chelsea, NYC",
+    "category-business": "art",
+    "focus-business": "artists",
+    "link": "",
+    "owner-labels": "artist-owned"
+  },
+  {
+    "name-business": "Upper East Pet Care",
+    "description": "Pet grooming and daycare services with experienced staff.",
+    "hours-business": "Mon-Sat 9:00-18:00",
+    "location": "Upper East Side, NYC",
+    "category-business": "pet services",
+    "focus-business": "pet owners",
+    "link": "https://uppereastpetcare.com",
+    "owner-labels": ""
+  },
+  {
+    "name-business": "Downtown Financial Advisors",
+    "description": "Consulting firm providing financial planning and investment advice.",
+    "hours-business": "Mon-Fri 9:00-17:00",
+    "location": "Financial District, NYC",
+    "category-business": "finance",
+    "focus-business": "professionals",
+    "link": "https://dtfinancialadvisors.com",
+    "owner-labels": "corporate"
+  }
+]
