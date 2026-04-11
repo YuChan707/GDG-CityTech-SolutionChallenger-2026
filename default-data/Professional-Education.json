@@ -1,0 +1,92 @@
+[
+  {
+    "Organization-name": "NYC Tech Academy",
+    "Focus-Area": "Technology",
+    "User-requirement": "0-1 years experience",
+    "Program-services": "professional development, mentorship",
+    "Other category": "Web Development Bootcamp",
+    "link-registration-program": "https://nyctechacademy.com/apply",
+    "due-date-register-program": "2026-06-15"
+  },
+  {
+    "Organization-name": "Healthcare Pathways Initiative",
+    "Focus-Area": "Healthcare",
+    "User-requirement": "1-2 years experience",
+    "Program-services": "training, certification, mentorship",
+    "Other category": "Nursing Preparation",
+    "link-registration-program": "https://healthpathways.org/register",
+    "due-date-register-program": "2026-06-20"
+  },
+  {
+    "Organization-name": "Future Leaders Network",
+    "Focus-Area": "Professional Development",
+    "User-requirement": "0-3 years experience",
+    "Program-services": "leadership, networking, workshops",
+    "Other category": "Young Professionals",
+    "link-registration-program": "https://futureleadersnyc.org/join",
+    "due-date-register-program": "2026-06-10"
+  },
+  {
+    "Organization-name": "STEM Innovators Hub",
+    "Focus-Area": "STEAM",
+    "User-requirement": "0 years experience",
+    "Program-services": "education, mentorship, project-based learning",
+    "Other category": "Robotics & Engineering",
+    "link-registration-program": "https://stemhubnyc.org/apply",
+    "due-date-register-program": "2026-06-25"
+  },
+  {
+    "Organization-name": "Legal Scholars Program NYC",
+    "Focus-Area": "Law",
+    "User-requirement": "1+ years experience",
+    "Program-services": "internships, mentorship, seminars",
+    "Other category": "Pre-Law Track",
+    "link-registration-program": "https://legalscholarsnyc.org/register",
+    "due-date-register-program": "2026-07-01"
+  },
+  {
+    "Organization-name": "Media Creators Lab",
+    "Focus-Area": "Media",
+    "User-requirement": "0-2 years experience",
+    "Program-services": "content creation, workshops, networking",
+    "Other category": "Digital Content & Social Media",
+    "link-registration-program": "https://mediacreatorslab.com/apply",
+    "due-date-register-program": "2026-06-18"
+  },
+  {
+    "Organization-name": "Urban Science Research Center",
+    "Focus-Area": "Sciences",
+    "User-requirement": "2+ years experience",
+    "Program-services": "research, internships, training",
+    "Other category": "Biotech Research",
+    "link-registration-program": "https://urbanscience.org/apply",
+    "due-date-register-program": "2026-07-10"
+  },
+  {
+    "Organization-name": "TeachNYC Fellows",
+    "Focus-Area": "Teaching",
+    "User-requirement": "0-1 years experience",
+    "Program-services": "training, mentorship, certification",
+    "Other category": "Education Fellowship",
+    "link-registration-program": "https://teachnyc.org/fellows/apply",
+    "due-date-register-program": "2026-06-30"
+  },
+  {
+    "Organization-name": "Entertainment Industry Connect",
+    "Focus-Area": "Entertainment",
+    "User-requirement": "1-3 years experience",
+    "Program-services": "networking, mentorship, events",
+    "Other category": "Film & Music Industry",
+    "link-registration-program": "https://entconnectnyc.com/join",
+    "due-date-register-program": "2026-06-22"
+  },
+  {
+    "Organization-name": "Robotics Future Lab",
+    "Focus-Area": "Robotic",
+    "User-requirement": "0-2 years experience",
+    "Program-services": "hands-on training, competitions, mentorship",
+    "Other category": "AI & Robotics",
+    "link-registration-program": "https://roboticsfuturelab.com/register",
+    "due-date-register-program": "2026-07-05"
+  }
+]
