@@ -10,4 +10,9 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  server: {
+    fs: {
+      allow: ['..'],   // allow serving files one level above project root (default-data/)
+    },
+  },
 })

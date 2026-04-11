@@ -13,6 +13,7 @@ export interface Event {
   location: string;
   link: string;
   tags: string[];
+  company_hosted?: string;
   relevanceScore?: number;
 }
 

@@ -109,15 +109,36 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
 
           <div style={{ height: '14px' }} />
 
-          {/* Location */}
-          <div className="flex items-start gap-2">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="mt-0.5 flex-shrink-0">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#AD2B0B" />
-            </svg>
-            <span className="text-sm" style={{ color: '#555' }}>{event.location}</span>
-          </div>
+          {/* Location — only shown when available */}
+          {event.location && (
+            <>
+              <div className="flex items-start gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="mt-0.5 flex-shrink-0">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#AD2B0B" />
+                </svg>
+                <span className="text-sm" style={{ color: '#555' }}>{event.location}</span>
+              </div>
+              <div style={{ height: '14px' }} />
+            </>
+          )}
 
-          <div style={{ height: '14px' }} />
+          {/* Hosted by */}
+          {event.company_hosted && (
+            <>
+              <div className="flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="#AD2B0B" strokeWidth="2" strokeLinejoin="round" />
+                  <path d="M9 22V12h6v10" stroke="#AD2B0B" strokeWidth="2" strokeLinejoin="round" />
+                </svg>
+                <span className="text-sm" style={{ color: '#555' }}>
+                  Hosted by <span className="font-semibold" style={{ color: '#333' }}>{event.company_hosted}</span>
+                </span>
+              </div>
+              <div style={{ height: '14px' }} />
+            </>
+          )}
+
+          <div style={{ height: '0px' }} />
 
           {/* Price + audience */}
           <div className="flex items-center gap-3">
