@@ -83,3 +83,6 @@ The following placeholders are ready in the code. Add your project credentials t
 
 ---
 
+The `default-data` folder are fake data. just to testing the frontend.
+
+---
