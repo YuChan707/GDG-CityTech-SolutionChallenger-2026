@@ -147,5 +147,20 @@
     "link-event": "https://www.bronxsmallbiz.org/workshop",
     "company-hosted": "Bronx Business Alliance",
     "hosted-name": "Carlos Gomez"
+  },
+  {
+    "name-event": "Riverside Wellness Studio Sound Bath",
+    "date-event": "2026-06-10",
+    "time-event": "19:00",
+    "description-event": "A guided sound bath experience at Riverside Wellness Studio with crystal bowls and mindful breathing.",
+    "category-event": "wellness",
+    "focus-event": "adults",
+    "is-free": false,
+    "min-price": 25,
+    "max-price": 45,
+    "group people": "self-care enthusiasts",
+    "link-event": "https://riversidewellnessstudio.com/sound-bath",
+    "company-hosted": "Riverside Wellness Studio",
+    "hosted-name": "Lena Park"
   }
 ]

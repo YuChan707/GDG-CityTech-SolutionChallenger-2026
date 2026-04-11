@@ -98,5 +98,15 @@
     "focus-business": "professionals",
     "link": "https://dtfinancialadvisors.com",
     "owner-labels": "corporate"
+  },
+  {
+    "name-business": "Riverside Wellness Studio",
+    "description": "A wellness studio offering meditation, sound baths, and holistic self-care classes.",
+    "hours-business": "Tue-Sun 8:00-20:00",
+    "location": "Upper West Side, NYC",
+    "category-business": "wellness",
+    "focus-business": "adults",
+    "link": "https://riversidewellnessstudio.com",
+    "owner-labels": "community-owned"
   }
 ]
