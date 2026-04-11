@@ -362,7 +362,7 @@ export default function ResultsPage() {
         <button
           onClick={() => navigate('/')}
           className="text-xs text-center hover:opacity-70 transition-opacity"
-          style={{ color: '#AD2B0B' }}
+          style={{ color: '#ffc0b0' }}
         >
           ← Start over
         </button>
