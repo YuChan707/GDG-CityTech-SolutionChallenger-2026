@@ -15,6 +15,18 @@ const PRICE_OPTIONS = [
   { value: 'any', label: 'Any price' },
 ];
 
+const VIBE_COLORS: Record<string, { bg: string; color: string }> = {
+  'Outdoors':              { bg: '#b7e4c7', color: '#166534' },
+  'Food & Drinks':         { bg: '#ffd6a5', color: '#9a3412' },
+  'Arts & Culture':        { bg: '#d8b4fe', color: '#581c87' },
+  'Sports & Fitness':      { bg: '#bfdbfe', color: '#1e40af' },
+  'Music & Entertainment': { bg: '#fca5a5', color: '#991b1b' },
+  'Shopping':              { bg: '#fef08a', color: '#854d0e' },
+  'Gaming & Tech':         { bg: '#a5f3fc', color: '#155e75' },
+  'Wellness':              { bg: '#bbf7d0', color: '#14532d' },
+  'Family Fun':            { bg: '#fed7aa', color: '#7c2d12' },
+};
+
 type ActivePicker = 'dateFrom' | 'dateTo' | 'timeFrom' | 'timeTo' | null;
 
 function fmtDate(d: string) {
@@ -134,12 +146,18 @@ export default function ResultsPage() {
               {PRICE_OPTIONS.find(p => p.value === pricePreference)?.label}
             </span>
           )}
-          {preferences?.vibe && preferences.vibe.length > 0 && (
-            <span className="text-xs rounded-full" style={{ padding: '3px 12px', backgroundColor: 'rgba(173,43,11,0.18)', color: '#AD2B0B' }}>
-              {preferences.vibe.slice(0, 2).join(', ')}
-              {preferences.vibe.length > 2 ? ` +${preferences.vibe.length - 2}` : ''}
-            </span>
-          )}
+          {preferences?.vibe && preferences.vibe.map(v => {
+            const c = VIBE_COLORS[v] ?? { bg: '#e5e7eb', color: '#374151' };
+            return (
+              <span
+                key={v}
+                className="text-xs font-medium rounded-full"
+                style={{ padding: '3px 12px', backgroundColor: c.bg, color: c.color }}
+              >
+                {v}
+              </span>
+            );
+          })}
           <button
             onClick={() => setShowFilters(f => !f)}
             className="text-xs ml-auto hover:opacity-70 transition-opacity font-medium"

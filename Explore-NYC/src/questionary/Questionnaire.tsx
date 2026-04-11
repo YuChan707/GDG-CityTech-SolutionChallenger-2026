@@ -194,29 +194,30 @@ export default function Questionnaire() {
 
         {/* ── Step 1: Group type ── */}
         {step === 1 && (
-          <div className="flex flex-col flex-1 items-center">
+          <div className="flex flex-col flex-1 justify-between">
             <h2
-              className="text-2xl font-bold tracking-wide w-full"
+              className="text-2xl font-bold tracking-wide"
               style={{ color: 'rgba(255,255,255,0.95)' }}
             >
               Who are you exploring with?
             </h2>
-            <div style={{ height: '28px' }} />
-            <div className="grid grid-cols-2 gap-3 w-full max-w-md">
-              {GROUP_TYPES.map(g => (
-                <button
-                  key={g}
-                  onClick={() => setPrefs(p => ({ ...p, groupType: g }))}
-                  className="w-full rounded-full text-base font-semibold tracking-wide text-center transition-all duration-150 hover:opacity-90 active:scale-95"
-                  style={{
-                    height: '56px',
-                    backgroundColor: prefs.groupType === g ? '#F04251' : 'rgba(255,255,255,0.15)',
-                    color: prefs.groupType === g ? '#fff' : 'rgba(255,255,255,0.85)',
-                  }}
-                >
-                  {g}
-                </button>
-              ))}
+            <div className="flex justify-center pb-4">
+              <div className="grid grid-cols-2 gap-3 w-full max-w-xs">
+                {GROUP_TYPES.map(g => (
+                  <button
+                    key={g}
+                    onClick={() => setPrefs(p => ({ ...p, groupType: g }))}
+                    className="w-full rounded-full text-sm font-semibold tracking-wide text-center transition-all duration-150 hover:opacity-90 active:scale-95"
+                    style={{
+                      height: '44px',
+                      backgroundColor: prefs.groupType === g ? '#F04251' : 'rgba(255,255,255,0.15)',
+                      color: prefs.groupType === g ? '#fff' : 'rgba(255,255,255,0.85)',
+                    }}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
