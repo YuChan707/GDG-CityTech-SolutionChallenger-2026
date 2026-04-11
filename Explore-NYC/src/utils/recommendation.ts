@@ -94,8 +94,11 @@ export function filterEvents(
   timeTo: string,
   pricePreference = 'any',
 ): Event[] {
+  const today = new Date().toISOString().split('T')[0];
   const q = search.toLowerCase();
   return events.filter(event => {
+    // Always hide events that have already passed
+    if (event.date < today) return false;
     if (q) {
       const haystack = `${event.name} ${event.description} ${event.location} ${event.tags.join(' ')}`.toLowerCase();
       if (!haystack.includes(q)) return false;
