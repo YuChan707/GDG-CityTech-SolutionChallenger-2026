@@ -138,7 +138,7 @@
   {
     "name-event": "Bronx Small Gamer Developer Workshop",
     "date-event": "2026-03-02",
-    "time-event": "10:00",
+    "time-event": "10:00-16:30",
     "description-event": "Community event for indie game developers and gamers to showcase projects.",
     "category-event": "gaming",
     "focus-event": "all ages",
@@ -162,5 +162,50 @@
     "link-event": "https://riversidewellnessstudio.com/sound-bath",
     "company-hosted": "Riverside Wellness Studio",
     "hosted-name": "Lena Park"
+  },
+  {
+    "name-event": "East Village Dollar Brunch",
+    "date-event": "2026-06-18",
+    "time-event": "10:00-17:30",
+    "description-event": "Budget-friendly weekend brunch with live jazz and signature coffee blends.",
+    "category-event": "pop-up",
+    "focus-event": "young adults",
+    "is-free": false,
+    "min-price": 10,
+    "max-price": 15,
+    "group people": "foodies",
+    "link-event": "https://eastvillagebrunch.com",
+    "company-hosted": "East Village Brunch Collective",
+    "hosted-name": "Mia Torres"
+  },
+  {
+    "name-event": "Midtown Business Lunch Mixer",
+    "date-event": "2026-07-08",
+    "time-event": "12:30",
+    "description-event": "Curated networking lunch for professionals with chef-selected dishes and premium coffee.",
+    "category-event": "leader meeting",
+    "focus-event": "professionals",
+    "is-free": false,
+    "min-price": 30,
+    "max-price": 45,
+    "group people": "professionals",
+    "link-event": "https://midtownlunchmixer.com",
+    "company-hosted": "Midtown Business Collective",
+    "hosted-name": "Avery Cole"
+  },
+  {
+    "name-event": "SoHo Signature Cocktail Experience",
+    "date-event": "2026-07-22",
+    "time-event": "19:30-22:00",
+    "description-event": "High-end cocktail tasting event showcasing small-batch spirits and artful pairings.",
+    "category-event": "pop-up",
+    "focus-event": "adults",
+    "is-free": false,
+    "min-price": 75,
+    "max-price": 120,
+    "group people": "cocktail lovers",
+    "link-event": "https://sohosignaturecocktails.com",
+    "company-hosted": "SoHo Mixology Society",
+    "hosted-name": "Julian Beck"
   }
 ]

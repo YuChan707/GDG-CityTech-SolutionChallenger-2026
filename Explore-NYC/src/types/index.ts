@@ -3,6 +3,7 @@ export interface Event {
   name: string;
   date: string;
   time: string;
+  time_end?: string;
   description: string;
   category: string;
   focus: string;
@@ -14,10 +15,13 @@ export interface Event {
   link: string;
   tags: string[];
   company_hosted?: string;
+  experience_type?: 'event' | 'local-business';
+  operating_hours?: string;
   relevanceScore?: number;
 }
 
 export interface UserPreferences {
+  lookingFor: string;
   vibe: string[];
   groupType: string;
   interests: string[];

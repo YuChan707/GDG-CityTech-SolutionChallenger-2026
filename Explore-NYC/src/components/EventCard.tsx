@@ -1,3 +1,5 @@
+import { Gi3dMeeple } from 'react-icons/gi';
+import { IoBusiness } from 'react-icons/io5';
 import type { Event } from '../types';
 
 interface Props {
@@ -29,11 +31,10 @@ export default function EventCard({ event, onClick }: Readonly<Props>) {
     return `${month}/${day}`;
   }
 
-  function formatTime(t: string) {
-    const [h, m] = t.split(':');
-    const hour = parseInt(h);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    return `${hour % 12 || 12}:${m} ${ampm}`;
+  function formatTime(t: string, tEnd?: string) {
+    if (!t) return '';
+    const fmt = (s: string) => { const [h, m] = s.split(':'); return `${h.padStart(2, '0')}:${m}`; };
+    return tEnd ? `${fmt(t)} – ${fmt(tEnd)}` : fmt(t);
   }
 
   return (
@@ -53,13 +54,24 @@ export default function EventCard({ event, onClick }: Readonly<Props>) {
         </svg>
       </button>
 
-      {/* Category badge */}
-      <span
-        className="text-xs font-semibold uppercase tracking-wider self-start rounded-full"
-        style={{ padding: '3px 10px', backgroundColor: colors.badge, color: 'rgba(255,255,255,0.9)' }}
-      >
-        {event.category}
-      </span>
+      {/* Category badge + type icon */}
+      <div className="flex items-center gap-2 self-start">
+        <span
+          className="text-xs font-semibold uppercase tracking-wider rounded-full"
+          style={{ padding: '3px 10px', backgroundColor: colors.badge, color: 'rgba(255,255,255,0.9)' }}
+        >
+          {event.category}
+        </span>
+        <span
+          className="flex items-center gap-1 rounded-full text-xs font-semibold"
+          style={{ padding: '3px 10px', backgroundColor: 'rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.9)' }}
+        >
+          {event.experience_type === 'local-business'
+            ? <><IoBusiness size={12} /> Local Business</>
+            : <><Gi3dMeeple size={12} /> Event</>
+          }
+        </span>
+      </div>
 
       <div style={{ height: '8px' }} />
 
@@ -98,7 +110,7 @@ export default function EventCard({ event, onClick }: Readonly<Props>) {
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <span className="text-xs" style={{ color: 'rgba(255,255,255,0.65)' }}>
-            {formatDate(event.date)} · {formatTime(event.time)}
+            {formatDate(event.date)} · {formatTime(event.time, event.time_end)}
           </span>
           {event.is_free ? (
             <span

@@ -17,11 +17,16 @@ interface RawEvent {
   'hosted-name'?: string;
 }
 
-export const EVENTS: Event[] = (rawData as RawEvent[]).map((item, index) => ({
+export const EVENTS: Event[] = (rawData as RawEvent[]).map((item, index) => {
+  const timeParts = item['time-event'].split('-');
+  const timeStart = timeParts[0];
+  const timeEnd   = timeParts.length === 2 ? timeParts[1] : undefined;
+  return {
   id: String(index + 1),
   name: item['name-event'],
   date: item['date-event'],
-  time: item['time-event'],
+  time: timeStart,
+  time_end: timeEnd,
   description: item['description-event'],
   category: item['category-event'],
   focus: item['focus-event'],
@@ -32,5 +37,7 @@ export const EVENTS: Event[] = (rawData as RawEvent[]).map((item, index) => ({
   location: '',
   link: item['link-event'],
   company_hosted: item['company-hosted'] || undefined,
+  experience_type: 'event',
   tags: [item['category-event'], item['focus-event'], item['group people']].filter(Boolean),
-}));
+  };
+});

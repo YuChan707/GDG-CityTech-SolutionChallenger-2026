@@ -2,6 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { UserPreferences } from '../types';
 
+const LOOKING_FOR_OPTIONS = [
+  { value: 'events',         label: 'Events' },
+  { value: 'local-business', label: 'Visit Local-business' },
+  { value: 'both',           label: 'Both experiences' },
+];
+
 const VIBES = [
   'Outdoors', 'Food & Drinks', 'Arts & Culture',
   'Sports & Fitness', 'Music & Entertainment', 'Shopping',
@@ -22,13 +28,14 @@ const PRICE_OPTIONS = [
   { value: 'any', label: 'Any price' },
 ];
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 
 export default function Questionnaire() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [prefs, setPrefs] = useState<UserPreferences>({
+    lookingFor: '',
     vibe: [],
     groupType: '',
     interests: [],
@@ -64,10 +71,6 @@ export default function Questionnaire() {
       setStep(s => s + 1);
     } else {
       setLoading(true);
-      /**
-       * TODO: Replace setTimeout with actual API call:
-       * fetch('/api/recommendations', { method: 'POST', ... })
-       */
       setTimeout(() => {
         sessionStorage.setItem('questionnaireDone', 'true');
         sessionStorage.setItem('lastPreferences', JSON.stringify(prefs));
@@ -82,8 +85,9 @@ export default function Questionnaire() {
   }
 
   const canProceed = (() => {
-    if (step === 0) return prefs.vibe.length > 0;
-    if (step === 1) return prefs.groupType !== '';
+    if (step === 0) return prefs.lookingFor !== '';
+    if (step === 1) return prefs.vibe.length > 0;
+    if (step === 2) return prefs.groupType !== '';
     return true;
   })();
 
@@ -110,7 +114,7 @@ export default function Questionnaire() {
             className="text-base font-semibold tracking-widest uppercase text-center"
             style={{ color: 'rgba(255,255,255,0.85)' }}
           >
-            Finding your events…
+            Finding your experiences…
           </p>
           <div style={{ height: '10px' }} />
           <p
@@ -118,7 +122,6 @@ export default function Questionnaire() {
             style={{ color: 'rgba(255,255,255,0.4)', maxWidth: '220px' }}
           >
             Checking preferences
-            {/* TODO: will call Vertex AI recommendation API here */}
           </p>
         </div>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
@@ -163,8 +166,38 @@ export default function Questionnaire() {
           </span>
         </div>
 
-        {/* ── Step 0: Vibe ── */}
+        {/* ── Step 0: What are you looking for? ── */}
         {step === 0 && (
+          <div className="flex flex-col flex-1 justify-between">
+            <h2
+              className="text-2xl font-bold tracking-wide"
+              style={{ color: 'rgba(255,255,255,0.95)' }}
+            >
+              What are you looking for?
+            </h2>
+            <div className="flex justify-center pb-4">
+              <div className="flex flex-col gap-3 w-full max-w-sm">
+                {LOOKING_FOR_OPTIONS.map(opt => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setPrefs(p => ({ ...p, lookingFor: opt.value }))}
+                    className="w-full rounded-full text-base font-semibold tracking-wide text-center transition-all duration-150 hover:opacity-90 active:scale-95"
+                    style={{
+                      height: '54px',
+                      backgroundColor: prefs.lookingFor === opt.value ? '#F04251' : 'rgba(255,255,255,0.15)',
+                      color: prefs.lookingFor === opt.value ? '#fff' : 'rgba(255,255,255,0.85)',
+                    }}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Step 1: Vibe ── */}
+        {step === 1 && (
           <div className="flex flex-col flex-1">
             <h2
               className="text-2xl font-bold tracking-wide"
@@ -192,8 +225,8 @@ export default function Questionnaire() {
           </div>
         )}
 
-        {/* ── Step 1: Group type ── */}
-        {step === 1 && (
+        {/* ── Step 2: Group type ── */}
+        {step === 2 && (
           <div className="flex flex-col flex-1 justify-between">
             <h2
               className="text-2xl font-bold tracking-wide"
@@ -222,8 +255,8 @@ export default function Questionnaire() {
           </div>
         )}
 
-        {/* ── Step 2: Interests ── */}
-        {step === 2 && (
+        {/* ── Step 3: Interests ── */}
+        {step === 3 && (
           <div className="flex flex-col flex-1">
             <h2
               className="text-2xl font-bold tracking-wide"
@@ -299,8 +332,8 @@ export default function Questionnaire() {
           </div>
         )}
 
-        {/* ── Step 3: Price preference ── */}
-        {step === 3 && (
+        {/* ── Step 4: Price preference ── */}
+        {step === 4 && (
           <div className="flex flex-col flex-1 items-center">
             <h2
               className="text-2xl font-bold tracking-wide w-full"

@@ -2,9 +2,11 @@ import { useState, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { Event, UserPreferences } from '../types';
 import { EVENTS } from '../data/events';
+import { LOCAL_BUSINESSES } from '../data/localBusinesses';
 import { scoreEvents, filterEvents } from '../utils/recommendation';
 import EventCard from '../components/EventCard';
 import EventDetail from '../components/EventDetail';
+import CalendarPicker from '../components/CalendarPicker';
 
 const PAGE_SIZE = 8;
 
@@ -37,9 +39,8 @@ function fmtDate(d: string) {
 
 function fmtTime(t: string) {
   if (!t) return '';
-  const hour = Number(t.split(':')[0]);
-  const min  = t.split(':')[1];
-  return `${hour % 12 || 12}:${min} ${hour >= 12 ? 'PM' : 'AM'}`;
+  const [h, m] = t.split(':');
+  return `${h.padStart(2, '0')}:${m}`;
 }
 
 export default function ResultsPage() {
@@ -60,9 +61,13 @@ export default function ResultsPage() {
   const [selectedEvent,   setSelectedEvent]   = useState<Event | null>(null);
 
   const allEvents = useMemo(() => {
-    let result = EVENTS;
-    if (preferences) result = scoreEvents(result, preferences);
-    return filterEvents(result, search, dateFrom, dateTo, timeFrom, timeTo, pricePreference);
+    const lookingFor = preferences?.lookingFor ?? 'events';
+    let pool;
+    if (lookingFor === 'local-business') pool = LOCAL_BUSINESSES;
+    else if (lookingFor === 'both')      pool = [...EVENTS, ...LOCAL_BUSINESSES];
+    else                                 pool = EVENTS;
+    const scored = preferences ? scoreEvents(pool, preferences) : pool;
+    return filterEvents(scored, search, dateFrom, dateTo, timeFrom, timeTo, pricePreference);
   }, [search, dateFrom, dateTo, timeFrom, timeTo, pricePreference, preferences]);
 
   const totalPages = Math.ceil(allEvents.length / PAGE_SIZE);
@@ -208,25 +213,19 @@ export default function ResultsPage() {
             </div>
             {activePicker === 'dateFrom' && (
               <div style={{ marginTop: '10px' }}>
-                <input
-                  type="date"
+                <CalendarPicker
                   value={dateFrom}
                   min={today}
-                  onChange={e => { setDateFrom(e.target.value); setActivePicker(null); resetPage(); }}
-                  className="rounded-xl px-4 py-2 text-sm outline-none border-0"
-                  style={{ backgroundColor: '#fff', color: '#333' }}
+                  onChange={date => { setDateFrom(date); setActivePicker(null); resetPage(); }}
                 />
               </div>
             )}
             {activePicker === 'dateTo' && (
               <div style={{ marginTop: '10px' }}>
-                <input
-                  type="date"
+                <CalendarPicker
                   value={dateTo}
                   min={dateFrom || today}
-                  onChange={e => { setDateTo(e.target.value); setActivePicker(null); resetPage(); }}
-                  className="rounded-xl px-4 py-2 text-sm outline-none border-0"
-                  style={{ backgroundColor: '#fff', color: '#333' }}
+                  onChange={date => { setDateTo(date); setActivePicker(null); resetPage(); }}
                 />
               </div>
             )}
@@ -338,7 +337,7 @@ export default function ResultsPage() {
         <div style={{ height: '8px' }} />
 
         <p className="text-xs" style={{ color: '#999', paddingLeft: '4px' }}>
-          {allEvents.length} event{allEvents.length !== 1 ? 's' : ''} found
+          {allEvents.length} experience{allEvents.length === 1 ? '' : 's'} found
           {preferences ? ' · sorted by relevance' : ''}
           {totalPages > 1 ? ` · page ${page + 1} of ${totalPages}` : ''}
         </p>

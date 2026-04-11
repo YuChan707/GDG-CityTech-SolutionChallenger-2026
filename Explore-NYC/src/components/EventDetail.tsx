@@ -29,16 +29,35 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
     return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   }
 
-  function formatTime(t: string) {
-    const [h, m] = t.split(':');
-    const hour = parseInt(h);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    return `${hour % 12 || 12}:${m} ${ampm}`;
+  function formatTime(t: string, tEnd?: string) {
+    if (!t) return '';
+    const fmt = (s: string) => { const [h, m] = s.split(':'); return `${h.padStart(2, '0')}:${m}`; };
+    return tEnd ? `${fmt(t)} – ${fmt(tEnd)}` : fmt(t);
   }
 
   function handleRemind() {
-    alert(`Reminder set for "${event.name}" on ${formatDate(event.date)} at ${formatTime(event.time)}!`);
+    alert(`Reminder set for "${event.name}" on ${formatDate(event.date)} at ${formatTime(event.time, event.time_end)}!`);
     // TODO: Integrate with Firestore to save reminders
+  }
+
+  function getPriceLabel() {
+    if (event.is_free) return 'FREE';
+    const min = event.min_price ?? '?';
+    const max = event.max_price;
+    if (max && max !== event.min_price) return `$${min} – $${max}`;
+    return `$${min}`;
+  }
+
+  function getAveragePriceLabel() {
+    if (event.is_free) return '$';
+
+    const min = event.min_price ?? 0;
+    const max = event.max_price ?? min;
+    const avg = (min + max) / 2;
+
+    if (avg <= 20) return '$';
+    if (avg <= 50) return '$$';
+    return '$$$';
   }
 
   return (
@@ -85,29 +104,48 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
         {/* Body */}
         <div style={{ padding: '20px 20px 16px' }} className="flex flex-col">
 
-          {/* Date & time */}
-          <div className="flex items-center gap-5">
-            <div className="flex items-center gap-2">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="4" width="18" height="18" rx="2" stroke="#AD2B0B" strokeWidth="2" />
-                <path d="M3 10h18M8 2v4M16 2v4" stroke="#AD2B0B" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-              <span className="text-sm font-medium" style={{ color: '#333' }}>
-                {formatDate(event.date)}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="9" stroke="#AD2B0B" strokeWidth="2" />
-                <path d="M12 7v5l3 3" stroke="#AD2B0B" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-              <span className="text-sm font-medium" style={{ color: '#333' }}>
-                {formatTime(event.time)}
-              </span>
-            </div>
-          </div>
+          {/* Date & time — events only */}
+          {event.date && (
+            <>
+              <div className="flex items-center gap-5">
+                <div className="flex items-center gap-2">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                    <rect x="3" y="4" width="18" height="18" rx="2" stroke="#AD2B0B" strokeWidth="2" />
+                    <path d="M3 10h18M8 2v4M16 2v4" stroke="#AD2B0B" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                  <span className="text-sm font-medium" style={{ color: '#333' }}>
+                    {formatDate(event.date)}
+                  </span>
+                </div>
+                {event.time && (
+                  <div className="flex items-center gap-2">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="9" stroke="#AD2B0B" strokeWidth="2" />
+                      <path d="M12 7v5l3 3" stroke="#AD2B0B" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                    <span className="text-sm font-medium" style={{ color: '#333' }}>
+                      {formatTime(event.time, event.time_end)}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div style={{ height: '14px' }} />
+            </>
+          )}
 
-          <div style={{ height: '14px' }} />
+          {/* Operating hours — local businesses only */}
+          {event.operating_hours && (
+            <>
+              <div className="flex items-start gap-2">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="mt-0.5 flex-shrink-0">
+                  <circle cx="12" cy="12" r="9" stroke="#AD2B0B" strokeWidth="2" />
+                  <path d="M12 7v5l3 3" stroke="#AD2B0B" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+                <span className="text-sm font-medium" style={{ color: '#333' }}>{event.operating_hours}</span>
+              </div>
+              <div style={{ height: '14px' }} />
+            </>
+          )}
 
           {/* Location — only shown when available */}
           {event.location && (
@@ -142,24 +180,42 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
 
           {/* Price + audience */}
           <div className="flex items-center gap-3">
-            <span
-              className="rounded-full text-sm font-semibold"
-              style={{
-                padding: '4px 14px',
-                backgroundColor: event.is_free ? '#65CDB6' : '#FFE19D',
-                color: event.is_free ? '#fff' : '#6b3a00',
-              }}
-            >
-              {event.is_free
-                ? 'FREE'
-                : `$${event.min_price}${event.max_price && event.max_price !== event.min_price ? ` – $${event.max_price}` : ''}`}
-            </span>
+            {event.experience_type !== 'local-business' && (
+              <span
+                className="rounded-full text-sm font-semibold"
+                style={{
+                  padding: '4px 14px',
+                  backgroundColor: event.is_free ? '#65CDB6' : '#FFE19D',
+                  color: event.is_free ? '#fff' : '#6b3a00',
+                }}
+              >
+                {getPriceLabel()}
+              </span>
+            )}
             <span className="text-xs" style={{ color: '#999' }}>
               {event.focus} · {event.group_type.join(', ')}
             </span>
           </div>
 
           <div style={{ height: '14px' }} />
+
+          {/* Average price — events only */}
+          {event.experience_type !== 'local-business' && (
+            <>
+              <div className="flex items-center gap-2">
+                <span className="text-xs uppercase tracking-widest font-semibold" style={{ color: '#999' }}>
+                  Average Price
+                </span>
+                <span
+                  className="text-sm font-semibold rounded-full"
+                  style={{ padding: '4px 12px', backgroundColor: '#EDEDEE', color: '#333' }}
+                >
+                  {getAveragePriceLabel()}
+                </span>
+              </div>
+              <div style={{ height: '14px' }} />
+            </>
+          )}
 
           {/* Description */}
           <p className="text-sm leading-relaxed" style={{ color: '#444' }}>
