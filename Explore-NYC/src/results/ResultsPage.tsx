@@ -99,8 +99,14 @@ export default function ResultsPage() {
         <div style={{ height: '12px' }} />
 
         {/* Active filters row + toggle */}
-        <div className="flex items-center gap-3 flex-wrap" style={{ paddingLeft: '4px' }}>
-          <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#AD2B0B' }}>
+        <div
+          className="flex items-center gap-3 flex-wrap rounded-2xl"
+          style={{ backgroundColor: 'rgba(173,43,11,0.1)', padding: '10px 16px' }}
+        >
+          <span
+            className="font-bold uppercase tracking-wider flex-shrink-0"
+            style={{ fontSize: '16px', color: '#AD2B0B' }}
+          >
             FILTER
           </span>
           {date && (
@@ -119,14 +125,14 @@ export default function ResultsPage() {
             </span>
           )}
           {preferences?.vibe && preferences.vibe.length > 0 && (
-            <span className="text-xs rounded-full" style={{ padding: '3px 12px', backgroundColor: 'rgba(173,43,11,0.12)', color: '#AD2B0B' }}>
+            <span className="text-xs rounded-full" style={{ padding: '3px 12px', backgroundColor: 'rgba(173,43,11,0.18)', color: '#AD2B0B' }}>
               {preferences.vibe.slice(0, 2).join(', ')}
               {preferences.vibe.length > 2 ? ` +${preferences.vibe.length - 2}` : ''}
             </span>
           )}
           <button
             onClick={() => setShowFilters(f => !f)}
-            className="text-xs ml-auto hover:opacity-70 transition-opacity"
+            className="text-xs ml-auto hover:opacity-70 transition-opacity font-medium"
             style={{ color: '#AD2B0B' }}
           >
             {showFilters ? 'Hide filters ↑' : `Edit filters${activeFilterCount > 0 ? ` (${activeFilterCount})` : ''} →`}

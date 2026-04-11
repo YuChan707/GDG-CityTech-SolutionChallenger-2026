@@ -69,7 +69,7 @@ export default function FilterScreen() {
           {/* FILTER label */}
           <p
             className="text-xs tracking-[0.2em] uppercase font-semibold"
-            style={{ color: 'rgba(255,255,255,0.5)' }}
+            style={{ color: 'rgba(255, 116, 116, 0.84)' }}
           >
             FILTER
           </p>
