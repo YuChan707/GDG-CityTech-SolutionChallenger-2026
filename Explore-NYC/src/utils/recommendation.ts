@@ -81,13 +81,17 @@ export function scoreEvents(events: Event[], preferences: UserPreferences): Even
 }
 
 /**
- * Filter events by search query, date, time, and price preference.
+ * Filter events by search, date range, time range, and price preference.
+ * dateFrom/dateTo: YYYY-MM-DD. If only dateFrom → exact day. Both → inclusive range.
+ * timeFrom/timeTo: HH:MM. Events whose time falls within the window.
  */
 export function filterEvents(
   events: Event[],
   search: string,
-  date: string,
-  time: string,
+  dateFrom: string,
+  dateTo: string,
+  timeFrom: string,
+  timeTo: string,
   pricePreference = 'any',
 ): Event[] {
   const q = search.toLowerCase();
@@ -96,8 +100,13 @@ export function filterEvents(
       const haystack = `${event.name} ${event.description} ${event.location} ${event.tags.join(' ')}`.toLowerCase();
       if (!haystack.includes(q)) return false;
     }
-    if (date && event.date !== date) return false;
-    if (time && event.time < time) return false;
+    if (dateFrom && dateTo) {
+      if (event.date < dateFrom || event.date > dateTo) return false;
+    } else if (dateFrom) {
+      if (event.date !== dateFrom) return false;
+    }
+    if (timeFrom && event.time < timeFrom) return false;
+    if (timeTo && event.time > timeTo) return false;
     if (pricePreference === 'free' && !event.is_free) return false;
     if (pricePreference === 'up20') {
       if (event.is_free) return false;

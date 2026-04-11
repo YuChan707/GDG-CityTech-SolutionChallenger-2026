@@ -15,68 +15,83 @@ const PRICE_OPTIONS = [
   { value: 'any', label: 'Any price' },
 ];
 
+type ActivePicker = 'dateFrom' | 'dateTo' | 'timeFrom' | 'timeTo' | null;
+
+function fmtDate(d: string) {
+  if (!d) return '';
+  const [, month, day] = d.split('-');
+  return `${month}/${day}`;
+}
+
+function fmtTime(t: string) {
+  if (!t) return '';
+  const hour = Number(t.split(':')[0]);
+  const min  = t.split(':')[1];
+  return `${hour % 12 || 12}:${min} ${hour >= 12 ? 'PM' : 'AM'}`;
+}
+
 export default function ResultsPage() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const state = location.state as { preferences?: UserPreferences } | null;
+  const navigate    = useNavigate();
+  const location    = useLocation();
+  const state       = location.state as { preferences?: UserPreferences } | null;
   const preferences = state?.preferences;
 
-  const [showFilters, setShowFilters] = useState(false);
-  const [search, setSearch] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
+  const [showFilters,     setShowFilters]     = useState(false);
+  const [search,          setSearch]          = useState('');
+  const [dateFrom,        setDateFrom]        = useState('');
+  const [dateTo,          setDateTo]          = useState('');
+  const [timeFrom,        setTimeFrom]        = useState('');
+  const [timeTo,          setTimeTo]          = useState('');
   const [pricePreference, setPricePreference] = useState(preferences?.pricePreference ?? 'any');
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [page, setPage] = useState(0);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [activePicker,    setActivePicker]    = useState<ActivePicker>(null);
+  const [page,            setPage]            = useState(0);
+  const [selectedEvent,   setSelectedEvent]   = useState<Event | null>(null);
 
   const allEvents = useMemo(() => {
     let result = EVENTS;
     if (preferences) result = scoreEvents(result, preferences);
-    return filterEvents(result, search, date, time, pricePreference);
-  }, [search, date, time, pricePreference, preferences]);
+    return filterEvents(result, search, dateFrom, dateTo, timeFrom, timeTo, pricePreference);
+  }, [search, dateFrom, dateTo, timeFrom, timeTo, pricePreference, preferences]);
 
   const totalPages = Math.ceil(allEvents.length / PAGE_SIZE);
   const pageEvents = allEvents.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
 
-  function handleSearchChange(value: string) {
-    setSearch(value);
-    setPage(0);
-  }
+  function resetPage()                   { setPage(0); }
+  function handleSearchChange(v: string) { setSearch(v); setPage(0); }
+  function togglePicker(p: ActivePicker) { setActivePicker(cur => cur === p ? null : p); }
 
-  function resetPage() {
-    setPage(0);
-  }
+  const today = new Date().toISOString().split('T')[0];
 
-  function formatDisplayDate(d: string) {
-    if (!d) return 'Any date';
-    const [year, month, day] = d.split('-');
-    return `${month}/${day}/${year}`;
-  }
+  const dateChip = dateFrom && dateTo
+    ? `${fmtDate(dateFrom)} – ${fmtDate(dateTo)}`
+    : dateFrom ? fmtDate(dateFrom) : '';
 
-  function formatDisplayTime(t: string) {
-    if (!t) return 'Any time';
-    const [h, m] = t.split(':');
-    const hour = parseInt(h);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    return `${hour % 12 || 12}:${m} ${ampm}`;
-  }
+  const timeChip = timeFrom && timeTo
+    ? `${fmtTime(timeFrom)} – ${fmtTime(timeTo)}`
+    : timeFrom  ? `From ${fmtTime(timeFrom)}`
+    : timeTo    ? `Until ${fmtTime(timeTo)}`
+    : '';
 
-  const activeFilterCount = (date ? 1 : 0) + (time ? 1 : 0) + (pricePreference !== 'any' ? 1 : 0);
+  const activeFilterCount =
+    (dateFrom || dateTo        ? 1 : 0) +
+    (timeFrom || timeTo        ? 1 : 0) +
+    (pricePreference !== 'any' ? 1 : 0);
+
+  function pickerBtnStyle(active: boolean): React.CSSProperties {
+    return {
+      padding: '7px 20px',
+      minWidth: '130px',
+      backgroundColor: active ? '#F04251' : '#FFE19D',
+      color: active ? '#fff' : '#6b3a00',
+    };
+  }
 
   return (
-    <div
-      className="min-h-screen flex flex-col items-center"
-      style={{ padding: '32px 24px' }}
-    >
+    <div className="min-h-screen flex flex-col items-center" style={{ padding: '32px 24px' }}>
       <div className="w-full max-w-3xl flex flex-col">
 
         {/* Search bar */}
-        <div
-          className="flex items-center gap-3 rounded-full"
-          style={{ backgroundColor: '#AD2B0B', padding: '5px 20px' }}
-        >
+        <div className="flex items-center gap-3 rounded-full" style={{ backgroundColor: '#AD2B0B', padding: '5px 20px' }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
             <circle cx="11" cy="11" r="7" stroke="rgba(255,255,255,0.7)" strokeWidth="2" />
             <path d="M16.5 16.5L21 21" stroke="rgba(255,255,255,0.7)" strokeWidth="2" strokeLinecap="round" />
@@ -90,33 +105,28 @@ export default function ResultsPage() {
             style={{ color: '#fff', caretColor: '#fff' }}
           />
           {search && (
-            <button onClick={() => handleSearchChange('')} style={{ color: 'rgba(255,255,255,0.5)' }}>
-              ✕
-            </button>
+            <button onClick={() => handleSearchChange('')} style={{ color: 'rgba(255,255,255,0.5)' }}>✕</button>
           )}
         </div>
 
         <div style={{ height: '12px' }} />
 
-        {/* Active filters row + toggle */}
+        {/* Active filters bar */}
         <div
           className="flex items-center gap-3 flex-wrap rounded-2xl"
           style={{ backgroundColor: 'rgba(173,43,11,0.1)', padding: '10px 16px' }}
         >
-          <span
-            className="font-bold uppercase tracking-wider flex-shrink-0"
-            style={{ fontSize: '16px', color: '#AD2B0B' }}
-          >
+          <span className="font-bold uppercase tracking-wider flex-shrink-0" style={{ fontSize: '16px', color: '#AD2B0B' }}>
             FILTER
           </span>
-          {date && (
+          {dateChip && (
             <span className="text-xs rounded-full" style={{ padding: '3px 12px', backgroundColor: '#FFE19D', color: '#6b3a00' }}>
-              {formatDisplayDate(date)}
+              {dateChip}
             </span>
           )}
-          {time && (
+          {timeChip && (
             <span className="text-xs rounded-full" style={{ padding: '3px 12px', backgroundColor: '#FFE19D', color: '#6b3a00' }}>
-              From {formatDisplayTime(time)}
+              {timeChip}
             </span>
           )}
           {pricePreference !== 'any' && (
@@ -141,111 +151,143 @@ export default function ResultsPage() {
 
         {/* Collapsible filter panel */}
         {showFilters && (
-          <div
-            className="rounded-3xl mt-3"
-            style={{ backgroundColor: '#AD2B0B', padding: '20px 20px' }}
-          >
-            <p
-              className="text-xs tracking-[0.2em] uppercase font-semibold"
-              style={{ color: 'rgba(255,255,255,0.5)' }}
-            >
-              FILTERS
-            </p>
+          <div className="rounded-3xl mt-3" style={{ backgroundColor: '#AD2B0B', padding: '24px' }}>
 
-            <div style={{ height: '16px' }} />
-
-            {/* Date */}
-            <div>
-              <div className="flex items-center gap-2">
+            {/* DATE */}
+            <p className="text-xs uppercase tracking-widest font-semibold" style={{ color: 'rgba(255,255,255,0.5)' }}>DATE</p>
+            <div style={{ height: '10px' }} />
+            <div className="flex items-end gap-3 flex-wrap">
+              <div className="flex flex-col gap-1">
+                <span className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>From</span>
                 <button
-                  onClick={() => { setShowDatePicker(!showDatePicker); setShowTimePicker(false); }}
+                  onClick={() => togglePicker('dateFrom')}
                   className="rounded-full text-sm font-medium transition-all hover:opacity-90"
-                  style={{ padding: '5px 20px', backgroundColor: '#FFE19D', color: '#6b3a00', minWidth: '140px' }}
+                  style={pickerBtnStyle(!!dateFrom)}
                 >
-                  {formatDisplayDate(date)}
+                  {dateFrom ? fmtDate(dateFrom) : 'Select day'}
                 </button>
-                {date && (
-                  <button
-                    onClick={() => { setDate(''); resetPage(); }}
-                    className="text-xs hover:opacity-70"
-                    style={{ color: 'rgba(255,255,255,0.5)' }}
-                  >
-                    ✕
-                  </button>
-                )}
               </div>
-              {showDatePicker && (
-                <div style={{ marginTop: '8px', marginLeft: '4px' }}>
-                  <input
-                    type="date"
-                    value={date}
-                    min={new Date().toISOString().split('T')[0]}
-                    onChange={e => { setDate(e.target.value); setShowDatePicker(false); resetPage(); }}
-                    className="rounded-xl px-4 py-2 text-sm outline-none border-0"
-                    style={{ backgroundColor: '#fff', color: '#333' }}
-                  />
-                </div>
+              <span style={{ color: 'rgba(255,255,255,0.3)', paddingBottom: '9px' }}>→</span>
+              <div className="flex flex-col gap-1">
+                <span className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>To (optional)</span>
+                <button
+                  onClick={() => togglePicker('dateTo')}
+                  className="rounded-full text-sm font-medium transition-all hover:opacity-90"
+                  style={pickerBtnStyle(!!dateTo)}
+                >
+                  {dateTo ? fmtDate(dateTo) : 'Select day'}
+                </button>
+              </div>
+              {(dateFrom || dateTo) && (
+                <button
+                  onClick={() => { setDateFrom(''); setDateTo(''); setActivePicker(null); resetPage(); }}
+                  className="text-xs hover:opacity-70 pb-2"
+                  style={{ color: 'rgba(255,255,255,0.45)' }}
+                >
+                  ✕ clear
+                </button>
               )}
             </div>
-
-            <div style={{ height: '12px' }} />
-
-            {/* Time */}
-            <div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => { setShowTimePicker(!showTimePicker); setShowDatePicker(false); }}
-                  className="rounded-full text-sm font-medium transition-all hover:opacity-90"
-                  style={{ padding: '5px 20px', backgroundColor: '#FFE19D', color: '#6b3a00', minWidth: '140px' }}
-                >
-                  {formatDisplayTime(time)}
-                </button>
-                {time && (
-                  <button
-                    onClick={() => { setTime(''); resetPage(); }}
-                    className="text-xs hover:opacity-70"
-                    style={{ color: 'rgba(255,255,255,0.5)' }}
-                  >
-                    ✕
-                  </button>
-                )}
+            {activePicker === 'dateFrom' && (
+              <div style={{ marginTop: '10px' }}>
+                <input
+                  type="date"
+                  value={dateFrom}
+                  min={today}
+                  onChange={e => { setDateFrom(e.target.value); setActivePicker(null); resetPage(); }}
+                  className="rounded-xl px-4 py-2 text-sm outline-none border-0"
+                  style={{ backgroundColor: '#fff', color: '#333' }}
+                />
               </div>
-              {showTimePicker && (
-                <div style={{ marginTop: '8px', marginLeft: '4px' }}>
-                  <input
-                    type="time"
-                    value={time}
-                    onChange={e => { setTime(e.target.value); setShowTimePicker(false); resetPage(); }}
-                    className="rounded-xl px-4 py-2 text-sm outline-none border-0"
-                    style={{ backgroundColor: '#fff', color: '#333' }}
-                  />
-                </div>
+            )}
+            {activePicker === 'dateTo' && (
+              <div style={{ marginTop: '10px' }}>
+                <input
+                  type="date"
+                  value={dateTo}
+                  min={dateFrom || today}
+                  onChange={e => { setDateTo(e.target.value); setActivePicker(null); resetPage(); }}
+                  className="rounded-xl px-4 py-2 text-sm outline-none border-0"
+                  style={{ backgroundColor: '#fff', color: '#333' }}
+                />
+              </div>
+            )}
+
+            <div style={{ height: '20px' }} />
+
+            {/* TIME */}
+            <p className="text-xs uppercase tracking-widest font-semibold" style={{ color: 'rgba(255,255,255,0.5)' }}>TIME</p>
+            <div style={{ height: '10px' }} />
+            <div className="flex items-end gap-3 flex-wrap">
+              <div className="flex flex-col gap-1">
+                <span className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>From</span>
+                <button
+                  onClick={() => togglePicker('timeFrom')}
+                  className="rounded-full text-sm font-medium transition-all hover:opacity-90"
+                  style={pickerBtnStyle(!!timeFrom)}
+                >
+                  {timeFrom ? fmtTime(timeFrom) : 'Start time'}
+                </button>
+              </div>
+              <span style={{ color: 'rgba(255,255,255,0.3)', paddingBottom: '9px' }}>→</span>
+              <div className="flex flex-col gap-1">
+                <span className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>To</span>
+                <button
+                  onClick={() => togglePicker('timeTo')}
+                  className="rounded-full text-sm font-medium transition-all hover:opacity-90"
+                  style={pickerBtnStyle(!!timeTo)}
+                >
+                  {timeTo ? fmtTime(timeTo) : 'End time'}
+                </button>
+              </div>
+              {(timeFrom || timeTo) && (
+                <button
+                  onClick={() => { setTimeFrom(''); setTimeTo(''); setActivePicker(null); resetPage(); }}
+                  className="text-xs hover:opacity-70 pb-2"
+                  style={{ color: 'rgba(255,255,255,0.45)' }}
+                >
+                  ✕ clear
+                </button>
               )}
             </div>
+            {activePicker === 'timeFrom' && (
+              <div style={{ marginTop: '10px' }}>
+                <input
+                  type="time"
+                  value={timeFrom}
+                  onChange={e => { setTimeFrom(e.target.value); setActivePicker(null); resetPage(); }}
+                  className="rounded-xl px-4 py-2 text-sm outline-none border-0"
+                  style={{ backgroundColor: '#fff', color: '#333' }}
+                />
+              </div>
+            )}
+            {activePicker === 'timeTo' && (
+              <div style={{ marginTop: '10px' }}>
+                <input
+                  type="time"
+                  value={timeTo}
+                  onChange={e => { setTimeTo(e.target.value); setActivePicker(null); resetPage(); }}
+                  className="rounded-xl px-4 py-2 text-sm outline-none border-0"
+                  style={{ backgroundColor: '#fff', color: '#333' }}
+                />
+              </div>
+            )}
 
-            <div style={{ height: '16px' }} />
+            <div style={{ height: '20px' }} />
 
-            {/* Price */}
-            <p
-              className="text-xs uppercase tracking-wider font-medium"
-              style={{ color: 'rgba(255,255,255,0.5)', marginBottom: '8px' }}
-            >
-              PRICE
-            </p>
-            <div
-              className="rounded-2xl overflow-hidden"
-              style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}
-            >
+            {/* PRICE */}
+            <p className="text-xs uppercase tracking-widest font-semibold" style={{ color: 'rgba(255,255,255,0.5)', marginBottom: '10px' }}>PRICE</p>
+            <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}>
               {PRICE_OPTIONS.map((opt, i) => (
                 <button
                   key={opt.value}
                   onClick={() => { setPricePreference(opt.value); resetPage(); }}
                   className="w-full text-left text-sm flex items-center justify-between transition-colors duration-150 hover:opacity-90"
                   style={{
-                    padding: '8px 20px',
+                    padding: '10px 20px',
                     backgroundColor: pricePreference === opt.value ? 'rgba(240,66,81,0.35)' : 'transparent',
-                    color: 'rgba(255,255,255,0.85)',
-                    borderBottom: i < PRICE_OPTIONS.length - 1 ? '1px solid rgba(255,255,255,0.15)' : 'none',
+                    color: 'rgba(255,255,255,0.9)',
+                    borderBottom: i < PRICE_OPTIONS.length - 1 ? '1px solid rgba(255,255,255,0.12)' : 'none',
                   }}
                 >
                   <span>{opt.label}</span>
@@ -254,14 +296,19 @@ export default function ResultsPage() {
               ))}
             </div>
 
-            {/* Clear all */}
-            {(date || time || pricePreference !== 'any') && (
+            {(dateFrom || dateTo || timeFrom || timeTo || pricePreference !== 'any') && (
               <>
                 <div style={{ height: '16px' }} />
                 <button
-                  onClick={() => { setDate(''); setTime(''); setPricePreference('any'); resetPage(); }}
+                  onClick={() => {
+                    setDateFrom(''); setDateTo('');
+                    setTimeFrom(''); setTimeTo('');
+                    setPricePreference('any');
+                    setActivePicker(null);
+                    resetPage();
+                  }}
                   className="text-xs hover:opacity-70 transition-opacity"
-                  style={{ color: 'rgba(255,255,255,0.5)' }}
+                  style={{ color: 'rgba(255,255,255,0.45)' }}
                 >
                   Clear all filters
                 </button>
@@ -272,7 +319,6 @@ export default function ResultsPage() {
 
         <div style={{ height: '8px' }} />
 
-        {/* Results count */}
         <p className="text-xs" style={{ color: '#999', paddingLeft: '4px' }}>
           {allEvents.length} event{allEvents.length !== 1 ? 's' : ''} found
           {preferences ? ' · sorted by relevance' : ''}
@@ -281,20 +327,13 @@ export default function ResultsPage() {
 
         <div style={{ height: '16px' }} />
 
-        {/* Event grid */}
         {pageEvents.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {pageEvents.map(event => (
-                <EventCard
-                  key={event.id}
-                  event={event}
-                  onClick={() => setSelectedEvent(event)}
-                />
+                <EventCard key={event.id} event={event} onClick={() => setSelectedEvent(event)} />
               ))}
             </div>
-
-            {/* Pagination */}
             {totalPages > 1 && (
               <>
                 <div style={{ height: '24px' }} />
@@ -304,77 +343,50 @@ export default function ResultsPage() {
                     disabled={page === 0}
                     className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:opacity-80 disabled:opacity-30 disabled:cursor-not-allowed"
                     style={{ backgroundColor: '#AD2B0B', color: '#fff' }}
-                  >
-                    ←
-                  </button>
-
+                  >←</button>
                   {Array.from({ length: totalPages }, (_, i) => i).map(i => (
                     <button
                       key={i}
                       onClick={() => setPage(i)}
                       className="w-8 h-8 rounded-full text-xs font-semibold transition-all hover:opacity-80"
-                      style={{
-                        backgroundColor: i === page ? '#F04251' : 'rgba(173,43,11,0.15)',
-                        color: i === page ? '#fff' : '#AD2B0B',
-                      }}
-                    >
-                      {i + 1}
-                    </button>
+                      style={{ backgroundColor: i === page ? '#F04251' : 'rgba(173,43,11,0.15)', color: i === page ? '#fff' : '#AD2B0B' }}
+                    >{i + 1}</button>
                   ))}
-
                   <button
                     onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                     disabled={page === totalPages - 1}
                     className="w-9 h-9 rounded-full flex items-center justify-center transition-all hover:opacity-80 disabled:opacity-30 disabled:cursor-not-allowed"
                     style={{ backgroundColor: '#AD2B0B', color: '#fff' }}
-                  >
-                    →
-                  </button>
+                  >→</button>
                 </div>
               </>
             )}
           </>
         ) : (
-          <div
-            className="rounded-3xl text-center"
-            style={{ backgroundColor: '#AD2B0B', padding: '40px 24px' }}
-          >
-            <p className="text-lg font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>
-              No events found
-            </p>
+          <div className="rounded-3xl text-center" style={{ backgroundColor: '#AD2B0B', padding: '40px 24px' }}>
+            <p className="text-lg font-semibold" style={{ color: 'rgba(255,255,255,0.85)' }}>No events found</p>
             <div style={{ height: '10px' }} />
-            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
-              Try adjusting your filters or search term
-            </p>
+            <p className="text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>Try adjusting your filters or search term</p>
             <div style={{ height: '24px' }} />
             <button
               onClick={() => setShowFilters(true)}
               className="rounded-full text-sm font-semibold"
               style={{ padding: '5px 20px', backgroundColor: '#F04251', color: '#fff' }}
-            >
-              Adjust Filters
-            </button>
+            >Adjust Filters</button>
           </div>
         )}
 
         <div style={{ height: '24px' }} />
-
         <button
           onClick={() => navigate('/')}
           className="text-xs text-center hover:opacity-70 transition-opacity"
           style={{ color: '#ffc0b0' }}
-        >
-          ← Start over
-        </button>
-
+        >← Start over</button>
         <div style={{ height: '16px' }} />
       </div>
 
       {selectedEvent && (
-        <EventDetail
-          event={selectedEvent}
-          onClose={() => setSelectedEvent(null)}
-        />
+        <EventDetail event={selectedEvent} onClose={() => setSelectedEvent(null)} />
       )}
     </div>
   );
