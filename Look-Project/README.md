@@ -10,6 +10,13 @@ We recognize that NYC is vast and diverse. It's not just Manhattan. Brooklyn, Br
 - **Project Overview:** Explain the app's mission and goals to engage users.
 - **Community Promotion:** Highlight and promote local communities and events across all boroughs.
 
+### V1 - Frontend Design - Download results
+
+**Plan Idea:**  
+
+- **New download button:** Get the results and save in own device.
+- **Dsiplay same data result:** differenciate the event/local business services.
+
 
 ### V2 - Backend design (upcoming)
 Plan idea:
