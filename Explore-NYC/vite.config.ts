@@ -11,8 +11,14 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] })
   ],
   server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
     fs: {
-      allow: ['..'],   // allow serving files one level above project root (default-data/)
+      allow: ['..'],
     },
   },
 })
