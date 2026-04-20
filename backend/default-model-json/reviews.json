@@ -1,0 +1,68 @@
+[
+  {
+    "name-event": "Brooklyn Night Market Pop-Up",
+    "comments": "Amazing vibes, great food variety and live music!",
+    "link-post-comment": "https://instagram.com/post/market-review-1",
+    "company-hosted": "Brooklyn Night Market"
+  },
+  {
+    "name-event": "NYC Tech Startup Networking Meetup",
+    "comments": "Met a lot of founders and got valuable connections.",
+    "link-post-comment": "https://linkedin.com/post/tech-meetup-review",
+    "company-hosted": "NYC Tech Collective"
+  },
+  {
+    "name-event": "Central Park Morning Yoga",
+    "comments": "Very relaxing and beginner-friendly session.",
+    "link-post-comment": "https://instagram.com/post/yoga-nyc",
+    "company-hosted": "NYC Wellness Group"
+  },
+  {
+    "name-event": "NYC Half Marathon",
+    "comments": "Challenging but well-organized race!",
+    "link-post-comment": "https://twitter.com/post/nyc-marathon",
+    "company-hosted": "New York Road Runners"
+  },
+  {
+    "name-event": "SoHo Fashion Pop-Up Shop",
+    "comments": "Loved the unique designs and streetwear brands.",
+    "link-post-comment": "https://instagram.com/post/soho-fashion",
+    "company-hosted": "SoHo Creative Studios"
+  },
+  {
+    "name-event": "Columbia AI Research Seminar",
+    "comments": "Very insightful talks on AI trends and research.",
+    "link-post-comment": "https://linkedin.com/post/ai-seminar",
+    "company-hosted": "Columbia University"
+  },
+  {
+    "name-event": "Queens Night Food Truck Festival",
+    "comments": "So many food options, great for families!",
+    "link-post-comment": "https://instagram.com/post/queens-food",
+    "company-hosted": "Queens Night Market"
+  },
+  {
+    "name-event": "Women in Business Leadership Panel",
+    "comments": "Inspiring speakers and great networking opportunity.",
+    "link-post-comment": "https://linkedin.com/post/women-leaders",
+    "company-hosted": "NYC Women Leaders Network"
+  },
+  {
+    "name-event": "Brooklyn Indie Game Night",
+    "comments": "Fun event, discovered some awesome indie games.",
+    "link-post-comment": "https://twitter.com/post/game-night",
+    "company-hosted": "Indie Dev NYC"
+  },
+  {
+    "name-event": "Bronx Small Business Workshop",
+    "comments": "Helpful tips for marketing and growth strategies.",
+    "link-post-comment": "https://facebook.com/post/bronx-workshop",
+    "company-hosted": "Bronx Business Alliance"
+  },
+  {
+    "name-event": "Riverside Wellness Studio Sound Bath",
+    "comments": "The sound bath was deeply restorative and the studio felt peaceful. I left feeling refreshed and more centered.",
+    "link-post-comment": "https://instagram.com/post/riverside-soundbath",
+    "company-hosted": "Riverside Wellness Studio"
+  }
+]

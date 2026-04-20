@@ -1,3 +1,8 @@
+// ⚠️ STATIC FALLBACK — using hardcoded JSON, NOT the backend or Apify
+// TODO: Replace this import with a real API call, e.g.:
+//   const rawData = await fetch('/api/events').then(r => r.json());
+// Once the Apify pipeline (backend/pipeline/run.js) pushes data to Firestore,
+// the backend route GET /api/events will serve live data instead.
 import rawData from '../../../default-data/events.json';
 import type { Event } from '../types';
 

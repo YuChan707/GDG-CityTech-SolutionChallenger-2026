@@ -1,106 +1,43 @@
 # Explore NYC
 
-**Explore NYC** is a web application that helps users discover local events, pop-ups, and hidden gems in New York City, tailored to their personal preferences through a short questionnaire and an AI-powered recommendation system.
+**Explore NYC** is a web application that helps users discover local events, pop-ups, and hidden gems in New York City — tailored to personal preferences through a short questionnaire and an AI-powered recommendation engine.
 
-## About the Project
+Built for the **GDG CityTech Solution Challenger 2026**.
 
-Built for the **GDG CityTech Solution Challenger 2026**, Explore NYC targets:
+---
 
-- Tourists visiting New York City
-- Locals looking for something fun to do
-- Groups of friends planning an outing
+## What it does
 
-### Features
+1. Users answer 4 quick questions — vibe, group type, interests, and budget.
+2. The app scores and ranks NYC events by relevance.
+3. Users browse results, view event details, and get links to attend.
 
-- **Personalized Recommendations**: AI-driven suggestions based on user preferences
-- **Local Focus**: Highlights events and businesses across all NYC boroughs (Manhattan, Brooklyn, Bronx, Queens, Staten Island)
-- **Interactive Questionnaire**: Quick survey to match users with ideal experiences
-- **Event Discovery**: Browse pop-ups, festivals, workshops, and more
-- **Business Directory**: Explore local cafes, studios, markets, and services
+---
 
-### Tech Stack
+## Repository Structure
 
-| Layer      | Technology              |
-|------------|-------------------------|
-| Frontend  | React 19 + TypeScript + Vite |
-| Styling   | TailwindCSS v4          |
-| Routing   | React Router v6         |
-| Backend   | Node.js + Express       |
-| Database  | Firestore               |
-| AI        | Vertex AI / Gemini      |
-| Analytics | BigQuery                |
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js (v18 or higher)
-- npm or yarn
-
-### Installation
-
-#### Windows
-
-##### Frontend
-
-```bash
-cd "c:\Users\[your account]\GDG-CityTech-SolutionChallenger-2026\Explore-NYC"
-npm install
-npm run dev
+```
+├── Explore-NYC/     ← React + TypeScript frontend (Vite)
+├── backend/         ← Node.js + Express API (Firestore)
+└── default-data/    ← Sample JSON data used for seeding
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+## Running the project
 
-##### Backend
+Each service has its own setup guide:
 
-```bash
-cd "c:\Users\[your account]\GDG-CityTech-SolutionChallenger-2026\backend"
-npm install
-npm start
-```
+- **Frontend** → [`Explore-NYC/README.md`](Explore-NYC/README.md)
+- **Backend** → [`backend/Readme.md`](backend/Readme.md)
 
-API runs on [http://localhost:3001](http://localhost:3001).
+Start the backend first, then the frontend.
 
-#### macOS
+---
 
-##### Frontend
+## Team
 
-```bash
-cd "/Users/[your account]/GDG-CityTech-SolutionChallenger-2026/Explore-NYC"
-npm install
-npm run dev
-```
-
-Open [http://localhost:5173](http://localhost:5173) in your browser.
-
-##### Backend (still working)
-
-```bash
-cd "/Users/[your account]/GDG-CityTech-SolutionChallenger-2026/backend"
-npm install
-npm start
-```
-
-API runs on [http://localhost:3001](http://localhost:3001).
-
-## Google Cloud Integration (Coming Soon)
-
-The following placeholders are ready in the code. Add your project credentials to activate them:
-
-- **Firestore**: Store events and user preferences (`backend/server.js`)
-- **Vertex AI**: AI-powered event recommendations (`backend/routes/recommendations.js`)
-- **BigQuery**: Analytics and trend detection (`backend/server.js`)
-
-## Data
-
-The `default-data` folder contains fake data for testing the frontend. Replace with real data when integrating with Firestore.
-
-## Contributing
-
-Team members:
 - Taimor
 - Catherine
 
 ## License
 
-This project is licensed under the MIT License.
+MIT

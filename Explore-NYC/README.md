@@ -1,51 +1,82 @@
-# Explore NYC
+# Explore NYC — Frontend
 
-**Explore NYC** is a web application that helps users discover local events, pop-ups, and hidden gems in New York City — tailored to their personal preferences through a short questionnaire and an AI-powered recommendation system.
+React + TypeScript frontend for the Explore NYC application. Presents a guided questionnaire, filters, and a ranked event results grid.
 
-## About the Project
+---
 
-Built for the **GDG CityTech Solution Challenger 2026**, Explore NYC targets:
+## Tech Stack
 
-- Tourists visiting New York City
-- Locals looking for something fun to do
-- Groups of friends planning an outing
+| Layer | Technology |
+|---|---|
+| Framework | React 19 + TypeScript |
+| Build tool | Vite |
+| Styling | TailwindCSS v4 |
+| Routing | React Router v7 |
+| PDF export | jsPDF |
 
-### How it works
+---
 
-1. **Questionnaire** - Users answer 4 short questions about their vibe, group type, interests, and budget.
-2. **Filter** - Optionally filter results by date and time.
-3. **Results** - Events are scored and ranked by relevance using a recommendation engine, then displayed in a browsable card grid.
-4. **Event Detail** - Tap any card to see full details, set a reminder, or visit the event link.
-
-
-### Project Structure
+## Project Structure
 
 ```
-Explore-NYC/          ← Frontend (React + Vite)
-  src/
-    home/             ← Start screen
-    questionary/      ← 4-step questionnaire flow
-    filter/           ← Date & time filter screen
-    results/          ← Event results grid
-    components/       ← EventCard, EventDetail (modal)
-    data/             ← Mock event dataset (10 events)
-    utils/            ← Recommendation scoring logic
-    types/            ← TypeScript interfaces
-
-backend/              ← Backend (Node.js + Express)
-  routes/
-    events.js         ← GET /api/events
-    recommendations.js← POST /api/recommendations (Vertex AI placeholder)
-  data/
-    events.json       ← Sample event dataset
+Explore-NYC/
+├── public/
+└── src/
+    ├── home/            ← Start screen
+    ├── questionary/     ← 4-step questionnaire flow
+    ├── filter/          ← Date & time filter screen
+    ├── results/         ← Event results grid
+    ├── components/      ← EventCard, EventDetail modal
+    ├── data/            ← Local mock event dataset
+    ├── utils/           ← Recommendation scoring logic
+    └── types/           ← TypeScript interfaces
 ```
+
+---
+
+## Prerequisites
+
+- **Node.js** v18 or higher — [nodejs.org](https://nodejs.org)
+- **Backend running** on `http://localhost:3001` — see [`backend/Readme.md`](../backend/Readme.md)
+
+---
+
+## Setup & Run
+
+### 1. Install dependencies
+
+```bash
+cd Explore-NYC
+npm install
+```
+
+### 2. Start the development server
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+> The backend must be running first. See [`backend/Readme.md`](../backend/Readme.md) for setup.
+
+---
+
+## Available Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start dev server with hot reload at `http://localhost:5173` |
+| `npm run build` | Type-check and build for production (output: `dist/`) |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint across all source files |
 
 ---
 
 ## Color Scheme
 
 | Token | Hex | Usage |
-|-------|-----|-------|
+|---|---|---|
 | Primary | `#AD2B0B` | Backgrounds, cards |
 | Accent | `#F04251` | Buttons, highlights |
 | Card Light | `#65CDB6` | Event cards (even) |
