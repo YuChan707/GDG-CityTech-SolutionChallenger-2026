@@ -78,12 +78,43 @@ async function seedBusinesses() {
   console.log(`  → ${businesses.length} businesses written.`);
 }
 
+// ── Seed education profiles ───────────────────────────────────────────────────
+
+async function seedEducation() {
+  const orgs = JSON.parse(readFileSync(join(dataDir, 'Professional-Education.json'), 'utf-8'));
+  console.log(`\nSeeding ${orgs.length} education profiles…`);
+  const batch = db.batch();
+
+  for (const [i, o] of orgs.entries()) {
+    const name = o['Organization-name'] ?? 'org';
+    const id   = `${name.toLowerCase().replaceAll(/\s+/g, '-').replaceAll(/[^a-z0-9-]/g, '')}`;
+
+    batch.set(db.collection('education').doc(id), {
+      id:               String(i + 1),
+      type:             o.type ?? 'event',         // 'event' | 'job'
+      name,
+      focusArea:        o['Focus-Area']                  ?? '',
+      requirement:      o['User-requirement']            ?? '',
+      services:         (o['Program-services'] ?? '').split(',').map(s => s.trim()),
+      otherCategory:    o['Other category']              ?? '',
+      registrationLink: o['link-registration-program']  ?? null,
+      dueDate:          o['due-date-register-program']   ?? null,
+    }, { merge: true });
+
+    console.log(`  ✓ [${o.type}] "${name}"  ${o['Focus-Area'] ?? ''}`);
+  }
+
+  await batch.commit();
+  console.log(`  → ${orgs.length} education profiles written.`);
+}
+
 // ── Run ───────────────────────────────────────────────────────────────────────
 
 try {
   await seedEvents();
   await seedBusinesses();
-  console.log('\n✅ Seed complete — Firestore now has events + businesses.');
+  await seedEducation();
+  console.log('\n✅ Seed complete — Firestore now has events + businesses + education.');
 } catch (err) {
   console.error('\n❌ Seed failed:', err.message);
   process.exit(1);

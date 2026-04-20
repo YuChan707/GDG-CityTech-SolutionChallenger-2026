@@ -15,13 +15,26 @@ export default function Header() {
     }
   }
 
-  const homeActive = ['/', '/questionnaire', '/results'].includes(location.pathname);
+  function handleEducation() {
+    const isDone = sessionStorage.getItem('educationDone') === 'true';
+    if (isDone) {
+      const raw = sessionStorage.getItem('lastEducationPrefs');
+      const prefs = raw ? JSON.parse(raw) : undefined;
+      navigate('/education/results', { state: { preferences: prefs } });
+    } else {
+      navigate('/education/questionnaire');
+    }
+  }
+
+  const homeActive      = ['/', '/questionnaire', '/results'].includes(location.pathname);
+  const educationActive = location.pathname.startsWith('/education');
 
   const navItems = [
-    { label: 'Home page',           onClick: handleHome,                       active: homeActive },
-    { label: 'About the project',   onClick: () => navigate('/about'),          active: location.pathname === '/about' },
-    { label: 'Review people',       onClick: () => navigate('/reviews'),        active: location.pathname === '/reviews' },
-    { label: 'Submit request',      onClick: () => navigate('/submit'),         active: location.pathname === '/submit' },
+    { label: 'Home page',         onClick: handleHome,                      active: homeActive,      blue: false },
+    { label: 'About the project', onClick: () => navigate('/about'),         active: location.pathname === '/about',    blue: false },
+    { label: 'Review people',     onClick: () => navigate('/reviews'),       active: location.pathname === '/reviews',  blue: false },
+    { label: 'Submit request',    onClick: () => navigate('/submit'),        active: location.pathname === '/submit',   blue: false },
+    { label: 'High Education',    onClick: handleEducation,                  active: educationActive, blue: true  },
   ];
 
   return (
@@ -54,20 +67,27 @@ export default function Header() {
         className="flex items-center justify-center flex-wrap"
         style={{ gap: '8px', padding: '8px 20px 12px' }}
       >
-        {navItems.map(item => (
-          <button
-            key={item.label}
-            onClick={item.onClick}
-            className="rounded-full text-xs font-medium tracking-wide transition-all duration-150 hover:opacity-80 active:scale-95"
-            style={{
-              padding: '5px 16px',
-              backgroundColor: item.active ? '#F04251' : 'rgba(255,255,255,0.18)',
-              color: item.active ? '#fff' : 'rgba(255,255,255,0.8)',
-            }}
-          >
-            {item.label}
-          </button>
-        ))}
+        {navItems.map(item => {
+          let bg: string;
+          if (item.blue) bg = item.active ? '#2563eb' : 'rgba(74,158,224,0.35)';
+          else bg = item.active ? '#F04251' : 'rgba(255,255,255,0.18)';
+
+          return (
+            <button
+              key={item.label}
+              onClick={item.onClick}
+              className="rounded-full text-xs font-medium tracking-wide transition-all duration-150 hover:opacity-80 active:scale-95"
+              style={{
+                padding: '5px 16px',
+                backgroundColor: bg,
+                color: '#fff',
+                border: item.blue && !item.active ? '1px solid rgba(74,158,224,0.5)' : 'none',
+              }}
+            >
+              {item.label}
+            </button>
+          );
+        })}
       </nav>
 
     </header>

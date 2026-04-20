@@ -2,11 +2,12 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import eventsRouter       from "./routes/events.js";
-import businessesRouter   from "./routes/businesses.js";
+import eventsRouter          from "./routes/events.js";
+import businessesRouter      from "./routes/businesses.js";
 import recommendationsRouter from "./routes/recommendations.js";
-import dailyPickRouter from "./routes/daily-pick.js";
-import pipelineRouter from "./routes/pipeline.js";
+import dailyPickRouter       from "./routes/daily-pick.js";
+import pipelineRouter        from "./routes/pipeline.js";
+import educationRouter       from "./routes/education.js";
 import './jobs/scheduler.js'; 
 import { runStartupChecks } from "./services/startup-check.service.js";
 import { globalLimiter, recommendationsLimiter } from "./config/rateLimiter.js";
@@ -25,7 +26,8 @@ app.use("/api/events",     eventsRouter);
 app.use("/api/businesses", businessesRouter);
 app.use("/api/recommendations", recommendationsLimiter, recommendationsRouter);
 app.use("/api/daily-pick", dailyPickRouter);
-app.use("/api/pipeline", pipelineRouter);
+app.use("/api/pipeline",   pipelineRouter);
+app.use("/api/education",  educationRouter);
 
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", service: "Explore NYC API" });
