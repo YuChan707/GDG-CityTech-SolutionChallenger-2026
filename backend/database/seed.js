@@ -1,51 +1,90 @@
-/**
- * Seed script — uploads backend/data/events.json into Firestore.
- *
- * Usage:
- *   node backend/database/seed.js
- *   npm run seed          (from backend/ directory)
- *
- * Safe to re-run: uses { merge: true } so existing docs are updated, not duplicated.
- */
+// Seed script — uploads default-data/ events + businesses into Firestore.
+// Run from backend/: npm run seed
 
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 import { db } from './firestore.js';
-import { EVENT_COLLECTION, validateEvent } from './schemas/event.schema.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+// Source files live two levels up at project root / default-data/
+const dataDir = join(__dirname, '../../default-data');
+
+// ── Seed events ───────────────────────────────────────────────────────────────
 
 async function seedEvents() {
-  const raw = readFileSync(join(__dirname, '../data/events.json'), 'utf-8');
-  const events = JSON.parse(raw);
-
-  console.log(`Seeding ${events.length} events into Firestore collection "${EVENT_COLLECTION}"...`);
-
+  const events = JSON.parse(readFileSync(join(dataDir, 'events.json'), 'utf-8'));
+  console.log(`\nSeeding ${events.length} events…`);
   const batch = db.batch();
 
-  for (const event of events) {
-    try {
-      validateEvent(event);
-    } catch (err) {
-      console.warn(`  Skipping "${event.name || event.id}": ${err.message}`);
-      continue;
-    }
+  for (const e of events) {
+    const name = e['name-event'] ?? e.name ?? 'event';
+    const date = e['date-event'] ?? e.date ?? '';
+    const id   = `${name.toLowerCase().replaceAll(/\s+/g, '-').replaceAll(/[^a-z0-9-]/g, '')}-${date}`;
 
-    const docRef = db.collection(EVENT_COLLECTION).doc(String(event.id));
-    batch.set(docRef, {
-      ...event,
-      created_at: Date.now(),
+    batch.set(db.collection('events').doc(id), {
+      title:          name,
+      description:    e['description-event'] ?? e.description ?? '',
+      date,
+      time:           e['time-event']     ?? e.time     ?? '',
+      location:       e.location          ?? e['location-event'] ?? '',
+      category:       e['category-event'] ?? e.category ?? 'other',
+      focus:          e['focus-event']    ?? '',
+      is_free:        e['is-free']        ?? e.is_free  ?? false,
+      min_price:      e['min-price']      ?? null,
+      max_price:      e['max-price']      ?? null,
+      tags:           e.tags              ?? [],
+      link:           e['link-event']     ?? e.link ?? '',
+      hosted_by:      e['company-hosted'] ?? '',
+      is_legitimate:  true,
+      gemini_checked: false,
     }, { merge: true });
 
-    console.log(`  Queued: [${event.id}] ${event.name}`);
+    console.log(`  ✓ "${name}"  ${date}`);
   }
 
   await batch.commit();
-  console.log('\nSeed complete.');
+  console.log(`  → ${events.length} events written.`);
 }
 
-seedEvents().catch(err => {
-  console.error('Seed failed:', err);
+// ── Seed businesses ───────────────────────────────────────────────────────────
+
+async function seedBusinesses() {
+  const businesses = JSON.parse(readFileSync(join(dataDir, 'local-business.json'), 'utf-8'));
+  console.log(`\nSeeding ${businesses.length} businesses…`);
+  const batch = db.batch();
+
+  for (const b of businesses) {
+    const name = b['name-business'] ?? b.name ?? 'business';
+    const id   = name.toLowerCase().replaceAll(/\s+/g, '-').replaceAll(/[^a-z0-9-]/g, '');
+
+    batch.set(db.collection('businesses').doc(id), {
+      name,
+      description:  b.description  ?? '',
+      hours:        b['hours-business']    ?? b.hours    ?? '',
+      location:     b.location             ?? '',
+      category:     b['category-business'] ?? b.category ?? 'other',
+      focus:        b['focus-business']    ?? '',
+      link:         b.link                 ?? '',
+      owner_labels: b['owner-labels']      ?? '',
+      is_active:    b.is_active            ?? true,
+      last_checked: null,
+    }, { merge: true });
+
+    console.log(`  ✓ "${name}"  ${b.location ?? ''}`);
+  }
+
+  await batch.commit();
+  console.log(`  → ${businesses.length} businesses written.`);
+}
+
+// ── Run ───────────────────────────────────────────────────────────────────────
+
+try {
+  await seedEvents();
+  await seedBusinesses();
+  console.log('\n✅ Seed complete — Firestore now has events + businesses.');
+} catch (err) {
+  console.error('\n❌ Seed failed:', err.message);
   process.exit(1);
-});
+}

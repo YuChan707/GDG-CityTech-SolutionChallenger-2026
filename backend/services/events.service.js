@@ -46,7 +46,9 @@ export async function queryEvents(filters = {}) {
   if (eqCount === 1) ref = applyFirestoreEqFilter(ref, { category, is_free, date });
 
   const snapshot = await ref.get();
-  let events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  let events = snapshot.docs
+    .map(doc => ({ id: doc.id, ...doc.data() }))
+    .filter(e => e.is_legitimate !== false); // hide Gemini-flagged events
 
   // When one equality filter was pushed to Firestore, strip it from memory filters to avoid double-filtering.
   const memoryFilters = eqCount === 1
