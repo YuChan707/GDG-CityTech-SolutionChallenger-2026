@@ -1,106 +1,214 @@
 # Explore NYC
 
-**Explore NYC** is a web application that helps users discover local events, pop-ups, and hidden gems in New York City, tailored to their personal preferences through a short questionnaire and an AI-powered recommendation system.
+> AI-powered event & opportunity discovery for New York City  
+> Built for **GDG CityTech Solution Challenger 2026**
 
-## About the Project
+**Explore NYC** is a full-stack web application that helps users discover local events, pop-ups, hidden gems, and professional opportunities in New York City. Users answer a short questionnaire and an AI-powered pipeline finds, validates, and ranks the best matches — in real time.
 
-Built for the **GDG CityTech Solution Challenger 2026**, Explore NYC targets:
+---
 
-- Tourists visiting New York City
-- Locals looking for something fun to do
-- Groups of friends planning an outing
+## Repository Structure
 
-### Features
+```
+GDG-CityTech-SolutionChallenger-2026/
+├── Explore-NYC/        ← React 19 + TypeScript frontend (Vite + TailwindCSS)
+├── backend/            ← Node.js + Express API (Firestore + Gemini + Apify)
+├── default-data/       ← JSON seed data for Firestore collections
+└── ARCHITECTURE.md     ← Full system architecture & mermaid diagrams
+```
 
-- **Personalized Recommendations**: AI-driven suggestions based on user preferences
-- **Local Focus**: Highlights events and businesses across all NYC boroughs (Manhattan, Brooklyn, Bronx, Queens, Staten Island)
-- **Interactive Questionnaire**: Quick survey to match users with ideal experiences
-- **Event Discovery**: Browse pop-ups, festivals, workshops, and more
-- **Business Directory**: Explore local cafes, studios, markets, and services
+Each service has its own setup guide:
 
-### Tech Stack
+- **Frontend** → [`Explore-NYC/README.md`](Explore-NYC/README.md)
+- **Backend** → [`backend/Readme.md`](backend/Readme.md)
+- **Seed Data** → [`default-data/README.md`](default-data/README.md)
 
-| Layer      | Technology              |
-|------------|-------------------------|
-| Frontend  | React 19 + TypeScript + Vite |
-| Styling   | TailwindCSS v4          |
-| Routing   | React Router v6         |
-| Backend   | Node.js + Express       |
-| Database  | Firestore               |
-| AI        | Vertex AI / Gemini      |
-| Analytics | BigQuery                |
+Start the backend first, then the frontend.
 
-## Getting Started
+---
+
+## System Overview
+
+```mermaid
+graph TB
+    subgraph Client["Frontend — React 19 + TypeScript"]
+        A[StartScreen] --> B[Questionnaire\n5-step form]
+        B --> C[ResultsPage\n8-per-page grid]
+        B --> D[EducationQuestionnaire\n5-step form]
+        D --> E[EducationResults\nOrg cards]
+        C --> F[EventDetail Modal]
+        C --> G[PDF Export]
+        E --> G
+    end
+
+    subgraph API["Backend — Express 4 on :3001"]
+        H[/api/events]
+        I[/api/businesses]
+        J[POST /api/recommendations]
+        K[POST /api/pipeline/trigger]
+        L[/api/daily-pick]
+        M[/api/education]
+        N[/api/health]
+    end
+
+    subgraph Pipeline["Data Pipeline"]
+        O[demand-pipeline.service\nuser-triggered, fire-and-forget]
+        P[pipeline.service\ncron every 6 hours]
+        Q[daily-pick.service\ncached once per day]
+    end
+
+    subgraph External["External Services"]
+        R[Google Gemini 2.0 Flash\nAI validation & ranking]
+        S[Apify\nGoogle Search · Maps · Instagram]
+        T[Google Firestore\nNoSQL database]
+    end
+
+    B -- "POST /api/pipeline/trigger\n(fire & forget)" --> K
+    C -- GET --> H
+    C -- GET --> I
+    C -- POST --> J
+    D -- POST --> M
+    A -- GET --> L
+
+    K --> O
+    P --> P
+    L --> Q
+
+    O --> S
+    O --> R
+    P --> S
+    P --> R
+    Q --> S
+    Q --> R
+
+    O --> T
+    P --> T
+    Q --> T
+    H --> T
+    I --> T
+    J --> T
+    M --> T
+```
+
+---
+
+## Two Modes
+
+### NYC Explorer
+Users discover events and local businesses matched to their vibe, group type, interests, and budget. A background AI pipeline enriches results after submission.
+
+### High Education
+Users (high school, college, career changers) discover professional programs, events, and job opportunities matched to their focus area and experience level.
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, TypeScript, Vite, TailwindCSS v4 |
+| Routing | React Router v7 |
+| Backend | Node.js 18+, Express 4, ESM modules |
+| Database | Google Firestore (Firebase Free Tier) |
+| AI | Google Gemini 2.0 Flash |
+| Scraping | Apify (Google Search, Google Maps, Instagram) |
+| Maps | @vis.gl/react-google-maps |
+| PDF Export | jsPDF |
+| Cron | node-cron |
+| Security | Helmet, express-rate-limit, CORS allowlist |
+
+---
+
+## Quick Start
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- npm or yarn
+- Node.js 18+
+- Firebase project with Firestore enabled
+- Firebase Admin SDK service account JSON
+- Gemini API key
+- Apify token
 
-### Installation
-
-#### Windows
-
-##### Frontend
-
-```bash
-cd "c:\Users\[your account]\GDG-CityTech-SolutionChallenger-2026\Explore-NYC"
-npm install
-npm run dev
-```
-
-Open [http://localhost:5173](http://localhost:5173) in your browser.
-
-##### Backend
+### 1. Clone & configure
 
 ```bash
-cd "c:\Users\[your account]\GDG-CityTech-SolutionChallenger-2026\backend"
-npm install
-npm start
+git clone <repo-url>
+cd GDG-CityTech-SolutionChallenger-2026
 ```
 
-API runs on [http://localhost:3001](http://localhost:3001).
-
-#### macOS
-
-##### Frontend
+### 2. Start the backend
 
 ```bash
-cd "/Users/[your account]/GDG-CityTech-SolutionChallenger-2026/Explore-NYC"
+cd backend
+cp .env.example .env        # fill in Firebase, Gemini, Apify credentials
 npm install
-npm run dev
+npm run seed                 # load default-data/ into Firestore (run once)
+npm run dev                  # starts on http://localhost:3001
 ```
 
-Open [http://localhost:5173](http://localhost:5173) in your browser.
-
-##### Backend (still working)
+### 3. Start the frontend
 
 ```bash
-cd "/Users/[your account]/GDG-CityTech-SolutionChallenger-2026/backend"
+cd ../Explore-NYC
 npm install
-npm start
+npm run dev                  # starts on http://localhost:5173
 ```
 
-API runs on [http://localhost:3001](http://localhost:3001).
+Open [http://localhost:5173](http://localhost:5173).
 
-## Google Cloud Integration (Coming Soon)
+---
 
-The following placeholders are ready in the code. Add your project credentials to activate them:
+## Data Flow
 
-- **Firestore**: Store events and user preferences (`backend/server.js`)
-- **Vertex AI**: AI-powered event recommendations (`backend/routes/recommendations.js`)
-- **BigQuery**: Analytics and trend detection (`backend/server.js`)
+```mermaid
+sequenceDiagram
+    actor User
+    participant FE as Frontend
+    participant BE as Backend
+    participant DB as Firestore
+    participant AI as Gemini
+    participant Scraper as Apify
 
-## Data
+    User->>FE: Completes questionnaire
+    FE->>BE: POST /api/pipeline/trigger
+    BE-->>FE: 200 OK (immediate)
+    FE->>BE: GET /api/events + /api/businesses
+    BE->>DB: Query collections
+    DB-->>BE: Raw documents
+    BE-->>FE: Scored & ranked results
+    FE-->>User: Display results grid
 
-The `default-data` folder contains fake data for testing the frontend. Replace with real data when integrating with Firestore.
+    Note over BE,Scraper: Background (fire-and-forget)
+    BE->>Scraper: Search Google / Maps
+    Scraper-->>BE: Raw web results
+    BE->>AI: Validate & rank results
+    AI-->>BE: Structured + scored data
+    BE->>DB: Save new events/businesses
+```
 
-## Contributing
+---
 
-Team members:
-- Taimor
+## Environment Variables
+
+Copy `backend/.env.example` and fill in:
+
+```env
+GOOGLE_APPLICATION_CREDENTIALS=./database/YOUR-adminsdk.json
+FIREBASE_PROJECT_ID=your-firebase-project-id
+GEMINI_API_KEY=your-gemini-api-key
+APIFY_TOKEN=your-apify-token
+PORT=3001
+ALLOWED_ORIGINS=http://localhost:5173
+```
+
+---
+
+## Team
+
+- Osumane
+- Yuzhen
 - Catherine
 
 ## License
 
-This project is licensed under the MIT License.
+MIT

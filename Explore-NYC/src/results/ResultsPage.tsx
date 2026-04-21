@@ -1,8 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import type { Event, UserPreferences } from '../types';
-import { EVENTS } from '../data/events';
-import { LOCAL_BUSINESSES } from '../data/localBusinesses';
+import { fetchEvents, fetchBusinesses } from '../api/backend';
 import { scoreEvents, filterEvents } from '../utils/recommendation';
 import EventCard from '../components/EventCard';
 import EventDetail from '../components/EventDetail';
@@ -51,6 +50,8 @@ export default function ResultsPage() {
   const state       = location.state as { preferences?: UserPreferences } | null;
   const preferences = state?.preferences;
 
+  const [loadedData,      setLoadedData]      = useState<Event[]>([]);
+  const [isLoading,       setIsLoading]       = useState(true);
   const [showFilters,     setShowFilters]     = useState(false);
   const [search,          setSearch]          = useState('');
   const [dateFrom,        setDateFrom]        = useState('');
@@ -62,15 +63,34 @@ export default function ResultsPage() {
   const [page,            setPage]            = useState(0);
   const [selectedEvent,   setSelectedEvent]   = useState<Event | null>(null);
 
-  const allEvents = useMemo(() => {
+  // Fetch live data from backend on mount.
+  // fetchEvents/fetchBusinesses fall back to static JSON if the backend is offline.
+  useEffect(() => {
     const lookingFor = preferences?.lookingFor ?? 'events';
-    let pool;
-    if (lookingFor === 'local-business') pool = LOCAL_BUSINESSES;
-    else if (lookingFor === 'both')      pool = [...EVENTS, ...LOCAL_BUSINESSES];
-    else                                 pool = EVENTS;
-    const scored = preferences ? scoreEvents(pool, preferences) : pool;
+
+    async function load() {
+      setIsLoading(true);
+      try {
+        if (lookingFor === 'local-business') {
+          setLoadedData(await fetchBusinesses());
+        } else if (lookingFor === 'both') {
+          const [events, businesses] = await Promise.all([fetchEvents(), fetchBusinesses()]);
+          setLoadedData([...events, ...businesses]);
+        } else {
+          setLoadedData(await fetchEvents());
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    load();
+  }, [preferences?.lookingFor]);
+
+  const allEvents = useMemo(() => {
+    const scored = preferences ? scoreEvents(loadedData, preferences) : loadedData;
     return filterEvents(scored, search, dateFrom, dateTo, timeFrom, timeTo, pricePreference);
-  }, [search, dateFrom, dateTo, timeFrom, timeTo, pricePreference, preferences]);
+  }, [loadedData, search, dateFrom, dateTo, timeFrom, timeTo, pricePreference, preferences]);
 
   const totalPages = Math.ceil(allEvents.length / PAGE_SIZE);
   const pageEvents = allEvents.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
@@ -356,7 +376,11 @@ export default function ResultsPage() {
 
         <div style={{ height: '16px' }} />
 
-        {pageEvents.length > 0 ? (
+        {isLoading ? (
+          <div className="text-center py-16" style={{ color: '#AD2B0B' }}>
+            Loading experiences…
+          </div>
+        ) : pageEvents.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {pageEvents.map(event => (

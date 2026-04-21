@@ -1,0 +1,28 @@
+# ── Secrets — NEVER commit these ──────────────────────────────────────────────
+.env
+.env.*
+*.env
+**/.env
+**/.env.*
+
+# ── Firebase service account keys ─────────────────────────────────────────────
+backend/database/*.json
+**/*firebase*adminsdk*.json
+**/*service-account*.json
+
+# ── Dependencies ───────────────────────────────────────────────────────────────
+node_modules/
+**/node_modules/
+
+# ── Build output ───────────────────────────────────────────────────────────────
+dist/
+build/
+.vite/
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+
+# ── OS files ──────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

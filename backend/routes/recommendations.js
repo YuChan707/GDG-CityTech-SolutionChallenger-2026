@@ -1,15 +1,7 @@
 import { Router } from 'express';
-import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { getAllEvents } from '../services/events.service.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const router = Router();
-
-function loadEvents() {
-  const raw = readFileSync(join(__dirname, '../data/events.json'), 'utf-8');
-  return JSON.parse(raw);
-}
 
 // Keyword maps for scoring
 const VIBE_KEYWORDS = {
@@ -31,28 +23,34 @@ const GROUP_KEYWORDS = {
   'Family': ['family', 'families'],
 };
 
-/**
- * POST /api/recommendations
- * Body: { preferences: { vibe, groupType, interests, pricePreference, customInput } }
- *
- * TODO: Replace scoring logic with Vertex AI Matching Engine or Gemini API call:
- * const { VertexAI } = require('@google-cloud/vertexai');
- * const vertexAI = new VertexAI({ project: process.env.GCP_PROJECT_ID, location: 'us-central1' });
- * const model = vertexAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
- * const result = await model.generateContent({ ... });
- *
- * TODO: Replace events source with Firestore:
- * const { Firestore } = require('@google-cloud/firestore');
- * const db = new Firestore({ projectId: process.env.GCP_PROJECT_ID });
- * const snapshot = await db.collection('events').get();
- */
-router.post('/', (req, res) => {
-  const { preferences } = req.body;
-  if (!preferences) {
-    return res.status(400).json({ error: 'preferences required' });
+const VALID_PRICE = new Set(['free', 'up20', 'up50', 'any']);
+
+function validatePreferences(p) {
+  if (!p || typeof p !== 'object') return 'preferences must be an object';
+  if (p.vibe !== undefined && !Array.isArray(p.vibe)) return 'vibe must be an array';
+  if (p.interests !== undefined && !Array.isArray(p.interests)) return 'interests must be an array';
+  if (p.groupType !== undefined && typeof p.groupType !== 'string') return 'groupType must be a string';
+  if (p.customInput !== undefined && typeof p.customInput !== 'string') return 'customInput must be a string';
+  if (p.customInput && p.customInput.length > 300) return 'customInput too long (max 300 characters)';
+  if (p.pricePreference && !VALID_PRICE.has(p.pricePreference))
+    return `pricePreference must be one of: ${[...VALID_PRICE].join(', ')}`;
+  return null;
+}
+
+router.post('/', async (req, res) => {
+  const { preferences } = req.body ?? {};
+  const validationError = validatePreferences(preferences);
+  if (validationError) {
+    return res.status(400).json({ error: validationError });
   }
 
-  let events = loadEvents();
+  let events;
+  try {
+    events = await getAllEvents();
+  } catch (err) {
+    console.error('POST /api/recommendations — Firestore error:', err);
+    return res.status(500).json({ error: 'Failed to fetch events' });
+  }
 
   const scored = events.map(event => {
     let score = 0;

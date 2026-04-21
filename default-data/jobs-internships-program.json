@@ -1,0 +1,196 @@
+[
+  {
+    "Organization-name": "Per Scholas",
+    "Focus-Area": "Technology",
+    "User-requirement": "0-2 years experience",
+    "Program-services": "IT training, certifications, job placement",
+    "Other category": "Software Engineering / IT Support",
+    "location": "Bronx, NYC",
+    "coordinates": { "lat": 40.8448, "lng": -73.8648 },
+    "link-registration-program": "https://perscholas.org",
+    "due-date-register-program": "rolling"
+  },
+  {
+    "Organization-name": "NYC Tech Talent Pipeline",
+    "Focus-Area": "Technology",
+    "User-requirement": "0-3 years experience",
+    "Program-services": "training, job placement",
+    "Other category": "Tech Workforce",
+    "location": "Manhattan, NYC",
+    "coordinates": { "lat": 40.7128, "lng": -74.0060 },
+    "link-registration-program": "https://www.techtalentpipeline.nyc",
+    "due-date-register-program": "rolling"
+  },
+  {
+    "Organization-name": "The HOPE Program",
+    "Focus-Area": "Workforce Development",
+    "User-requirement": "unemployed / low-income",
+    "Program-services": "job training, placement, career support",
+    "Other category": "Career Readiness",
+    "location": "Midtown, Manhattan, NYC",
+    "coordinates": { "lat": 40.7549, "lng": -73.9840 },
+    "link-registration-program": "https://www.thehopeprogram.org",
+    "due-date-register-program": "rolling"
+  },
+  {
+    "Organization-name": "Brooklyn Workforce Innovations",
+    "Focus-Area": "Career Training",
+    "User-requirement": "varies",
+    "Program-services": "sector-based training, job placement",
+    "Other category": "Tech / Healthcare / Film",
+    "location": "Downtown Brooklyn, NYC",
+    "coordinates": { "lat": 40.6935, "lng": -73.9850 },
+    "link-registration-program": "https://bwiny.org",
+    "due-date-register-program": "rolling"
+  },
+  {
+    "Organization-name": "Workforce1 Career Centers",
+    "Focus-Area": "Job Placement",
+    "User-requirement": "all levels",
+    "Program-services": "resume help, job matching, hiring events",
+    "Other category": "NYC Government",
+    "location": "Long Island City, Queens, NYC",
+    "coordinates": { "lat": 40.7447, "lng": -73.9485 },
+    "link-registration-program": "https://access.nyc.gov/programs/workforce-1/",
+    "due-date-register-program": "rolling"
+  },
+  {
+    "Organization-name": "Grace Institute",
+    "Focus-Area": "Professional Training",
+    "User-requirement": "women applicants",
+    "Program-services": "tuition-free training, job placement",
+    "Other category": "Business & Admin",
+    "location": "Midtown East, Manhattan, NYC",
+    "coordinates": { "lat": 40.7568, "lng": -73.9702 },
+    "link-registration-program": "https://graceinstitute.org",
+    "due-date-register-program": "rolling"
+  },
+  {
+    "Organization-name": "BronxWorks Workforce Development",
+    "Focus-Area": "Career Services",
+    "User-requirement": "youth and adults",
+    "Program-services": "GED prep, job readiness training",
+    "Other category": "Community Programs",
+    "location": "South Bronx, NYC",
+    "coordinates": { "lat": 40.8186, "lng": -73.9247 },
+    "link-registration-program": "https://bronxworks.org",
+    "due-date-register-program": "rolling"
+  },
+  {
+    "Organization-name": "CAMBA Jobs-Plus",
+    "Focus-Area": "Employment Services",
+    "User-requirement": "NYCHA residents",
+    "Program-services": "job placement, financial counseling",
+    "Other category": "Community Workforce",
+    "location": "Flatbush, Brooklyn, NYC",
+    "coordinates": { "lat": 40.6410, "lng": -73.9617 },
+    "link-registration-program": "https://camba.org",
+    "due-date-register-program": "rolling"
+  },
+  {
+    "Organization-name": "Apex Technical School",
+    "Focus-Area": "Trade Skills",
+    "User-requirement": "18+",
+    "Program-services": "hands-on trade training, job placement",
+    "Other category": "Construction / Electrical",
+    "location": "Long Island City, Queens, NYC",
+    "coordinates": { "lat": 40.7467, "lng": -73.9432 },
+    "link-registration-program": "https://apexschool.com",
+    "due-date-register-program": "rolling"
+  },
+  {
+    "Organization-name": "Kingsborough Community College Workforce Programs",
+    "Focus-Area": "Education & Training",
+    "User-requirement": "varies",
+    "Program-services": "career prep, mentorship",
+    "Other category": "CUNY Programs",
+    "location": "Manhattan Beach, Brooklyn, NYC",
+    "coordinates": { "lat": 40.5817, "lng": -73.9425 },
+    "link-registration-program": "https://kbcc.cuny.edu",
+    "due-date-register-program": "seasonal"
+  },
+  {
+    "Organization-name": "Per Scholas",
+    "Focus-Area": "Technology",
+    "Program-services": "IT training and job placement",
+    "location": "Bronx, NYC",
+    "link-registration-program": "https://perscholas.org"
+  },
+  {
+    "Organization-name": "NYU Tandon STEM Programs",
+    "Focus-Area": "STEAM",
+    "Program-services": "engineering and computer science training",
+    "location": "Brooklyn, NYC",
+    "link-registration-program": "https://engineering.nyu.edu"
+  },
+  {
+    "Organization-name": "NYC Health + Hospitals Internships",
+    "Focus-Area": "Healthcare",
+    "Program-services": "clinical and admin internships",
+    "location": "NYC",
+    "link-registration-program": "https://nychhc.org"
+  },
+  {
+    "Organization-name": "Legal Aid Society Internships",
+    "Focus-Area": "Law",
+    "Program-services": "legal internships and fellowships",
+    "location": "NYC",
+    "link-registration-program": "https://legalaidnyc.org"
+  },
+  {
+    "Organization-name": "American Museum of Natural History Internships",
+    "Focus-Area": "Sciences",
+    "Program-services": "research internships",
+    "location": "Manhattan, NYC",
+    "link-registration-program": "https://amnh.org"
+  },
+  {
+    "Organization-name": "NYC Teaching Fellows",
+    "Focus-Area": "Teaching",
+    "Program-services": "paid training and certification",
+    "location": "NYC",
+    "link-registration-program": "https://nycteachingfellows.org"
+  },
+  {
+    "Organization-name": "NBCUniversal Internships",
+    "Focus-Area": "Media",
+    "Program-services": "media and production internships",
+    "location": "NYC",
+    "link-registration-program": "https://nbcunicareers.com"
+  },
+  {
+    "Organization-name": "Warner Bros Discovery Early Careers",
+    "Focus-Area": "Entertainment",
+    "Program-services": "film and media internships",
+    "location": "NYC",
+    "link-registration-program": "https://careers.wbd.com"
+  },
+  {
+    "Organization-name": "Year Up New York",
+    "Focus-Area": "Professional Development",
+    "Program-services": "training + internships",
+    "location": "NYC",
+    "link-registration-program": "https://yearup.org"
+  },
+  {
+    "Organization-name": "Google NYC Apprenticeship Program",
+    "Focus-Area": "Technology",
+    "Program-services": "paid apprenticeship in tech roles",
+    "location": "NYC",
+    "link-registration-program": "https://buildyourfuture.withgoogle.com"
+  },
+  {
+    "Organization-name": "Columbia University Student Programs",
+    "Focus-Area": "Students & Early Careers",
+    "Program-services": "research + internships",
+    "location": "NYC",
+    "link-registration-program": "https://columbia.edu"
+  },
+  {
+    "Organization-name": "NYC Robotics Alliance Programs",
+    "Focus-Area": "Robotic",
+    "Program-services": "robotics training and competitions",
+    "location": "NYC",
+    "link-registration-program": "https://nycfirst.org"
+  }
+]

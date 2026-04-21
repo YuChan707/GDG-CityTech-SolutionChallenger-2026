@@ -6,6 +6,8 @@ import ResultsPage from './results/ResultsPage';
 import AboutPage from './pages/AboutPage';
 import ReviewPage from './pages/ReviewPage';
 import SubmitPage from './pages/SubmitPage';
+import EducationQuestionnaire from './education/EducationQuestionnaire';
+import EducationResults from './education/EducationResults';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/reviews" element={<ReviewPage />} />
           <Route path="/submit" element={<SubmitPage />} />
+          <Route path="/education/questionnaire" element={<EducationQuestionnaire />} />
+          <Route path="/education/results" element={<EducationResults />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

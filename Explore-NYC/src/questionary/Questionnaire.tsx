@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { UserPreferences } from '../types';
+import { triggerPipeline } from '../api/backend';
 
 const LOOKING_FOR_OPTIONS = [
   { value: 'events',         label: 'Events' },
@@ -71,6 +72,7 @@ export default function Questionnaire() {
       setStep(s => s + 1);
     } else {
       setLoading(true);
+      triggerPipeline(prefs as unknown as Record<string, unknown>);
       setTimeout(() => {
         sessionStorage.setItem('questionnaireDone', 'true');
         sessionStorage.setItem('lastPreferences', JSON.stringify(prefs));

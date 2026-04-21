@@ -1,112 +1,197 @@
 [
   {
-    "name-business": "Hudson Coffee Roasters",
-    "description": "Cozy coffee shop offering specialty brews, pastries, and free Wi-Fi.",
-    "hours-business": "Mon-Fri 7:00-18:00, Sat-Sun 8:00-16:00",
-    "location": "Hoboken, NJ",
+    "name-business": "Birch Coffee",
+    "description": "Cozy coffee shop with books and specialty brews.",
+    "hours-business": "Mon-Sun 7:00-19:00",
+    "location": "Upper West Side, NYC",
+    "coordinates": { "lat": 40.7870, "lng": -73.9754 },
     "category-business": "cafe",
     "focus-business": "young adults",
-    "link": "https://hudsoncoffeeroasters.com",
-    "owner-labels": "local entrepreneur"
+    "link": "https://birchcoffee.com",
+    "owner-labels": "local entrepreneur",
+    "is_active": true
   },
   {
-    "name-business": "Brooklyn Street Bites",
-    "description": "Food truck serving fusion street food inspired by global cuisines.",
-    "hours-business": "Daily 12:00-22:00",
-    "location": "Brooklyn, NY",
-    "category-business": "food truck",
+    "name-business": "Katz's Delicatessen",
+    "description": "Famous Jewish deli known for pastrami sandwiches since 1888.",
+    "hours-business": "Mon-Sun 8:00-22:45",
+    "location": "Lower East Side, Manhattan, NYC",
+    "coordinates": { "lat": 40.7223, "lng": -73.9873 },
+    "category-business": "restaurant",
     "focus-business": "all ages",
-    "link": "",
-    "owner-labels": "immigrant-owned"
+    "link": "https://katzsdelicatessen.com",
+    "owner-labels": "historic local",
+    "is_active": true
   },
   {
-    "name-business": "SoHo Fit Lab",
-    "description": "Modern fitness studio offering HIIT classes, personal training, and yoga.",
-    "hours-business": "Mon-Sun 6:00-21:00",
-    "location": "SoHo, NYC",
-    "category-business": "fitness",
-    "focus-business": "adults",
-    "link": "https://sohofitlab.com",
-    "owner-labels": "women-owned"
-  },
-  {
-    "name-business": "Queens Tech Repair",
-    "description": "Affordable electronics repair shop specializing in phones and laptops.",
-    "hours-business": "Mon-Sat 10:00-19:00",
-    "location": "Queens, NY",
-    "category-business": "tech services",
+    "name-business": "Levain Bakery",
+    "description": "Iconic bakery famous for enormous, decadent cookies.",
+    "hours-business": "Mon-Fri 8:00-19:00, Sat-Sun 8:00-19:00",
+    "location": "Upper West Side, Manhattan, NYC",
+    "coordinates": { "lat": 40.7819, "lng": -73.9806 },
+    "category-business": "bakery",
     "focus-business": "all ages",
-    "link": "",
-    "owner-labels": "minority-owned"
+    "link": "https://levainbakery.com",
+    "owner-labels": "local entrepreneur",
+    "is_active": true
   },
   {
-    "name-business": "Harlem Book Haven",
-    "description": "Independent bookstore featuring local authors, poetry nights, and events.",
-    "hours-business": "Tue-Sun 10:00-18:00",
-    "location": "Harlem, NYC",
+    "name-business": "The Strand Bookstore",
+    "description": "Independent bookstore with 18 miles of books — NYC institution since 1927.",
+    "hours-business": "Mon-Sat 9:30-22:30, Sun 11:00-22:30",
+    "location": "Union Square, Manhattan, NYC",
+    "coordinates": { "lat": 40.7328, "lng": -73.9910 },
     "category-business": "bookstore",
-    "focus-business": "students",
-    "link": "https://harlembookhaven.com",
-    "owner-labels": "community-based"
+    "focus-business": "all ages",
+    "link": "https://strandbooks.com",
+    "owner-labels": "local entrepreneur",
+    "is_active": true
   },
   {
-    "name-business": "Bronx Fresh Market",
-    "description": "Local grocery store with fresh produce, organic options, and deli section.",
-    "hours-business": "Daily 8:00-20:00",
-    "location": "Bronx, NY",
-    "category-business": "grocery",
-    "focus-business": "families",
-    "link": "",
-    "owner-labels": "family-owned"
+    "name-business": "Russ & Daughters",
+    "description": "Historic appetizing shop serving lox, bagels, and caviar since 1914.",
+    "hours-business": "Mon-Sun 8:00-20:00",
+    "location": "Lower East Side, Manhattan, NYC",
+    "coordinates": { "lat": 40.7219, "lng": -73.9877 },
+    "category-business": "food",
+    "focus-business": "all ages",
+    "link": "https://russanddaughters.com",
+    "owner-labels": "historic local",
+    "is_active": true
   },
   {
-    "name-business": "Midtown Gamer Hub",
-    "description": "Gaming lounge with PCs, consoles, and esports tournaments.",
-    "hours-business": "Mon-Sun 12:00-00:00",
-    "location": "Midtown Manhattan, NYC",
-    "category-business": "gaming",
-    "focus-business": "young adults",
-    "link": "https://midtowngamerhub.com",
-    "owner-labels": "startup"
+    "name-business": "Prince Street Pizza",
+    "description": "Famous square-slice pepperoni pizza in SoHo.",
+    "hours-business": "Mon-Sun 11:00-22:00",
+    "location": "SoHo, Manhattan, NYC",
+    "coordinates": { "lat": 40.7228, "lng": -73.9967 },
+    "category-business": "restaurant",
+    "focus-business": "all ages",
+    "link": "https://princestreetpizza.com",
+    "owner-labels": "local entrepreneur",
+    "is_active": true
   },
   {
-    "name-business": "Chelsea Art Studio",
-    "description": "Creative studio offering painting classes and gallery space for artists.",
-    "hours-business": "Wed-Sun 11:00-19:00",
-    "location": "Chelsea, NYC",
-    "category-business": "art",
-    "focus-business": "artists",
-    "link": "",
-    "owner-labels": "artist-owned"
-  },
-  {
-    "name-business": "Upper East Pet Care",
-    "description": "Pet grooming and daycare services with experienced staff.",
-    "hours-business": "Mon-Sat 9:00-18:00",
-    "location": "Upper East Side, NYC",
-    "category-business": "pet services",
-    "focus-business": "pet owners",
-    "link": "https://uppereastpetcare.com",
-    "owner-labels": "latina-owner"
-  },
-  {
-    "name-business": "Downtown Financial Advisors",
-    "description": "Consulting firm providing financial planning and investment advice.",
-    "hours-business": "Mon-Fri 9:00-17:00",
-    "location": "Financial District, NYC",
-    "category-business": "finance",
-    "focus-business": "professionals",
-    "link": "https://dtfinancialadvisors.com",
-    "owner-labels": "corporate"
-  },
-  {
-    "name-business": "Riverside Wellness Studio",
-    "description": "A wellness studio offering meditation, sound baths, and holistic self-care classes.",
-    "hours-business": "Tue-Sun 8:00-20:00",
-    "location": "Upper West Side, NYC",
-    "category-business": "wellness",
+    "name-business": "Brooklyn Brewery",
+    "description": "Popular craft brewery with tours and tastings in Williamsburg.",
+    "hours-business": "Mon-Thu 17:00-23:00, Fri 17:00-23:00, Sat-Sun 12:00-20:00",
+    "location": "Williamsburg, Brooklyn, NYC",
+    "coordinates": { "lat": 40.7222, "lng": -73.9577 },
+    "category-business": "brewery",
     "focus-business": "adults",
-    "link": "https://riversidewellnessstudio.com",
-    "owner-labels": "community-owned"
+    "link": "https://brooklynbrewery.com",
+    "owner-labels": "local entrepreneur",
+    "is_active": true
+  },
+  {
+    "name-business": "Artists & Fleas",
+    "description": "Weekend market for local artists, designers, and vintage sellers.",
+    "hours-business": "Sat-Sun 10:00-18:00",
+    "location": "Chelsea Market, Manhattan, NYC",
+    "coordinates": { "lat": 40.7425, "lng": -74.0061 },
+    "category-business": "market",
+    "focus-business": "all ages",
+    "link": "https://artistsandfleas.com",
+    "owner-labels": "local entrepreneur",
+    "is_active": true
+  },
+  {
+    "name-business": "Housing Works Bookstore Cafe",
+    "description": "Bookstore and café supporting HIV/AIDS services — all profits donated.",
+    "hours-business": "Mon-Sun 10:00-21:00",
+    "location": "SoHo, Manhattan, NYC",
+    "coordinates": { "lat": 40.7238, "lng": -74.0010 },
+    "category-business": "bookstore",
+    "focus-business": "all ages",
+    "link": "https://housingworks.org/social-enterprise/bookstore-cafe",
+    "owner-labels": "nonprofit",
+    "is_active": true
+  },
+  {
+    "name-business": "Muji NYC",
+    "description": "Minimalist Japanese design store for home, apparel, and stationery.",
+    "hours-business": "Mon-Sun 10:00-21:00",
+    "location": "Fifth Avenue, Midtown, NYC",
+    "coordinates": { "lat": 40.7550, "lng": -73.9792 },
+    "category-business": "retail",
+    "focus-business": "all ages",
+    "link": "https://muji.com/us",
+    "owner-labels": "international brand",
+    "is_active": true
+  },
+  {
+    "name-business": "Smorgasburg",
+    "description": "Largest weekly open-air food market in America, every Saturday.",
+    "hours-business": "Sat 11:00-18:00",
+    "location": "Williamsburg Waterfront, Brooklyn, NYC",
+    "coordinates": { "lat": 40.7193, "lng": -73.9634 },
+    "category-business": "market",
+    "focus-business": "foodies",
+    "link": "https://smorgasburg.com",
+    "owner-labels": "local entrepreneur",
+    "is_active": true
+  },
+  {
+    "name-business": "REI Co-op Soho",
+    "category-business": "Outdoors",
+    "description": "Outdoor gear and adventure equipment store.",
+    "location": "SoHo, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "Joe's Pizza",
+    "category-business": "Food & Drinks",
+    "description": "Iconic NYC pizza spot.",
+    "location": "Greenwich Village, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "The Museum of Modern Art (MoMA)",
+    "category-business": "Arts & Culture",
+    "description": "World-famous modern art museum.",
+    "location": "Midtown Manhattan, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "Equinox Gym",
+    "category-business": "Sports & Fitness",
+    "description": "Premium fitness club with classes and training.",
+    "location": "NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "Bowery Ballroom",
+    "category-business": "Music & Entertainment",
+    "description": "Popular live music venue.",
+    "location": "Lower East Side, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "Canal Street Market",
+    "category-business": "Shopping",
+    "description": "Trendy retail and food market.",
+    "location": "Chinatown, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "OS NYC",
+    "category-business": "Gaming & Tech",
+    "description": "Gaming lounge and esports venue.",
+    "location": "Chinatown, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "MNDFL Meditation Studio",
+    "category-business": "Wellness",
+    "description": "Meditation classes and mindfulness sessions.",
+    "location": "Greenwich Village, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "FAO Schwarz",
+    "category-business": "Family Fun",
+    "description": "Iconic toy store experience for families.",
+    "location": "Rockefeller Center, NYC",
+    "is_active": true
   }
 ]
