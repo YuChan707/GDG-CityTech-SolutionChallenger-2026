@@ -1,196 +1,135 @@
-// Triggered when a user submits the questionnaire.
-// Maps their preferences (vibe, interests, custom input) to Instagram hashtags,
-// fires an Apify actor run, then processes results through Gemini → Firestore.
-// Everything after the initial trigger runs in the background — the HTTP response
-// is sent immediately so the user never waits.
+// Triggered when a user submits the questionnaire (fire-and-forget).
+// New flow: preferences → Apify search (Google Search / Google Maps) → Gemini validation → Firestore
+// Gemini and Apify are fully independent services.
 
-import { classifyContent } from '../ai/gemini.service.js';
-import { normalizeEvent } from '../processors/event.processor.js';
-import { isRelevant } from '../processors/filter.processor.js';
-import { matchToExisting } from '../processors/matcher.processor.js';
-import { saveEvent } from '../database/firestore.js';
+import { searchEvents, searchBusinesses } from './apify-search.service.js';
+import { validateLegitimacyBatch, rankResultsForUser } from '../ai/gemini.service.js';
+import { db } from '../database/firestore.js';
 
-// ─── Hashtag maps ─────────────────────────────────────────────────────────────
+const SAVE_LIMIT = 5; // max new items to write per pipeline run
 
-const VIBE_HASHTAGS = {
-  'Outdoors':              ['nycoutdoors', 'nycparks', 'nycrunning', 'nycnature'],
-  'Food & Drinks':         ['nycfood', 'nycfoodtruck', 'nycmarket', 'nycfoodie'],
-  'Arts & Culture':        ['nycart', 'nycgallery', 'nycculture', 'nycmuseums'],
-  'Sports & Fitness':      ['nycfitness', 'nycyoga', 'nycmarathon', 'nycsports'],
-  'Music & Entertainment': ['nycmusic', 'nycfestival', 'nyclive', 'nycevents'],
-  'Shopping':              ['nycshopping', 'nycpopup', 'nycfashion'],
-  'Gaming & Tech':         ['nyctech', 'nycstartup', 'nycgaming', 'nycdevs'],
-  'Wellness':              ['nycwellness', 'nycmeditation', 'nycsoundhealing'],
-  'Family Fun':            ['nycfamily', 'nycfamilyfun', 'nycforkids'],
-};
-
-const INTEREST_HASHTAGS = {
-  'Gaming':      ['nycgaming', 'nycgamedev', 'nycindiegames'],
-  'Anime':       ['nycanimefest', 'nycotaku'],
-  'Fashion':     ['nycfashion', 'nycstyle'],
-  'Music':       ['nycmusic', 'nyclivemusic'],
-  'Food':        ['nycfood', 'nycfoodie'],
-  'Art':         ['nycart', 'nycgallery'],
-  'Running':     ['nycrunning', 'nycmarathon'],
-  'Tech':        ['nyctech', 'nycai', 'nycstartup'],
-  'Film':        ['nycfilm', 'nycfilmfest'],
-  'Dance':       ['nycdance', 'nycperformance'],
-  'Photography': ['nycphotography', 'nycphotowalk'],
-  'Travel':      ['exploreNYC', 'nyctravel'],
-};
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-export function preferencesToHashtags(preferences = {}) {
-  const tags = new Set(['nycevents']); // always include base tag
-
-  for (const vibe of preferences.vibe ?? []) {
-    for (const tag of VIBE_HASHTAGS[vibe] ?? []) tags.add(tag);
-  }
-
-  for (const interest of preferences.interests ?? []) {
-    for (const tag of INTEREST_HASHTAGS[interest] ?? []) tags.add(tag);
-  }
-
-  // Treat custom free-text words as additional hashtag hints
-  for (const word of (preferences.customInput ?? '').split(/[\s,]+/)) {
-    const clean = word.toLowerCase().replaceAll(/[^a-z0-9]/g, '');
-    if (clean.length > 3) tags.add(`nyc${clean}`);
-  }
-
-  return [...tags].slice(0, 7); // 7 hashtags on paid tier
+function slugify(str) {
+  return (str ?? '').toLowerCase().replaceAll(/\s+/g, '-').replaceAll(/[^a-z0-9-]/g, '');
 }
 
-// ─── Step 1: trigger Apify actor run ─────────────────────────────────────────
+// ── Save helpers ──────────────────────────────────────────────────────────────
 
-async function triggerApifyRun(hashtags) {
-  const { APIFY_TOKEN } = process.env;
-  if (!APIFY_TOKEN) {
-    console.warn('[demand-pipeline] APIFY_TOKEN not set — skipping Apify trigger');
-    return null;
+async function saveNewEvents(items) {
+  const today   = new Date().toISOString().slice(0, 10);
+  const batch   = db.batch();
+  let   written = 0;
+
+  for (const item of items) {
+    if (written >= SAVE_LIMIT) break;
+    const id = slugify(item.name) || `apify-event-${Date.now()}`;
+    const ref = db.collection('events').doc(id);
+    const existing = await ref.get();
+    if (existing.exists) continue;
+
+    batch.set(ref, {
+      title:          item.name,
+      description:    item.description ?? '',
+      date:           item.date        ?? today,
+      location:       item.location    ?? 'NYC',
+      category:       item.category    ?? 'other',
+      link:           item.link        ?? '',
+      is_free:        false,
+      is_legitimate:  item.is_legitimate ?? true,
+      gemini_checked: true,
+      source:         item.source      ?? 'apify',
+      addedAt:        new Date().toISOString(),
+    }, { merge: false });
+
+    written++;
+    console.log(`[demand-pipeline] queued event: "${item.name}"`);
   }
 
-  const res = await fetch(
-    `https://api.apify.com/v2/acts/apify~instagram-hashtag-scraper/runs?token=${APIFY_TOKEN}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        hashtags,
-        resultsLimit: 5,       // 5 posts per hashtag — enough to find 3 real events
-        scrapeType: 'posts',
-        proxy: { useApifyProxy: true },
-      }),
-    }
-  );
-
-  if (!res.ok) {
-    console.error(`[demand-pipeline] Apify trigger failed: ${res.status}`);
-    return null;
-  }
-
-  const data = await res.json();
-  return data.data?.id ?? null; // runId
+  if (written > 0) await batch.commit();
+  return written;
 }
 
-// ─── Step 2: poll until run finishes ─────────────────────────────────────────
+async function saveNewBusinesses(items) {
+  const batch   = db.batch();
+  let   written = 0;
 
-async function waitForRun(runId, maxWaitMs = 5 * 60 * 1000) {
-  const { APIFY_TOKEN } = process.env;
-  const pollMs = 8000;
-  const deadline = Date.now() + maxWaitMs;
+  for (const item of items) {
+    if (written >= SAVE_LIMIT) break;
+    const id = slugify(item.name) || `apify-biz-${Date.now()}`;
+    const ref = db.collection('businesses').doc(id);
+    const existing = await ref.get();
+    if (existing.exists) continue;
 
-  while (Date.now() < deadline) {
-    await new Promise(r => setTimeout(r, pollMs));
+    batch.set(ref, {
+      name:         item.name,
+      description:  item.description ?? '',
+      location:     item.address     ?? item.location ?? 'NYC',
+      coordinates:  item.coordinates ?? null,
+      category:     item.category    ?? 'other',
+      link:         item.link        ?? '',
+      phone:        item.phone       ?? '',
+      rating:       item.rating      ?? null,
+      is_active:    true,
+      source:       item.source      ?? 'apify',
+      addedAt:      new Date().toISOString(),
+    }, { merge: false });
 
-    const res = await fetch(
-      `https://api.apify.com/v2/actor-runs/${runId}?token=${APIFY_TOKEN}`
-    );
-    const data = await res.json();
-    const status = data.data?.status;
-
-    if (status === 'SUCCEEDED') return data.data.defaultDatasetId;
-    if (status === 'FAILED' || status === 'ABORTED') {
-      throw new Error(`Apify run ${runId} ended with status: ${status}`);
-    }
+    written++;
+    console.log(`[demand-pipeline] queued business: "${item.name}"`);
   }
 
-  throw new Error(`Apify run ${runId} timed out after ${maxWaitMs / 1000}s`);
+  if (written > 0) await batch.commit();
+  return written;
 }
 
-// ─── Step 3: fetch dataset pages ─────────────────────────────────────────────
-
-async function fetchDataset(datasetId) {
-  const { APIFY_TOKEN } = process.env;
-  const limit = 50;
-  let offset = 0;
-  const all = [];
-
-  while (true) {
-    const url = `https://api.apify.com/v2/datasets/${datasetId}/items` +
-      `?token=${APIFY_TOKEN}&limit=${limit}&offset=${offset}`;
-    const res = await fetch(url);
-    const items = await res.json();
-    if (!items.length) break;
-    for (const item of items) {
-      all.push({ ...item, text: item.caption ?? item.text ?? '' });
-    }
-    if (items.length < limit) break;
-    offset += limit;
-  }
-
-  return all;
-}
-
-// ─── Step 4: classify + save ──────────────────────────────────────────────────
-
-const SAVE_LIMIT = 3; // max new events to add to Firestore per pipeline run
-
-async function processPosts(posts) {
-  const today     = new Date().toISOString().slice(0, 10);
-  const windowEnd = new Date(Date.now() + 7 * 86_400_000).toISOString().slice(0, 10);
-  let saved = 0;
-
-  for (const post of posts) {
-    if (saved >= SAVE_LIMIT) break; // stop as soon as 3 new events are saved
-    if (!isRelevant(post.text)) continue;
-
-    try {
-      const aiResult = await classifyContent(post.text);
-      if (aiResult.type === 'ignore') continue;
-      if (aiResult.date && (aiResult.date < today || aiResult.date > windowEnd)) continue;
-
-      const match = matchToExisting(aiResult);
-      if (!match) {
-        await saveEvent(normalizeEvent(aiResult));
-        saved++;
-        console.log(`[demand-pipeline] saved event ${saved}/${SAVE_LIMIT}: "${aiResult.name}"`);
-      }
-    } catch (err) {
-      console.warn('[demand-pipeline] classify error:', err.message);
-    }
-  }
-
-  return saved;
-}
-
-// ─── Public: fire-and-forget entry point ──────────────────────────────────────
+// ── Public entry point ────────────────────────────────────────────────────────
 
 export async function triggerDemandPipeline(preferences) {
-  const hashtags = preferencesToHashtags(preferences);
-  console.log(`[demand-pipeline] hashtags → ${hashtags.join(', ')}`);
-
-  const runId = await triggerApifyRun(hashtags);
-  if (!runId) return;
-
-  console.log(`[demand-pipeline] Apify run started: ${runId}`);
+  console.log('[demand-pipeline] starting — preferences:', JSON.stringify(preferences));
 
   try {
-    const datasetId = await waitForRun(runId);
-    const posts     = await fetchDataset(datasetId);
-    const saved     = await processPosts(posts);
-    console.log(`[demand-pipeline] done — ${saved} new events saved to Firestore`);
+    // 1. Apify searches (run in parallel, independent of Gemini)
+    const [rawEvents, rawBusinesses] = await Promise.all([
+      searchEvents(preferences),
+      searchBusinesses(preferences),
+    ]);
+
+    console.log(`[demand-pipeline] Apify returned ${rawEvents.length} events, ${rawBusinesses.length} businesses`);
+
+    if (!rawEvents.length && !rawBusinesses.length) return;
+
+    // 2. Gemini ranks results against preferences (independent call, not tied to Apify)
+    const rankedEvents     = await rankResultsForUser(rawEvents,     preferences).catch(() => rawEvents);
+    const rankedBusinesses = await rankResultsForUser(rawBusinesses, preferences).catch(() => rawBusinesses);
+
+    // 3. Gemini validates the top candidates
+    const topEvents = rankedEvents
+      .sort((a, b) => (b.relevanceScore ?? 0) - (a.relevanceScore ?? 0))
+      .slice(0, SAVE_LIMIT);
+
+    const topBusinesses = rankedBusinesses
+      .sort((a, b) => (b.relevanceScore ?? 0) - (a.relevanceScore ?? 0))
+      .slice(0, SAVE_LIMIT);
+
+    const validationInput = [
+      ...topEvents.map(e     => ({ type: 'event',    name: e.name, location: e.location, category: e.category })),
+      ...topBusinesses.map(b => ({ type: 'business', name: b.name, location: b.location, category: b.category })),
+    ];
+
+    const validations = await validateLegitimacyBatch(validationInput).catch(() =>
+      validationInput.map(() => ({ is_legitimate: true }))
+    );
+
+    const validEvents     = topEvents.map((e, i) => ({ ...e, is_legitimate: validations[i]?.is_legitimate ?? true }))
+                                     .filter(e => e.is_legitimate);
+    const validBusinesses = topBusinesses.map((b, i) => ({ ...b, is_legitimate: validations[topEvents.length + i]?.is_legitimate ?? true }))
+                                         .filter(b => b.is_legitimate);
+
+    // 4. Save to Firestore
+    const savedEvents     = await saveNewEvents(validEvents);
+    const savedBusinesses = await saveNewBusinesses(validBusinesses);
+
+    console.log(`[demand-pipeline] done — saved ${savedEvents} events + ${savedBusinesses} businesses`);
   } catch (err) {
-    console.error('[demand-pipeline] pipeline error:', err.message);
+    console.error('[demand-pipeline] error:', err.message);
   }
 }

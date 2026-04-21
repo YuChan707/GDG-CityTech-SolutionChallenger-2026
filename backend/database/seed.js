@@ -1,4 +1,4 @@
-// Seed script — uploads default-data/ events + businesses into Firestore.
+// Seed script — uploads default-data/ into Firestore.
 // Run from backend/: npm run seed
 
 import { readFileSync } from 'node:fs';
@@ -7,8 +7,11 @@ import { dirname, join } from 'node:path';
 import { db } from './firestore.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-// Source files live two levels up at project root / default-data/
 const dataDir = join(__dirname, '../../default-data');
+
+function slugify(str) {
+  return str.toLowerCase().replaceAll(/\s+/g, '-').replaceAll(/[^a-z0-9-]/g, '');
+}
 
 // ── Seed events ───────────────────────────────────────────────────────────────
 
@@ -20,7 +23,7 @@ async function seedEvents() {
   for (const e of events) {
     const name = e['name-event'] ?? e.name ?? 'event';
     const date = e['date-event'] ?? e.date ?? '';
-    const id   = `${name.toLowerCase().replaceAll(/\s+/g, '-').replaceAll(/[^a-z0-9-]/g, '')}-${date}`;
+    const id   = `${slugify(name)}-${date}`;
 
     batch.set(db.collection('events').doc(id), {
       title:          name,
@@ -28,6 +31,7 @@ async function seedEvents() {
       date,
       time:           e['time-event']     ?? e.time     ?? '',
       location:       e.location          ?? e['location-event'] ?? '',
+      coordinates:    e.coordinates       ?? null,
       category:       e['category-event'] ?? e.category ?? 'other',
       focus:          e['focus-event']    ?? '',
       is_free:        e['is-free']        ?? e.is_free  ?? false,
@@ -56,13 +60,14 @@ async function seedBusinesses() {
 
   for (const b of businesses) {
     const name = b['name-business'] ?? b.name ?? 'business';
-    const id   = name.toLowerCase().replaceAll(/\s+/g, '-').replaceAll(/[^a-z0-9-]/g, '');
+    const id   = slugify(name);
 
     batch.set(db.collection('businesses').doc(id), {
       name,
       description:  b.description  ?? '',
       hours:        b['hours-business']    ?? b.hours    ?? '',
       location:     b.location             ?? '',
+      coordinates:  b.coordinates          ?? null,
       category:     b['category-business'] ?? b.category ?? 'other',
       focus:        b['focus-business']    ?? '',
       link:         b.link                 ?? '',
@@ -78,34 +83,67 @@ async function seedBusinesses() {
   console.log(`  → ${businesses.length} businesses written.`);
 }
 
-// ── Seed education profiles ───────────────────────────────────────────────────
+// ── Seed professional events ──────────────────────────────────────────────────
 
-async function seedEducation() {
-  const orgs = JSON.parse(readFileSync(join(dataDir, 'Professional-Education.json'), 'utf-8'));
-  console.log(`\nSeeding ${orgs.length} education profiles…`);
+async function seedProfessionalEvents() {
+  const orgs = JSON.parse(readFileSync(join(dataDir, 'professional-events.json'), 'utf-8'));
+  console.log(`\nSeeding ${orgs.length} professional events…`);
   const batch = db.batch();
 
-  for (const [i, o] of orgs.entries()) {
-    const name = o['Organization-name'] ?? 'org';
-    const id   = `${name.toLowerCase().replaceAll(/\s+/g, '-').replaceAll(/[^a-z0-9-]/g, '')}`;
+  for (const o of orgs) {
+    const name = o['name-event'] ?? o['Organization-name'] ?? 'event';
+    const id   = slugify(name);
 
-    batch.set(db.collection('education').doc(id), {
-      id:               String(i + 1),
-      type:             o.type ?? 'event',         // 'event' | 'job'
+    batch.set(db.collection('professional_events').doc(id), {
+      type:             'event',
       name,
-      focusArea:        o['Focus-Area']                  ?? '',
-      requirement:      o['User-requirement']            ?? '',
-      services:         (o['Program-services'] ?? '').split(',').map(s => s.trim()),
-      otherCategory:    o['Other category']              ?? '',
-      registrationLink: o['link-registration-program']  ?? null,
-      dueDate:          o['due-date-register-program']   ?? null,
+      focusArea:        o['Focus-Area']    ?? o['focus-event']       ?? '',
+      requirement:      o['User-requirement']                        ?? '',
+      services:         (o['Program-services'] ?? '').split(',').map(s => s.trim()).filter(Boolean),
+      otherCategory:    o['Other category'] ?? o['category-event']   ?? '',
+      location:         o.location                                   ?? '',
+      coordinates:      o.coordinates                                ?? null,
+      registrationLink: o['link-registration-program'] ?? o['link-event'] ?? null,
+      dueDate:          o['due-date-register-program'] ?? o['date-event']  ?? null,
+      description:      o['description-event']                       ?? '',
     }, { merge: true });
 
-    console.log(`  ✓ [${o.type}] "${name}"  ${o['Focus-Area'] ?? ''}`);
+    console.log(`  ✓ [event] "${name}"`);
   }
 
   await batch.commit();
-  console.log(`  → ${orgs.length} education profiles written.`);
+  console.log(`  → ${orgs.length} professional events written.`);
+}
+
+// ── Seed jobs & internships ───────────────────────────────────────────────────
+
+async function seedJobsInternships() {
+  const orgs = JSON.parse(readFileSync(join(dataDir, 'jobs-internships-program.json'), 'utf-8'));
+  console.log(`\nSeeding ${orgs.length} jobs & internships…`);
+  const batch = db.batch();
+
+  for (const o of orgs) {
+    const name = o['Organization-name'] ?? o.name ?? 'org';
+    const id   = slugify(name);
+
+    batch.set(db.collection('jobs_internships').doc(id), {
+      type:             'job',
+      name,
+      focusArea:        o['Focus-Area']                              ?? '',
+      requirement:      o['User-requirement']                        ?? '',
+      services:         (o['Program-services'] ?? '').split(',').map(s => s.trim()).filter(Boolean),
+      otherCategory:    o['Other category']                          ?? '',
+      location:         o.location                                   ?? '',
+      coordinates:      o.coordinates                                ?? null,
+      registrationLink: o['link-registration-program']              ?? null,
+      dueDate:          o['due-date-register-program']              ?? null,
+    }, { merge: true });
+
+    console.log(`  ✓ [job] "${name}"`);
+  }
+
+  await batch.commit();
+  console.log(`  → ${orgs.length} jobs & internships written.`);
 }
 
 // ── Run ───────────────────────────────────────────────────────────────────────
@@ -113,8 +151,9 @@ async function seedEducation() {
 try {
   await seedEvents();
   await seedBusinesses();
-  await seedEducation();
-  console.log('\n✅ Seed complete — Firestore now has events + businesses + education.');
+  await seedProfessionalEvents();
+  await seedJobsInternships();
+  console.log('\n✅ Seed complete — Firestore now has events + businesses + professional_events + jobs_internships.');
 } catch (err) {
   console.error('\n❌ Seed failed:', err.message);
   process.exit(1);

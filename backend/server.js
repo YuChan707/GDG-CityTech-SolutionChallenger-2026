@@ -8,6 +8,9 @@ import recommendationsRouter from "./routes/recommendations.js";
 import dailyPickRouter       from "./routes/daily-pick.js";
 import pipelineRouter        from "./routes/pipeline.js";
 import educationRouter       from "./routes/education.js";
+import suggestionsRouter     from "./routes/suggestions.js";
+import mapRouter             from "./routes/map.js";
+import searchRouter          from "./routes/search.js";
 import './jobs/scheduler.js'; 
 import { runStartupChecks } from "./services/startup-check.service.js";
 import { globalLimiter, recommendationsLimiter } from "./config/rateLimiter.js";
@@ -27,7 +30,10 @@ app.use("/api/businesses", businessesRouter);
 app.use("/api/recommendations", recommendationsLimiter, recommendationsRouter);
 app.use("/api/daily-pick", dailyPickRouter);
 app.use("/api/pipeline",   pipelineRouter);
-app.use("/api/education",  educationRouter);
+app.use("/api/education",   educationRouter);
+app.use("/api/suggestions", suggestionsRouter);
+app.use("/api/map",         mapRouter);
+app.use("/api/search",      searchRouter);
 
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", service: "Explore NYC API" });

@@ -1,10 +1,14 @@
 import { db } from '../database/firestore.js';
 
-const EDUCATION_COLLECTION = 'education';
-
 async function loadProfiles() {
-  const snapshot = await db.collection(EDUCATION_COLLECTION).get();
-  return snapshot.docs.map(doc => ({ ...doc.data() }));
+  const [evSnap, jobSnap] = await Promise.all([
+    db.collection('professional_events').get(),
+    db.collection('jobs_internships').get(),
+  ]);
+
+  const events = evSnap.docs.map(doc => ({ ...doc.data(), type: 'event' }));
+  const jobs   = jobSnap.docs.map(doc => ({ ...doc.data(), type: 'job'   }));
+  return [...events, ...jobs];
 }
 
 /**
@@ -28,7 +32,7 @@ export async function queryEducation(filters = {}) {
   if (search) {
     const q = search.toLowerCase();
     profiles = profiles.filter(p =>
-      `${p.name} ${p.focusArea} ${p.otherCategory} ${p.services.join(' ')}`
+      `${p.name} ${p.focusArea} ${p.otherCategory} ${(p.services ?? []).join(' ')}`
         .toLowerCase()
         .includes(q)
     );
@@ -62,7 +66,7 @@ export async function recommendEducation(prefs) {
     }
 
     if (extraSearch) {
-      const hay = `${p.name} ${p.focusArea} ${p.otherCategory} ${p.services.join(' ')}`.toLowerCase();
+      const hay = `${p.name} ${p.focusArea} ${p.otherCategory} ${(p.services ?? []).join(' ')}`.toLowerCase();
       if (hay.includes(extraSearch.toLowerCase())) score += 3;
     }
 

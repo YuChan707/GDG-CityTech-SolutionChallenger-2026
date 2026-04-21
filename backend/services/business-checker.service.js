@@ -1,70 +1,52 @@
 // Checks whether a local business is still actively operating.
 //
-// Two-step verification to keep costs low:
-//   Step 1 — Apify: scans the already-fetched dataset for posts from this business.
-//             No new Apify run is triggered — we reuse the existing dataset read.
-//   Step 2 — Gemini: given the business name, location, and any Apify post context,
-//             Gemini uses its training knowledge to confirm whether the business
-//             is likely still open (acts as a Google Maps knowledge proxy).
+// Two-step verification:
+//   Step 1 — Apify (Google Maps): search for the business by name → confirms it
+//             still appears in Google Maps listings with an active presence.
+//   Step 2 — Gemini: given the business name and location, uses AI knowledge
+//             to confirm whether the business is likely still open.
 //
 // is_active = true only when BOTH steps agree the business is operating.
 
-import { fetchInstagramPosts } from '../scrapers/apify.scraper.js';
+import { searchBusinesses } from './apify-search.service.js';
 import { db } from '../database/firestore.js';
 
-const STALE_THRESHOLD_DAYS = 60;
+const STALE_THRESHOLD_DAYS  = 60;
 const BUSINESSES_COLLECTION = 'businesses';
 
 function daysSince(isoTimestamp) {
   return Math.floor((Date.now() - new Date(isoTimestamp).getTime()) / 86_400_000);
 }
 
-// Step 1: scan the Apify dataset for recent posts that belong to this business.
-async function checkViaApify(businessName) {
-  const posts = await fetchInstagramPosts();
-  const keyword = businessName.toLowerCase().split(' ')[0]; // match on first word of name
+// Step 1: confirm the business appears in Google Maps results via Apify
+async function checkViaApify(businessName, location) {
+  const results = await searchBusinesses({ category: businessName });
 
-  const ownedPosts = posts.filter(p => {
-    const handle = (p.ownerFullName ?? p.ownerUsername ?? '').toLowerCase();
-    return handle.includes(keyword);
-  });
+  const match = results.find(r =>
+    r.name.toLowerCase().includes(businessName.toLowerCase().split(' ')[0])
+  );
 
-  if (!ownedPosts.length) {
-    return { active: false, reason: 'No Instagram posts found for this business', sampleText: null };
-  }
-
-  const newest = ownedPosts.sort(
-    (a, b) => new Date(b.timestamp ?? 0) - new Date(a.timestamp ?? 0)
-  )[0];
-
-  const age = daysSince(newest.timestamp);
-
-  if (age > STALE_THRESHOLD_DAYS) {
-    return {
-      active: false,
-      reason: `Last post was ${age} days ago (inactive threshold: ${STALE_THRESHOLD_DAYS} days)`,
-      sampleText: null,
-    };
+  if (!match) {
+    return { active: false, reason: 'Business not found in Google Maps results', detail: null };
   }
 
   return {
     active: true,
-    reason: `Recent post found — ${age} days ago`,
-    sampleText: newest.text ?? null,
+    reason: `Found in Google Maps: "${match.name}" at ${match.address || location}`,
+    detail: match,
   };
 }
 
-// Step 2: ask Gemini to verify using its training knowledge + Apify context.
-async function checkViaGemini(businessName, location, apifyContext) {
+// Step 2: ask Gemini to verify using its training knowledge
+async function checkViaGemini(businessName, location, mapsDetail) {
   const { GEMINI_API_KEY } = process.env;
   if (!GEMINI_API_KEY) throw new Error('Missing GEMINI_API_KEY in .env');
 
-  const context = apifyContext
-    ? `Recent Instagram post from the business: "${apifyContext.slice(0, 200)}"`
-    : 'No recent Instagram activity was found for this business.';
+  const context = mapsDetail
+    ? `Google Maps found: "${mapsDetail.name}" at ${mapsDetail.address ?? location}, rating ${mapsDetail.rating ?? 'unknown'}.`
+    : 'No Google Maps listing was found for this business.';
 
-  const prompt = `You are verifying whether a local business is still actively operating.
-Use your training knowledge about this business (similar to checking Google Maps) combined with the social media context.
+  const prompt = `You are verifying whether a local business is still actively operating in NYC.
 
 Business name: "${businessName}"
 Location: "${location}"
@@ -74,11 +56,11 @@ Return ONLY valid JSON, no markdown:
 {
   "is_active": true or false,
   "confidence": "high | medium | low",
-  "reason": "one sentence — e.g. still listed as open, or permanently closed in 2024"
+  "reason": "one sentence"
 }`;
 
   const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -91,26 +73,24 @@ Return ONLY valid JSON, no markdown:
 
   if (!res.ok) throw new Error(`Gemini error: ${res.status} ${res.statusText}`);
 
-  const data = await res.json();
-  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}';
+  const data    = await res.json();
+  const raw     = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '{}';
   const cleaned = raw.replace(/```json?\n?/g, '').replace(/```/g, '').trim();
   return JSON.parse(cleaned);
 }
 
 /**
- * Check if a business is active (Apify + Gemini double-check).
- * Updates the business document in Firestore with the result.
+ * Check if a business is active (Apify Google Maps + Gemini double-check).
+ * Optionally updates the Firestore document with the result.
  *
  * @param {string} businessName
  * @param {string} [location]
- * @param {string} [firestoreDocId]  - If provided, updates is_active on the Firestore doc
- * @returns {Promise<{ is_active: boolean, apify_active: boolean, gemini_active: boolean, confidence: string, reason: string }>}
+ * @param {string|null} [firestoreDocId]
  */
 export async function checkBusinessActive(businessName, location = 'NYC', firestoreDocId = null) {
-  const apify  = await checkViaApify(businessName);
-  const gemini = await checkViaGemini(businessName, location, apify.sampleText);
+  const apify  = await checkViaApify(businessName, location);
+  const gemini = await checkViaGemini(businessName, location, apify.detail);
 
-  // Business must pass BOTH checks to be marked active
   const is_active = apify.active && gemini.is_active;
 
   const result = {
