@@ -200,7 +200,7 @@ GOOGLE_APPLICATION_CREDENTIALS=./database/YOUR-adminsdk.json
 FIREBASE_PROJECT_ID=your-firebase-project-id
 GEMINI_API_KEY=your-gemini-api-key
 APIFY_TOKEN=your-apify-token
-ELEVEN_LABS_tokens
+ELEVEN_LABS_TOKENS=your-eleven-labs-tokens
 PORT=3001
 ALLOWED_ORIGINS=http://localhost:5173
 ```
