@@ -1,8 +1,9 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CiSaveDown1 } from 'react-icons/ci';
 import type { EducationPreferences } from './EducationQuestionnaire';
 import { EDUCATION_PROFILES, type EducationOrg } from '../data/educationProfiles';
+import { fetchEducationRecommendations } from '../api/backend';
 import { exportEducationToPDF } from '../utils/exportEducationPDF';
 
 const TODAY = new Date().toISOString().split('T')[0];
@@ -96,18 +97,32 @@ export default function EducationResults() {
   const [filterStatus, setFilterStatus] = useState('');
   const [selectedOrg,  setSelectedOrg]  = useState<EducationOrg | null>(null);
 
+  // API-sourced profiles (null = use static fallback, [] = empty result from API)
+  const [apiProfiles, setApiProfiles] = useState<EducationOrg[] | null>(null);
+  const [loadingApi,  setLoadingApi]  = useState(!!preferences);
+
+  useEffect(() => {
+    if (!preferences) { setLoadingApi(false); return; }
+    fetchEducationRecommendations(preferences as unknown as Record<string, unknown>)
+      .then(profiles => setApiProfiles(profiles))
+      .finally(() => setLoadingApi(false));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const results = useMemo(() => {
-    let pool = EDUCATION_PROFILES.map(org => ({
-      ...org,
-      _score: preferences ? scoreOrg(org, preferences) : 0,
-    }));
-
-    // Filter by type (the key new feature: Professional Events vs Jobs)
-    if (preferences?.lookingFor && preferences.lookingFor !== 'both') {
-      pool = pool.filter(o => o.type === preferences.lookingFor);
+    // Use API results when available; fall back to static data scored locally.
+    let pool: EducationOrg[];
+    if (apiProfiles !== null) {
+      pool = apiProfiles;
+    } else {
+      pool = EDUCATION_PROFILES.map(org => ({
+        ...org,
+        relevanceScore: preferences ? scoreOrg(org, preferences) : 0,
+      }));
+      if (preferences?.lookingFor && preferences.lookingFor !== 'both')
+        pool = pool.filter(o => o.type === preferences.lookingFor);
+      if (preferences)
+        pool = [...pool].sort((a, b) => (b.relevanceScore ?? 0) - (a.relevanceScore ?? 0));
     }
-
-    if (preferences) pool = pool.sort((a, b) => b._score - a._score);
 
     if (search.trim()) {
       const q = search.toLowerCase();
@@ -115,13 +130,12 @@ export default function EducationResults() {
         `${o.name} ${o.focusArea} ${o.otherCategory} ${o.services.join(' ')}`.toLowerCase().includes(q)
       );
     }
-
     if (filterFocus)               pool = pool.filter(o => o.focusArea === filterFocus);
     if (filterStatus === 'open')   pool = pool.filter(o => isOpen(o.dueDate));
     if (filterStatus === 'closed') pool = pool.filter(o => !isOpen(o.dueDate));
 
     return pool;
-  }, [preferences, search, filterFocus, filterStatus]);
+  }, [apiProfiles, preferences, search, filterFocus, filterStatus]);
 
   const activeFilterCount = (filterFocus ? 1 : 0) + (filterStatus ? 1 : 0) + (filterLevel ? 1 : 0);
 
@@ -297,6 +311,11 @@ export default function EducationResults() {
         )}
 
         <div style={{ height: '8px' }} />
+        {loadingApi && (
+          <p className="text-xs text-center" style={{ color: '#4A9EE0', paddingBottom: '8px' }}>
+            Fetching recommendations…
+          </p>
+        )}
         <p className="text-xs" style={{ color: '#999', paddingLeft: '4px' }}>
           {results.length} result{results.length === 1 ? '' : 's'}
           {preferences ? ' · sorted by match' : ''}

@@ -2,6 +2,7 @@
 // Falls back to static JSON if the backend is unreachable (dev without backend running).
 
 import type { Event } from '../types';
+import type { EducationOrg } from '../data/educationProfiles';
 // ⛔ Static fallbacks disabled — using live backend data.
 // import staticEvents     from '../../../../default-data/events.json';
 // import staticBusinesses from '../../../../default-data/local-business.json';
@@ -105,6 +106,38 @@ export async function triggerPipeline(preferences: Record<string, unknown>): Pro
     });
   } catch {
     // fire-and-forget — silently ignore failures
+  }
+}
+
+// ─── Suggestions ─────────────────────────────────────────────────────────────
+
+export interface Suggestion {
+  type: 'event' | 'local-business' | 'professional-event' | 'job';
+  name: string;
+  link: string;
+}
+
+export async function submitSuggestion(payload: Suggestion): Promise<void> {
+  await apiFetch<{ id: string }>('/api/suggestions', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+// ─── Education recommendations ────────────────────────────────────────────────
+
+export async function fetchEducationRecommendations(
+  prefs: Record<string, unknown>
+): Promise<EducationOrg[] | null> {
+  try {
+    const data = await apiFetch<{ profiles: EducationOrg[] }>(
+      '/api/education/recommendations',
+      { method: 'POST', body: JSON.stringify({ preferences: prefs }) }
+    );
+    return data.profiles ?? null;
+  } catch {
+    console.warn('[backend.ts] /api/education/recommendations unreachable — using static fallback');
+    return null;
   }
 }
 

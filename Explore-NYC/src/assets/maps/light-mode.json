@@ -1,0 +1,51 @@
+{
+  "variant": "light",
+  "styles": [
+    {
+      "id": "infrastructure",
+      "geometry": {
+        "fillOpacity": 1,
+        "fillColor": "#f7f1f9",
+        "strokeOpacity": 1,
+        "strokeColor": "#6e1111"
+      },
+      "label": {
+        "pinFillColor": "#fdeded"
+      }
+    },
+    {
+      "id": "natural",
+      "geometry": {
+        "fillOpacity": 1,
+        "fillColor": "#ceb1c9"
+      },
+      "label": {
+        "textFillOpacity": 1,
+        "textFillColor": "#690202",
+        "textStrokeOpacity": 1,
+        "textStrokeColor": "#eaa9a9"
+      }
+    },
+    {
+      "id": "pointOfInterest",
+      "geometry": {
+        "fillOpacity": 1,
+        "fillColor": "#d1b6c4"
+      },
+      "label": {
+        "visible": true,
+        "pinFillColor": "#1c646d",
+        "pinOutlineColor": "#152b9e",
+        "pinGlyphColor": "#ffffff",
+        "textStrokeOpacity": 1,
+        "textStrokeColor": "#ffffff"
+      }
+    },
+    {
+      "id": "political",
+      "geometry": {
+        "fillColor": "#a24444"
+      }
+    }
+  ]
+}

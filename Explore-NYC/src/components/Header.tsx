@@ -26,15 +26,17 @@ export default function Header() {
     }
   }
 
-  const homeActive      = ['/', '/questionnaire', '/results'].includes(location.pathname);
+  const homePageActive  = location.pathname === '/';
+  const explorerActive  = ['/questionnaire', '/results'].includes(location.pathname);
   const educationActive = location.pathname.startsWith('/education');
 
   const navItems = [
-    { label: 'Home page',         onClick: handleHome,                      active: homeActive,      blue: false },
-    { label: 'About the project', onClick: () => navigate('/about'),         active: location.pathname === '/about',    blue: false },
-    { label: 'Review people',     onClick: () => navigate('/reviews'),       active: location.pathname === '/reviews',  blue: false },
-    { label: 'Submit request',    onClick: () => navigate('/submit'),        active: location.pathname === '/submit',   blue: false },
-    { label: 'High Education',    onClick: handleEducation,                  active: educationActive, blue: true  },
+    { label: 'Home page',         onClick: () => navigate('/'),              active: homePageActive,                    color: 'default' },
+    { label: 'Explorer',          onClick: handleHome,                       active: explorerActive,                    color: 'red'     },
+    { label: 'High Education',    onClick: handleEducation,                  active: educationActive,                   color: 'blue'    },
+    { label: 'About the project', onClick: () => navigate('/about'),         active: location.pathname === '/about',    color: 'default' },
+    { label: 'Review people',     onClick: () => navigate('/reviews'),       active: location.pathname === '/reviews',  color: 'default' },
+    { label: 'Submit request',    onClick: () => navigate('/submit'),        active: location.pathname === '/submit',   color: 'teal'    },
   ];
 
   return (
@@ -46,7 +48,7 @@ export default function Header() {
           className="text-xs uppercase"
           style={{ letterSpacing: '0.22em', color: 'rgba(255, 234, 3, 0.84)', fontSize: "30px"}}
         >
-          Google Solution Challenger 2026
+          EXPLORER NYC (for now)
         </span>
         <p
           className="text-xs uppercase"
@@ -58,7 +60,7 @@ export default function Header() {
           className="text-xs uppercase"
           style={{ letterSpacing: '0.22em', color: 'rgba(255,255,255,0.45)', fontSize: "15px"}}
         >
-          "Support local business"
+          "Support local business and student success"
         </p>
       </div>
 
@@ -68,9 +70,15 @@ export default function Header() {
         style={{ gap: '8px', padding: '8px 20px 12px' }}
       >
         {navItems.map(item => {
-          let bg: string;
-          if (item.blue) bg = item.active ? '#2563eb' : 'rgba(74,158,224,0.35)';
-          else bg = item.active ? '#F04251' : 'rgba(255,255,255,0.18)';
+          const colors: Record<string, [string, string, string]> = {
+            default: ['#F04251',  'rgba(255,255,255,0.18)', 'none'],
+            red:     ['#8b0000',  'rgba(139,0,0,0.45)',     'none'],
+            blue:    ['#2563eb',  'rgba(74,158,224,0.35)',  '1px solid rgba(74,158,224,0.5)'],
+            teal:    ['#00827f',  'rgba(0,130,127,0.35)',   '1px solid rgba(0,130,127,0.5)'],
+          };
+          const [activeBg, inactiveBg, inactiveBorder] = colors[item.color] ?? colors.default;
+          const bg     = item.active ? activeBg  : inactiveBg;
+          const border = item.active ? 'none'    : inactiveBorder;
 
           return (
             <button
@@ -81,7 +89,7 @@ export default function Header() {
                 padding: '5px 16px',
                 backgroundColor: bg,
                 color: '#fff',
-                border: item.blue && !item.active ? '1px solid rgba(74,158,224,0.5)' : 'none',
+                border,
               }}
             >
               {item.label}
