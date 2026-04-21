@@ -29,7 +29,10 @@ Start the backend first, then the frontend.
 
 ## System Overview
 
-```mermaid
+```
+
+mermaid
+
 graph TB
     subgraph Client["Frontend — React 19 + TypeScript"]
         A[StartScreen] --> B[Questionnaire\n5-step form]
@@ -197,6 +200,7 @@ GOOGLE_APPLICATION_CREDENTIALS=./database/YOUR-adminsdk.json
 FIREBASE_PROJECT_ID=your-firebase-project-id
 GEMINI_API_KEY=your-gemini-api-key
 APIFY_TOKEN=your-apify-token
+ELEVEN_LABS_TOKENS=your-eleven-labs-tokens
 PORT=3001
 ALLOWED_ORIGINS=http://localhost:5173
 ```
@@ -205,9 +209,9 @@ ALLOWED_ORIGINS=http://localhost:5173
 
 ## Team
 
-- Osumane
-- Yuzhen
-- Catherine
+- Osumane Diallo
+- Yuzhen Chen
+- Catherine Ochoa
 
 ## License
 

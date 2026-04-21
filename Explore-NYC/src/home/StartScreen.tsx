@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import MapSection from '../components/MapSection';
+import HearButton from '../components/HearButton';
 
 export default function StartScreen() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function StartScreen() {
           className="uppercase tracking-[0.3em] mt-2"
           style={{ fontSize: '11px', color: 'rgba(255,255,255,0.35)' }}
         >
-          Google Solution Challenge 2026 · GDG City Tech CUNY
+          Google Solution Challenge · 2026 
         </p>
         <p
           className="text-sm mt-3 max-w-md mx-auto text-center leading-relaxed"
@@ -48,12 +49,20 @@ export default function StartScreen() {
             boxShadow: '0 8px 24px rgba(173,43,11,0.45)',
           }}
         >
-          <span
-            className="text-xs uppercase tracking-widest font-semibold rounded-full self-start"
-            style={{ padding: '3px 12px', backgroundColor: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }}
-          >
-            Events &amp; Local Business
-          </span>
+          <div className="flex items-center justify-between">
+            <span
+              className="text-xs uppercase tracking-widest font-semibold rounded-full"
+              style={{ padding: '3px 12px', backgroundColor: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.7)' }}
+            >
+              Events &amp; Local Business
+            </span>
+            <HearButton
+              getText={() => 'Events and Local Business. Explorer. Discover local events, pop-ups, festivals, and hidden gems in NYC. Tell us your vibe, group, and budget — we\'ll match you to the best experiences. Includes a 5-step questionnaire covering vibe, group, interests, and budget.'}
+              size={20}
+              label="Read card description"
+              style={{ backgroundColor: 'rgba(255,255,255,0.15)', padding: '5px', color: 'rgba(255,255,255,0.8)' }}
+            />
+          </div>
 
           <div style={{ height: '20px' }} />
 
@@ -111,12 +120,20 @@ export default function StartScreen() {
             boxShadow: '0 8px 24px rgba(26,58,92,0.55)',
           }}
         >
-          <span
-            className="text-xs uppercase tracking-widest font-semibold rounded-full self-start"
-            style={{ padding: '3px 12px', backgroundColor: 'rgba(74,158,224,0.2)', color: '#93c5fd' }}
-          >
-            Programs &amp; Jobs
-          </span>
+          <div className="flex items-center justify-between">
+            <span
+              className="text-xs uppercase tracking-widest font-semibold rounded-full"
+              style={{ padding: '3px 12px', backgroundColor: 'rgba(74,158,224,0.2)', color: '#93c5fd' }}
+            >
+              Programs &amp; Jobs
+            </span>
+            <HearButton
+              getText={() => 'Programs and Jobs. High Education. Find professional events, bootcamps, fellowships, and jobs and internships in NYC. Match your focus area, experience level, and career goals. Includes a 5-step questionnaire covering type, level, focus, and experience.'}
+              size={20}
+              label="Read card description"
+              style={{ backgroundColor: 'rgba(74,158,224,0.15)', padding: '5px', color: '#93c5fd' }}
+            />
+          </div>
 
           <div style={{ height: '20px' }} />
 

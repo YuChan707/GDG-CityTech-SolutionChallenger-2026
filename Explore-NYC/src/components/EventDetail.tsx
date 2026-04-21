@@ -1,11 +1,11 @@
 import type { Event } from '../types';
+import HearButton from './HearButton';
 
 interface Props {
   event: Event;
   onClose: () => void;
 }
 
-// Must match EventCard colors so the modal header reflects the category
 const CATEGORY_COLORS: Record<string, string> = {
   'pop-up':         '#65CDB6',
   'festival':       '#5BB8D4',
@@ -21,23 +21,39 @@ function getCategoryColor(category: string): string {
   return CATEGORY_COLORS[category.toLowerCase()] ?? '#8FA8B4';
 }
 
+function formatDate(d: string) {
+  const date = new Date(d + 'T00:00:00');
+  return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function formatTime(t: string, tEnd?: string) {
+  if (!t) return '';
+  const fmt = (s: string) => { const [h, m] = s.split(':'); return `${h.padStart(2, '0')}:${m}`; };
+  return tEnd ? `${fmt(t)} – ${fmt(tEnd)}` : fmt(t);
+}
+
+function buildSpeechText(event: Event): string {
+  const parts: string[] = [`${event.name}.`, `Category: ${event.category}.`];
+  if (event.date)            parts.push(`Date: ${formatDate(event.date)}.`);
+  if (event.time)            parts.push(`Time: ${formatTime(event.time, event.time_end)}.`);
+  if (event.operating_hours) parts.push(`Hours: ${event.operating_hours}.`);
+  if (event.location)        parts.push(`Location: ${event.location}.`);
+  if (event.company_hosted)  parts.push(`Hosted by ${event.company_hosted}.`);
+  if (event.description)     parts.push(event.description);
+  if (event.is_free) {
+    parts.push('This event is free.');
+  } else if (event.min_price) {
+    const range = event.max_price && event.max_price !== event.min_price ? ` to $${event.max_price}` : '';
+    parts.push(`Price: $${event.min_price}${range}.`);
+  }
+  return parts.join(' ');
+}
+
 export default function EventDetail({ event, onClose }: Readonly<Props>) {
   const headerColor = getCategoryColor(event.category);
 
-  function formatDate(d: string) {
-    const date = new Date(d + 'T00:00:00');
-    return date.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-  }
-
-  function formatTime(t: string, tEnd?: string) {
-    if (!t) return '';
-    const fmt = (s: string) => { const [h, m] = s.split(':'); return `${h.padStart(2, '0')}:${m}`; };
-    return tEnd ? `${fmt(t)} – ${fmt(tEnd)}` : fmt(t);
-  }
-
   function handleRemind() {
     alert(`Reminder set for "${event.name}" on ${formatDate(event.date)} at ${formatTime(event.time, event.time_end)}!`);
-    // TODO: Integrate with Firestore to save reminders
   }
 
   function getPriceLabel() {
@@ -50,28 +66,38 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
 
   function getAveragePriceLabel() {
     if (event.is_free) return '$';
-
     const min = event.min_price ?? 0;
     const max = event.max_price ?? min;
     const avg = (min + max) / 2;
-
     if (avg <= 20) return '$';
     if (avg <= 50) return '$$';
     return '$$$';
   }
 
+  const groupTypes = event.group_type ?? [];
+
   return (
-    <div
+    <dialog
+      open
+      onClose={onClose}
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
-      onClick={onClose}
+      style={{
+        width: '100vw',
+        height: '100vh',
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        margin: 0,
+        padding: '16px',
+        border: 'none',
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        backdropFilter: 'blur(4px)',
+      }}
     >
       <div
-        className="w-full max-w-lg rounded-3xl overflow-hidden relative"
+        className="w-full max-w-lg rounded-3xl overflow-hidden"
         style={{ backgroundColor: '#F7F5FA' }}
-        onClick={e => e.stopPropagation()}
       >
-        {/* Header, uses the category color */}
+        {/* Header */}
         <div style={{ backgroundColor: headerColor, padding: '20px 20px 16px' }}>
           <div className="flex items-start justify-between">
             <div className="flex-1 pr-3">
@@ -89,22 +115,31 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
                 {event.name}
               </h2>
             </div>
-            <button
-              onClick={onClose}
-              className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 hover:opacity-70 transition-opacity"
-              style={{ backgroundColor: 'rgba(0,0,0,0.2)' }}
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-                <path d="M18 6L6 18M6 6l12 12" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
-              </svg>
-            </button>
+
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <HearButton
+                getText={() => buildSpeechText(event)}
+                size={20}
+                label="Read event details aloud"
+                style={{ backgroundColor: 'rgba(0,0,0,0.2)', padding: '6px', color: '#fff' }}
+              />
+              <button
+                onClick={onClose}
+                aria-label="Close"
+                className="w-8 h-8 rounded-full flex items-center justify-center hover:opacity-70 transition-opacity"
+                style={{ backgroundColor: 'rgba(0,0,0,0.2)' }}
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                  <path d="M18 6L6 18M6 6l12 12" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Body */}
         <div style={{ padding: '20px 20px 16px' }} className="flex flex-col">
 
-          {/* Date & time — events only */}
           {event.date && (
             <>
               <div className="flex items-center gap-5">
@@ -113,9 +148,7 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
                     <rect x="3" y="4" width="18" height="18" rx="2" stroke="#AD2B0B" strokeWidth="2" />
                     <path d="M3 10h18M8 2v4M16 2v4" stroke="#AD2B0B" strokeWidth="2" strokeLinecap="round" />
                   </svg>
-                  <span className="text-sm font-medium" style={{ color: '#333' }}>
-                    {formatDate(event.date)}
-                  </span>
+                  <span className="text-sm font-medium" style={{ color: '#333' }}>{formatDate(event.date)}</span>
                 </div>
                 {event.time && (
                   <div className="flex items-center gap-2">
@@ -123,9 +156,7 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
                       <circle cx="12" cy="12" r="9" stroke="#AD2B0B" strokeWidth="2" />
                       <path d="M12 7v5l3 3" stroke="#AD2B0B" strokeWidth="2" strokeLinecap="round" />
                     </svg>
-                    <span className="text-sm font-medium" style={{ color: '#333' }}>
-                      {formatTime(event.time, event.time_end)}
-                    </span>
+                    <span className="text-sm font-medium" style={{ color: '#333' }}>{formatTime(event.time, event.time_end)}</span>
                   </div>
                 )}
               </div>
@@ -133,7 +164,6 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
             </>
           )}
 
-          {/* Operating hours — local businesses only */}
           {event.operating_hours && (
             <>
               <div className="flex items-start gap-2">
@@ -147,7 +177,6 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
             </>
           )}
 
-          {/* Location — only shown when available */}
           {event.location && (
             <>
               <div className="flex items-start gap-2">
@@ -160,7 +189,6 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
             </>
           )}
 
-          {/* Hosted by */}
           {event.company_hosted && (
             <>
               <div className="flex items-center gap-2">
@@ -176,9 +204,6 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
             </>
           )}
 
-          <div style={{ height: '0px' }} />
-
-          {/* Price + audience */}
           <div className="flex items-center gap-3">
             {event.experience_type !== 'local-business' && (
               <span
@@ -193,23 +218,17 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
               </span>
             )}
             <span className="text-xs" style={{ color: '#999' }}>
-              {event.focus} · {event.group_type.join(', ')}
+              {event.focus}{groupTypes.length > 0 ? ` · ${groupTypes.join(', ')}` : ''}
             </span>
           </div>
 
           <div style={{ height: '14px' }} />
 
-          {/* Average price — events only */}
           {event.experience_type !== 'local-business' && (
             <>
               <div className="flex items-center gap-2">
-                <span className="text-xs uppercase tracking-widest font-semibold" style={{ color: '#999' }}>
-                  Average Price
-                </span>
-                <span
-                  className="text-sm font-semibold rounded-full"
-                  style={{ padding: '4px 12px', backgroundColor: '#EDEDEE', color: '#333' }}
-                >
+                <span className="text-xs uppercase tracking-widest font-semibold" style={{ color: '#999' }}>Average Price</span>
+                <span className="text-sm font-semibold rounded-full" style={{ padding: '4px 12px', backgroundColor: '#EDEDEE', color: '#333' }}>
                   {getAveragePriceLabel()}
                 </span>
               </div>
@@ -217,21 +236,13 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
             </>
           )}
 
-          {/* Description */}
-          <p className="text-sm leading-relaxed" style={{ color: '#444' }}>
-            {event.description}
-          </p>
+          <p className="text-sm leading-relaxed" style={{ color: '#444' }}>{event.description}</p>
 
           <div style={{ height: '14px' }} />
 
-          {/* Tags */}
           <div className="flex flex-wrap gap-2">
-            {event.tags.map(tag => (
-              <span
-                key={tag}
-                className="text-xs rounded-full"
-                style={{ padding: '4px 12px', backgroundColor: '#EDEDEE', color: '#666' }}
-              >
+            {(event.tags ?? []).map(tag => (
+              <span key={tag} className="text-xs rounded-full" style={{ padding: '4px 12px', backgroundColor: '#EDEDEE', color: '#666' }}>
                 {tag}
               </span>
             ))}
@@ -239,7 +250,6 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
 
           <div style={{ height: '18px' }} />
 
-          {/* Action buttons */}
           <div className="flex gap-3">
             <button
               onClick={handleRemind}
@@ -261,6 +271,6 @@ export default function EventDetail({ event, onClose }: Readonly<Props>) {
 
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }
