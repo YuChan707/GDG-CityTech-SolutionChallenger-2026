@@ -1,68 +1,135 @@
 [
   {
+    "reviewer-name": "Brooklyn Local",
     "name-event": "Brooklyn Night Market Pop-Up",
     "comments": "Amazing vibes, great food variety and live music!",
     "link-post-comment": "https://instagram.com/post/market-review-1",
     "company-hosted": "Brooklyn Night Market"
   },
   {
+    "reviewer-name": "NYC Tech Collective",
     "name-event": "NYC Tech Startup Networking Meetup",
     "comments": "Met a lot of founders and got valuable connections.",
     "link-post-comment": "https://linkedin.com/post/tech-meetup-review",
     "company-hosted": "NYC Tech Collective"
   },
   {
+    "reviewer-name": "Wellness Fan",
     "name-event": "Central Park Morning Yoga",
     "comments": "Very relaxing and beginner-friendly session.",
     "link-post-comment": "https://instagram.com/post/yoga-nyc",
     "company-hosted": "NYC Wellness Group"
   },
   {
+    "reviewer-name": "Road Runner",
     "name-event": "NYC Half Marathon",
     "comments": "Challenging but well-organized race!",
     "link-post-comment": "https://twitter.com/post/nyc-marathon",
     "company-hosted": "New York Road Runners"
   },
   {
+    "reviewer-name": "Fashion Lover",
     "name-event": "SoHo Fashion Pop-Up Shop",
     "comments": "Loved the unique designs and streetwear brands.",
     "link-post-comment": "https://instagram.com/post/soho-fashion",
     "company-hosted": "SoHo Creative Studios"
   },
   {
+    "reviewer-name": "AI Researcher",
     "name-event": "Columbia AI Research Seminar",
     "comments": "Very insightful talks on AI trends and research.",
     "link-post-comment": "https://linkedin.com/post/ai-seminar",
     "company-hosted": "Columbia University"
   },
   {
+    "reviewer-name": "Queens Foodie",
     "name-event": "Queens Night Food Truck Festival",
     "comments": "So many food options, great for families!",
     "link-post-comment": "https://instagram.com/post/queens-food",
     "company-hosted": "Queens Night Market"
   },
   {
+    "reviewer-name": "Business Leader",
     "name-event": "Women in Business Leadership Panel",
     "comments": "Inspiring speakers and great networking opportunity.",
     "link-post-comment": "https://linkedin.com/post/women-leaders",
     "company-hosted": "NYC Women Leaders Network"
   },
   {
+    "reviewer-name": "Indie Gamer",
     "name-event": "Brooklyn Indie Game Night",
     "comments": "Fun event, discovered some awesome indie games.",
     "link-post-comment": "https://twitter.com/post/game-night",
     "company-hosted": "Indie Dev NYC"
   },
   {
+    "reviewer-name": "Small Biz Owner",
     "name-event": "Bronx Small Business Workshop",
     "comments": "Helpful tips for marketing and growth strategies.",
     "link-post-comment": "https://facebook.com/post/bronx-workshop",
     "company-hosted": "Bronx Business Alliance"
   },
   {
+    "reviewer-name": "Wellness Seeker",
     "name-event": "Riverside Wellness Studio Sound Bath",
     "comments": "The sound bath was deeply restorative and the studio felt peaceful. I left feeling refreshed and more centered.",
     "link-post-comment": "https://instagram.com/post/riverside-soundbath",
     "company-hosted": "Riverside Wellness Studio"
+  },
+  {
+    "reviewer-name": "Maria G.",
+    "name-event": "Queens Night Market",
+    "comments": "The Queens Night Market was incredible — so much food and culture in one place. ExploreNYC matched me perfectly!",
+    "link-post-comment": "",
+    "company-hosted": "Queens Night Market"
+  },
+  {
+    "reviewer-name": "James T.",
+    "name-event": "Per Scholas",
+    "comments": "Found my internship through the Per Scholas listing. The filter by focus area saved me so much time.",
+    "link-post-comment": "",
+    "company-hosted": "Per Scholas"
+  },
+  {
+    "reviewer-name": "Priya S.",
+    "name-event": "NYC Tech + Media Meetup",
+    "comments": "NYC Tech + Media Meetup was exactly what I needed to break into the industry. Great recommendation!",
+    "link-post-comment": "",
+    "company-hosted": "NYC Tech Collective"
+  },
+  {
+    "reviewer-name": "Carlos M.",
+    "name-event": "Tribeca Film Festival",
+    "comments": "I had no idea the Tribeca Film Festival had free screenings. ExploreNYC showed me events I'd never find otherwise.",
+    "link-post-comment": "",
+    "company-hosted": "Tribeca Film Festival"
+  },
+  {
+    "reviewer-name": "Aisha R.",
+    "name-event": "Healthcare Bootcamp Programs",
+    "comments": "The bootcamp listings for healthcare programs helped me find my next career step. This app is a game changer.",
+    "link-post-comment": "",
+    "company-hosted": "NYC Health Programs"
+  },
+  {
+    "reviewer-name": "David K.",
+    "name-event": "NYC Pride March",
+    "comments": "NYC Pride March info was all here — time, location, everything. Loved how easy it was to plan my day.",
+    "link-post-comment": "",
+    "company-hosted": "NYC Pride"
+  },
+  {
+    "reviewer-name": "Sophie L.",
+    "name-event": "Technology Internships",
+    "comments": "As a high school student I found real internships in Technology that actually accept people with no experience.",
+    "link-post-comment": "",
+    "company-hosted": "NYC Tech Programs"
+  },
+  {
+    "reviewer-name": "Omar F.",
+    "name-event": "STEAM Robotics Workshops",
+    "comments": "The STEAM programs section introduced me to robotics workshops I didn't know existed in the city.",
+    "link-post-comment": "",
+    "company-hosted": "NYC STEAM Programs"
   }
 ]
