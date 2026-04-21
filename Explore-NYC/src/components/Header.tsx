@@ -35,8 +35,8 @@ export default function Header() {
     { label: 'Explorer',          onClick: handleHome,                       active: explorerActive,                    color: 'red'     },
     { label: 'High Education',    onClick: handleEducation,                  active: educationActive,                   color: 'blue'    },
     { label: 'Who We Are?',       onClick: () => navigate('/about'),         active: location.pathname === '/about',    color: 'default' },
-    { label: 'Review people',     onClick: () => navigate('/reviews'),       active: location.pathname === '/reviews',  color: 'green'   },
-    { label: 'Submit request',    onClick: () => navigate('/submit'),        active: location.pathname === '/submit',   color: 'teal'    },
+    { label: 'People Review',     onClick: () => navigate('/reviews'),       active: location.pathname === '/reviews',  color: 'green'   },
+    { label: 'Submit Request',    onClick: () => navigate('/submit'),        active: location.pathname === '/submit',   color: 'teal'    },
   ];
 
   return (

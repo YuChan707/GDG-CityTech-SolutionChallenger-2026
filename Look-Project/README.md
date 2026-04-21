@@ -18,8 +18,25 @@ We recognize that NYC is vast and diverse. It's not just Manhattan. Brooklyn, Br
 - **Dsiplay same data result:** differenciate the event/local business services.
 
 
-### V2 - Backend design (upcoming)
-Plan idea:
-- Using Google Cloud products, make massive search events based on social media, official page, Luma, and Meet Up.
-- Goal tools: Vertex AI, Gemini AI, and Big Query
-- Add agentic AI?
+### V2 - Backend & Accessibility Updates
+
+**Plan Idea:**
+
+- **Audio Button (Accessibility):** Added an audio button to support users with visual or hearing impairments, enabling text-to-speech for event and business results so the app is more inclusive.
+- **Apify Data Extraction:** Integrated Apify to scrape and extract event and local business data from social media, official pages, Luma, and Meetup at scale, then pipes the collected data into Firebase for real-time storage and retrieval.
+- **Missing Pages Filled:**
+  - **Who We Are?** — Added a dedicated page introducing the team, mission, and the story behind the project.
+  - **People Review** — Added a community reviews page where users can read and submit feedback about local events and businesses.
+  - **Request Suggestion** — Added a section for suggestion events/program/internship
+
+
+### V3 - Agentic AI & Massive Event Search (upcoming)
+
+**Plan Idea:**
+
+- **Massive Event Search via Google Cloud:** Leverage Google Cloud infrastructure to perform large-scale searches across social media platforms, official event pages, Luma, and Meetup simultaneously.
+- **Goal Tools:**
+  - **Vertex AI** — Power intelligent search ranking and personalization.
+  - **Gemini AI** — Enable natural language understanding and agentic reasoning over search results.
+  - **BigQuery** — Store and analyze large volumes of event data for insights and recommendations.
+- **Agentic AI Integration:** Explore adding an autonomous AI agent that proactively discovers, filters, and surfaces relevant events without requiring manual user queries.
