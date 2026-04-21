@@ -136,13 +136,13 @@ export default function MapSection() {
         style={{ backgroundColor: 'rgba(255,255,255,0.92)', padding: '14px 20px', marginBottom: '10px', alignItems: 'center' }}
       >
         <p
-          className="uppercase tracking-widest font-semibold mb-3"
-          style={{ fontSize: '10px', color: '#777' }}
+          className="uppercase tracking-widest font-semibold mb-3 justify-center" 
+          style={{ fontSize: '10px', color: '#777', textAlign: 'center' }}
         >
           Filter by type
         </p>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 justify-center">
           {ALL_TYPES.map(type => {
             const on = activeTypes.has(type);
             return (
@@ -184,7 +184,7 @@ export default function MapSection() {
           )}
         </div>
 
-        <p className="mt-2" style={{ fontSize: '10px', color: '#aaa' }}>
+        <p className="mt-2 text-center" style={{ fontSize: '10px', color: '#000000' }}>
           {visiblePins.length} pin{visiblePins.length === 1 ? '' : 's'} visible
           {activePin ? ' · click the map to deselect' : ' · click a pin to focus it'}
         </p>

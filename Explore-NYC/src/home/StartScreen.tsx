@@ -9,7 +9,7 @@ export default function StartScreen() {
     <div className="min-h-screen flex flex-col items-center justify-center p-6 gap-8">
 
       {/* ── Title block ── */}
-      <div className="text-center">
+      <div className="text-center" style={{ paddingTop: '48px' }}>
         <div
           style={{
             fontSize: '52px',
