@@ -34,8 +34,8 @@ export default function Header() {
     { label: 'Home page',         onClick: () => navigate('/'),              active: homePageActive,                    color: 'default' },
     { label: 'Explorer',          onClick: handleHome,                       active: explorerActive,                    color: 'red'     },
     { label: 'High Education',    onClick: handleEducation,                  active: educationActive,                   color: 'blue'    },
-    { label: 'About the project', onClick: () => navigate('/about'),         active: location.pathname === '/about',    color: 'default' },
-    { label: 'Review people',     onClick: () => navigate('/reviews'),       active: location.pathname === '/reviews',  color: 'default' },
+    { label: 'Who We Are?',       onClick: () => navigate('/about'),         active: location.pathname === '/about',    color: 'default' },
+    { label: 'Review people',     onClick: () => navigate('/reviews'),       active: location.pathname === '/reviews',  color: 'green'   },
     { label: 'Submit request',    onClick: () => navigate('/submit'),        active: location.pathname === '/submit',   color: 'teal'    },
   ];
 
@@ -58,7 +58,7 @@ export default function Header() {
         </p>
                 <p
           className="text-xs uppercase"
-          style={{ letterSpacing: '0.22em', color: 'rgba(255,255,255,0.45)', fontSize: "15px"}}
+          style={{ letterSpacing: '0.22em', color: 'rgba(255,255,255,0.85)', fontSize: "15px"}}
         >
           "Support local business and student success"
         </p>
@@ -75,6 +75,7 @@ export default function Header() {
             red:     ['#8b0000',  'rgba(139,0,0,0.45)',     'none'],
             blue:    ['#2563eb',  'rgba(74,158,224,0.35)',  '1px solid rgba(74,158,224,0.5)'],
             teal:    ['#00827f',  'rgba(0,130,127,0.35)',   '1px solid rgba(0,130,127,0.5)'],
+            green:   ['#306030',  'rgba(48,96,48,0.35)',    '1px solid rgba(48,96,48,0.5)'],
           };
           const [activeBg, inactiveBg, inactiveBorder] = colors[item.color] ?? colors.default;
           const bg     = item.active ? activeBg  : inactiveBg;

@@ -134,7 +134,7 @@ export async function fetchEducationRecommendations(
       '/api/education/recommendations',
       { method: 'POST', body: JSON.stringify({ preferences: prefs }) }
     );
-    return data.profiles ?? null;
+    return data.profiles?.length ? data.profiles : null;
   } catch {
     console.warn('[backend.ts] /api/education/recommendations unreachable — using static fallback');
     return null;

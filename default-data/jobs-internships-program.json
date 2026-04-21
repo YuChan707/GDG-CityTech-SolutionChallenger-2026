@@ -99,98 +99,135 @@
     "due-date-register-program": "rolling"
   },
   {
-    "Organization-name": "Kingsborough Community College Workforce Programs",
-    "Focus-Area": "Education & Training",
-    "User-requirement": "varies",
-    "Program-services": "career prep, mentorship",
-    "Other category": "CUNY Programs",
-    "location": "Manhattan Beach, Brooklyn, NYC",
-    "coordinates": { "lat": 40.5817, "lng": -73.9425 },
-    "link-registration-program": "https://kbcc.cuny.edu",
-    "due-date-register-program": "seasonal"
-  },
-  {
     "Organization-name": "Per Scholas",
     "Focus-Area": "Technology",
+    "User-requirement": "18+, no prior experience required",
     "Program-services": "IT training and job placement",
+    "Other category": "Software Engineering / IT Support",
     "location": "Bronx, NYC",
-    "link-registration-program": "https://perscholas.org"
+    "coordinates": { "lat": 40.8448, "lng": -73.8648 },
+    "link-registration-program": "https://perscholas.org",
+    "due-date-register-program": "rolling"
   },
   {
     "Organization-name": "NYU Tandon STEM Programs",
     "Focus-Area": "STEAM",
+    "User-requirement": "students / graduates",
     "Program-services": "engineering and computer science training",
-    "location": "Brooklyn, NYC",
-    "link-registration-program": "https://engineering.nyu.edu"
+    "Other category": "Computer Science",
+    "location": "Downtown Brooklyn, NYC",
+    "coordinates": { "lat": 40.6943, "lng": -73.9866 },
+    "link-registration-program": "https://engineering.nyu.edu",
+    "due-date-register-program": "seasonal"
   },
   {
     "Organization-name": "NYC Health + Hospitals Internships",
     "Focus-Area": "Healthcare",
+    "User-requirement": "students / graduates",
     "Program-services": "clinical and admin internships",
-    "location": "NYC",
-    "link-registration-program": "https://nychhc.org"
+    "Other category": "Public Health",
+    "location": "Multiple Locations, NYC",
+    "coordinates": { "lat": 40.7128, "lng": -74.0060 },
+    "link-registration-program": "https://nychhc.org",
+    "due-date-register-program": "seasonal"
   },
   {
     "Organization-name": "Legal Aid Society Internships",
     "Focus-Area": "Law",
+    "User-requirement": "law students",
     "Program-services": "legal internships and fellowships",
-    "location": "NYC",
-    "link-registration-program": "https://legalaidnyc.org"
+    "Other category": "Public Interest Law",
+    "location": "Lower Manhattan, NYC",
+    "coordinates": { "lat": 40.7135, "lng": -74.0090 },
+    "link-registration-program": "https://legalaidnyc.org",
+    "due-date-register-program": "seasonal"
   },
   {
     "Organization-name": "American Museum of Natural History Internships",
     "Focus-Area": "Sciences",
+    "User-requirement": "students",
     "Program-services": "research internships",
-    "location": "Manhattan, NYC",
-    "link-registration-program": "https://amnh.org"
+    "Other category": "Biology / Earth Science",
+    "location": "Upper West Side, Manhattan, NYC",
+    "coordinates": { "lat": 40.7813, "lng": -73.9735 },
+    "link-registration-program": "https://amnh.org",
+    "due-date-register-program": "seasonal"
   },
   {
     "Organization-name": "NYC Teaching Fellows",
     "Focus-Area": "Teaching",
+    "User-requirement": "bachelor’s degree",
     "Program-services": "paid training and certification",
-    "location": "NYC",
-    "link-registration-program": "https://nycteachingfellows.org"
+    "Other category": "Education Fellowship",
+    "location": "New York City, NYC",
+    "coordinates": { "lat": 40.7128, "lng": -74.0060 },
+    "link-registration-program": "https://nycteachingfellows.org",
+    "due-date-register-program": "rolling"
   },
   {
     "Organization-name": "NBCUniversal Internships",
     "Focus-Area": "Media",
+    "User-requirement": "college students",
     "Program-services": "media and production internships",
-    "location": "NYC",
-    "link-registration-program": "https://nbcunicareers.com"
+    "Other category": "Broadcast / Film",
+    "location": "30 Rockefeller Plaza, NYC",
+    "coordinates": { "lat": 40.7587, "lng": -73.9787 },
+    "link-registration-program": "https://nbcunicareers.com",
+    "due-date-register-program": "seasonal"
   },
   {
     "Organization-name": "Warner Bros Discovery Early Careers",
     "Focus-Area": "Entertainment",
+    "User-requirement": "students / graduates",
     "Program-services": "film and media internships",
-    "location": "NYC",
-    "link-registration-program": "https://careers.wbd.com"
+    "Other category": "Film & TV",
+    "location": "Hudson Yards, NYC",
+    "coordinates": { "lat": 40.7530, "lng": -74.0020 },
+    "link-registration-program": "https://careers.wbd.com",
+    "due-date-register-program": "seasonal"
   },
   {
     "Organization-name": "Year Up New York",
     "Focus-Area": "Professional Development",
+    "User-requirement": "18-29 years old",
     "Program-services": "training + internships",
-    "location": "NYC",
-    "link-registration-program": "https://yearup.org"
+    "Other category": "Business / IT Careers",
+    "location": "Midtown Manhattan, NYC",
+    "coordinates": { "lat": 40.7580, "lng": -73.9855 },
+    "link-registration-program": "https://yearup.org",
+    "due-date-register-program": "rolling"
   },
   {
     "Organization-name": "Google NYC Apprenticeship Program",
     "Focus-Area": "Technology",
+    "User-requirement": "no degree required (varies by role)",
     "Program-services": "paid apprenticeship in tech roles",
-    "location": "NYC",
-    "link-registration-program": "https://buildyourfuture.withgoogle.com"
+    "Other category": "Apprenticeship",
+    "location": "Google NYC (Chelsea), Manhattan, NYC",
+    "coordinates": { "lat": 40.7410, "lng": -74.0048 },
+    "link-registration-program": "https://buildyourfuture.withgoogle.com",
+    "due-date-register-program": "seasonal"
   },
   {
     "Organization-name": "Columbia University Student Programs",
     "Focus-Area": "Students & Early Careers",
+    "User-requirement": "students",
     "Program-services": "research + internships",
-    "location": "NYC",
-    "link-registration-program": "https://columbia.edu"
+    "Other category": "University Programs",
+    "location": "Morningside Heights, Manhattan, NYC",
+    "coordinates": { "lat": 40.8075, "lng": -73.9626 },
+    "link-registration-program": "https://columbia.edu",
+    "due-date-register-program": "varies"
   },
   {
     "Organization-name": "NYC Robotics Alliance Programs",
     "Focus-Area": "Robotic",
+    "User-requirement": "students",
     "Program-services": "robotics training and competitions",
-    "location": "NYC",
-    "link-registration-program": "https://nycfirst.org"
+    "Other category": "STEM Education",
+    "location": "New York City, NYC",
+    "coordinates": { "lat": 40.7128, "lng": -74.0060 },
+    "link-registration-program": "https://nycfirst.org",
+    "due-date-register-program": "seasonal"
   }
 ]

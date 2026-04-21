@@ -49,6 +49,7 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 function parseRequirement(req: string): [number, number] {
+  if (!req) return [0, 99];
   const r = req.toLowerCase();
   const plusMatch = r.match(/(\d+)\+/);
   if (plusMatch) return [Number(plusMatch[1]), 99];
@@ -86,8 +87,12 @@ export default function EducationResults() {
   const state       = location.state as { preferences?: EducationPreferences } | null;
   const preferences = state?.preferences
     ?? (() => {
-      const raw = sessionStorage.getItem('lastEducationPrefs');
-      return raw ? JSON.parse(raw) as EducationPreferences : undefined;
+      try {
+        const raw = sessionStorage.getItem('lastEducationPrefs');
+        return raw ? JSON.parse(raw) as EducationPreferences : undefined;
+      } catch {
+        return undefined;
+      }
     })();
 
   const [search,       setSearch]       = useState('');
