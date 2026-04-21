@@ -131,5 +131,95 @@
     "min-price": 0,
     "max-price": 50,
     "link-event": "https://generalassemb.ly"
+  },
+  {
+    "name-event": "NYC Tech Meetup",
+    "category-event": "Technology",
+    "description-event": "One of the largest tech meetups in NYC for developers and founders.",
+    "location": "Manhattan, NYC",
+    "focus-event": "professionals",
+    "is-free": true,
+    "link-event": "https://www.meetup.com/ny-tech"
+  },
+  {
+    "name-event": "AI Summit New York",
+    "category-event": "STEAM",
+    "description-event": "Conference focused on artificial intelligence and emerging technologies.",
+    "location": "Javits Center, NYC",
+    "focus-event": "professionals",
+    "is-free": false,
+    "link-event": "https://aisummit.com"
+  },
+  {
+    "name-event": "NYC Health Tech Meetup",
+    "category-event": "Healthcare",
+    "description-event": "Networking for healthcare innovators and startups.",
+    "location": "Manhattan, NYC",
+    "focus-event": "professionals",
+    "is-free": true,
+    "link-event": "https://meetup.com"
+  },
+  {
+    "name-event": "NY State Bar Association Events",
+    "category-event": "Law",
+    "description-event": "Legal networking and CLE events for professionals.",
+    "location": "NYC",
+    "focus-event": "law professionals",
+    "is-free": false,
+    "link-event": "https://nysba.org"
+  },
+  {
+    "name-event": "NY Academy of Sciences Events",
+    "category-event": "Sciences",
+    "description-event": "Scientific talks, panels, and networking.",
+    "location": "NYC",
+    "focus-event": "researchers",
+    "is-free": true,
+    "link-event": "https://nyas.org"
+  },
+  {
+    "name-event": "Teach For America NYC Events",
+    "category-event": "Teaching",
+    "description-event": "Info sessions and networking for future educators.",
+    "location": "NYC",
+    "focus-event": "students",
+    "is-free": true,
+    "link-event": "https://teachforamerica.org"
+  },
+  {
+    "name-event": "NYC Media Lab Events",
+    "category-event": "Media",
+    "description-event": "Workshops and talks on media innovation.",
+    "location": "NYC",
+    "focus-event": "creators",
+    "is-free": true,
+    "link-event": "https://nycmedialab.org"
+  },
+  {
+    "name-event": "Tribeca Film Festival Panels",
+    "category-event": "Entertainment",
+    "description-event": "Panels with filmmakers and industry leaders.",
+    "location": "Tribeca, NYC",
+    "focus-event": "creatives",
+    "is-free": false,
+    "link-event": "https://tribecafilm.com"
+  },
+  {
+    "name-event": "NYC Career Fair (Tech + Business)",
+    "category-event": "Professional Development",
+    "description-event": "Hiring event connecting job seekers with employers.",
+    "location": "NYC",
+    "focus-event": "job seekers",
+    "is-free": true,
+    "link-event": "https://eventbrite.com"
+  },
+  {
+    "name-event": "NYC Robotics Meetup",
+    "category-event": "Robotic",
+    "description-event": "Community for robotics engineers and enthusiasts.",
+    "location": "Brooklyn, NYC",
+    "focus-event": "engineers",
+    "is-free": true,
+    "link-event": "https://meetup.com"
   }
 ]

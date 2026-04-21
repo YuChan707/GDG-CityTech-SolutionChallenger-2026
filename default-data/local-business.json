@@ -130,5 +130,68 @@
     "link": "https://smorgasburg.com",
     "owner-labels": "local entrepreneur",
     "is_active": true
+  },
+  {
+    "name-business": "REI Co-op Soho",
+    "category-business": "Outdoors",
+    "description": "Outdoor gear and adventure equipment store.",
+    "location": "SoHo, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "Joe's Pizza",
+    "category-business": "Food & Drinks",
+    "description": "Iconic NYC pizza spot.",
+    "location": "Greenwich Village, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "The Museum of Modern Art (MoMA)",
+    "category-business": "Arts & Culture",
+    "description": "World-famous modern art museum.",
+    "location": "Midtown Manhattan, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "Equinox Gym",
+    "category-business": "Sports & Fitness",
+    "description": "Premium fitness club with classes and training.",
+    "location": "NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "Bowery Ballroom",
+    "category-business": "Music & Entertainment",
+    "description": "Popular live music venue.",
+    "location": "Lower East Side, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "Canal Street Market",
+    "category-business": "Shopping",
+    "description": "Trendy retail and food market.",
+    "location": "Chinatown, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "OS NYC",
+    "category-business": "Gaming & Tech",
+    "description": "Gaming lounge and esports venue.",
+    "location": "Chinatown, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "MNDFL Meditation Studio",
+    "category-business": "Wellness",
+    "description": "Meditation classes and mindfulness sessions.",
+    "location": "Greenwich Village, NYC",
+    "is_active": true
+  },
+  {
+    "name-business": "FAO Schwarz",
+    "category-business": "Family Fun",
+    "description": "Iconic toy store experience for families.",
+    "location": "Rockefeller Center, NYC",
+    "is_active": true
   }
 ]

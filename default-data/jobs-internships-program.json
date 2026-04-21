@@ -108,5 +108,89 @@
     "coordinates": { "lat": 40.5817, "lng": -73.9425 },
     "link-registration-program": "https://kbcc.cuny.edu",
     "due-date-register-program": "seasonal"
+  },
+  {
+    "Organization-name": "Per Scholas",
+    "Focus-Area": "Technology",
+    "Program-services": "IT training and job placement",
+    "location": "Bronx, NYC",
+    "link-registration-program": "https://perscholas.org"
+  },
+  {
+    "Organization-name": "NYU Tandon STEM Programs",
+    "Focus-Area": "STEAM",
+    "Program-services": "engineering and computer science training",
+    "location": "Brooklyn, NYC",
+    "link-registration-program": "https://engineering.nyu.edu"
+  },
+  {
+    "Organization-name": "NYC Health + Hospitals Internships",
+    "Focus-Area": "Healthcare",
+    "Program-services": "clinical and admin internships",
+    "location": "NYC",
+    "link-registration-program": "https://nychhc.org"
+  },
+  {
+    "Organization-name": "Legal Aid Society Internships",
+    "Focus-Area": "Law",
+    "Program-services": "legal internships and fellowships",
+    "location": "NYC",
+    "link-registration-program": "https://legalaidnyc.org"
+  },
+  {
+    "Organization-name": "American Museum of Natural History Internships",
+    "Focus-Area": "Sciences",
+    "Program-services": "research internships",
+    "location": "Manhattan, NYC",
+    "link-registration-program": "https://amnh.org"
+  },
+  {
+    "Organization-name": "NYC Teaching Fellows",
+    "Focus-Area": "Teaching",
+    "Program-services": "paid training and certification",
+    "location": "NYC",
+    "link-registration-program": "https://nycteachingfellows.org"
+  },
+  {
+    "Organization-name": "NBCUniversal Internships",
+    "Focus-Area": "Media",
+    "Program-services": "media and production internships",
+    "location": "NYC",
+    "link-registration-program": "https://nbcunicareers.com"
+  },
+  {
+    "Organization-name": "Warner Bros Discovery Early Careers",
+    "Focus-Area": "Entertainment",
+    "Program-services": "film and media internships",
+    "location": "NYC",
+    "link-registration-program": "https://careers.wbd.com"
+  },
+  {
+    "Organization-name": "Year Up New York",
+    "Focus-Area": "Professional Development",
+    "Program-services": "training + internships",
+    "location": "NYC",
+    "link-registration-program": "https://yearup.org"
+  },
+  {
+    "Organization-name": "Google NYC Apprenticeship Program",
+    "Focus-Area": "Technology",
+    "Program-services": "paid apprenticeship in tech roles",
+    "location": "NYC",
+    "link-registration-program": "https://buildyourfuture.withgoogle.com"
+  },
+  {
+    "Organization-name": "Columbia University Student Programs",
+    "Focus-Area": "Students & Early Careers",
+    "Program-services": "research + internships",
+    "location": "NYC",
+    "link-registration-program": "https://columbia.edu"
+  },
+  {
+    "Organization-name": "NYC Robotics Alliance Programs",
+    "Focus-Area": "Robotic",
+    "Program-services": "robotics training and competitions",
+    "location": "NYC",
+    "link-registration-program": "https://nycfirst.org"
   }
 ]

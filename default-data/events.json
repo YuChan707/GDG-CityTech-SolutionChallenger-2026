@@ -147,5 +147,77 @@
     "max-price": 400,
     "link-event": "https://governorsballmusicfestival.com",
     "company-hosted": "Founders Entertainment"
+  },
+  {
+    "name-event": "Central Park Picnic & Outdoor Games",
+    "category-event": "Outdoors",
+    "description-event": "Community picnic with games, music, and open lawn activities.",
+    "location": "Central Park, NYC",
+    "is-free": true,
+    "group people": "friends"
+  },
+  {
+    "name-event": "Smorgasburg Food Market",
+    "category-event": "Food & Drinks",
+    "description-event": "Famous outdoor food market with dozens of NYC vendors.",
+    "location": "Williamsburg, Brooklyn, NYC",
+    "is-free": true,
+    "group people": "foodies"
+  },
+  {
+    "name-event": "Met Museum Late Nights",
+    "category-event": "Arts & Culture",
+    "description-event": "Extended evening hours with live music and exhibitions.",
+    "location": "Metropolitan Museum of Art, NYC",
+    "is-free": false,
+    "group people": "artists"
+  },
+  {
+    "name-event": "Brooklyn Bridge Park Fitness Classes",
+    "category-event": "Sports & Fitness",
+    "description-event": "Free outdoor yoga and HIIT classes.",
+    "location": "Brooklyn Bridge Park, NYC",
+    "is-free": true,
+    "group people": "fitness"
+  },
+  {
+    "name-event": "SummerStage Concert Series",
+    "category-event": "Music & Entertainment",
+    "description-event": "Live performances in Central Park and other NYC parks.",
+    "location": "Central Park, NYC",
+    "is-free": true,
+    "group people": "music lovers"
+  },
+  {
+    "name-event": "SoHo Shopping Walk",
+    "category-event": "Shopping",
+    "description-event": "Explore retail stores, pop-ups, and designer shops.",
+    "location": "SoHo, NYC",
+    "is-free": true,
+    "group people": "shoppers"
+  },
+  {
+    "name-event": "NYC Game Night @ OS NYC",
+    "category-event": "Gaming & Tech",
+    "description-event": "Esports, console gaming, and community tournaments.",
+    "location": "Chinatown, NYC",
+    "is-free": false,
+    "group people": "gamers"
+  },
+  {
+    "name-event": "Bryant Park Yoga",
+    "category-event": "Wellness",
+    "description-event": "Outdoor yoga classes in Bryant Park.",
+    "location": "Bryant Park, NYC",
+    "is-free": true,
+    "group people": "wellness"
+  },
+  {
+    "name-event": "Queens Zoo Family Day",
+    "category-event": "Family Fun",
+    "description-event": "Interactive zoo activities for kids and families.",
+    "location": "Queens Zoo, NYC",
+    "is-free": false,
+    "group people": "families"
   }
 ]
