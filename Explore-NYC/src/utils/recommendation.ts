@@ -144,8 +144,8 @@ export function scoreEvents(events: Event[], preferences: UserPreferences): Even
         event.name,
         event.description,
         event.category,
-        ...event.tags,
-        ...event.group_type,
+        ...(event.tags ?? []),
+        ...(event.group_type ?? []),
       ].join(' ').toLowerCase();
 
       // Score: vibe match (3pts each)
@@ -221,7 +221,7 @@ export function filterEvents(
 
     // ── Search ──────────────────────────────────────────────────────────────
     if (q) {
-      const haystack = `${event.name} ${event.description} ${event.location} ${event.tags.join(' ')}`.toLowerCase();
+      const haystack = `${event.name} ${event.description} ${event.location} ${(event.tags ?? []).join(' ')}`.toLowerCase();
       if (!haystack.includes(q)) return false;
     }
 
