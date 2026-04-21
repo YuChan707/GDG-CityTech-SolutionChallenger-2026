@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { UserPreferences } from '../types';
 import { triggerPipeline } from '../api/backend';
+import HearButton from '../components/HearButton';
 
 const LOOKING_FOR_OPTIONS = [
   { value: 'events',         label: 'Events' },
@@ -86,6 +87,14 @@ export default function Questionnaire() {
     else navigate('/');
   }
 
+  function getStepText(): string {
+    if (step === 0) return `What are you looking for? Options: ${LOOKING_FOR_OPTIONS.map(o => o.label).join(', ')}.`;
+    if (step === 1) return `What's your vibe today? Options: ${VIBES.join(', ')}.`;
+    if (step === 2) return `Who are you exploring with? Options: ${GROUP_TYPES.join(', ')}.`;
+    if (step === 3) return `What are your interests? Choose from: ${INTEREST_TAGS.join(', ')}.`;
+    return `What's your budget? Options: ${PRICE_OPTIONS.map(o => o.label).join(', ')}.`;
+  }
+
   const canProceed = (() => {
     if (step === 0) return prefs.lookingFor !== '';
     if (step === 1) return prefs.vibe.length > 0;
@@ -166,6 +175,12 @@ export default function Questionnaire() {
           >
             {step + 1}/{TOTAL_STEPS}
           </span>
+          <HearButton
+            getText={getStepText}
+            size={22}
+            label="Read this question aloud"
+            style={{ backgroundColor: 'rgba(255,255,255,0.15)', padding: '5px', color: 'rgba(255,255,255,0.8)' }}
+          />
         </div>
 
         {/* ── Step 0: What are you looking for? ── */}

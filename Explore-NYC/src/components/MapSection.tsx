@@ -133,7 +133,7 @@ export default function MapSection() {
       {/* ── Filter bar ── */}
       <div
         className="rounded-2xl"
-        style={{ backgroundColor: 'rgba(255,255,255,0.92)', padding: '14px 20px', marginBottom: '10px' }}
+        style={{ backgroundColor: 'rgba(255,255,255,0.92)', padding: '14px 20px', marginBottom: '10px', alignItems: 'center' }}
       >
         <p
           className="uppercase tracking-widest font-semibold mb-3"

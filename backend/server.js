@@ -11,6 +11,7 @@ import educationRouter       from "./routes/education.js";
 import suggestionsRouter     from "./routes/suggestions.js";
 import mapRouter             from "./routes/map.js";
 import searchRouter          from "./routes/search.js";
+import ttsRouter             from "./routes/tts.js";
 import './jobs/scheduler.js'; 
 import { runStartupChecks } from "./services/startup-check.service.js";
 import { globalLimiter, recommendationsLimiter } from "./config/rateLimiter.js";
@@ -34,6 +35,7 @@ app.use("/api/education",   educationRouter);
 app.use("/api/suggestions", suggestionsRouter);
 app.use("/api/map",         mapRouter);
 app.use("/api/search",      searchRouter);
+app.use("/api/tts",         ttsRouter);
 
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", service: "Explore NYC API" });
