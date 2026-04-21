@@ -1,18 +1,103 @@
 # Explore NYC — Backend API
 
-Express.js REST API powering the Explore NYC application. Reads event data from **Google Firestore** and exposes endpoints for event listing, filtering, and AI-scored recommendations.
+Express.js REST API powering the Explore NYC application. Connects to **Google Firestore**, uses **Google Gemini 2.0 Flash** for AI content validation and ranking, and **Apify** for real-time web scraping.
+
+---
+
+## Architecture
+
+```mermaid
+graph TB
+    subgraph Routes["Routes Layer"]
+        R1[events.js]
+        R2[businesses.js]
+        R3[recommendations.js]
+        R4[pipeline.js]
+        R5[daily-pick.js]
+        R6[education.js]
+        R7[search.js]
+        R8[suggestions.js]
+        R9[map.js]
+    end
+
+    subgraph Services["Services Layer"]
+        S1[events.service]
+        S2[demand-pipeline.service\nuser-triggered]
+        S3[pipeline.service\ncron-scheduled]
+        S4[daily-pick.service\ncached per day]
+        S5[education.service]
+        S6[apify-search.service]
+        S7[business-checker.service]
+        S8[map.service]
+    end
+
+    subgraph AI["AI Layer"]
+        A1[gemini.service\nvalidateLegitimacyBatch\nstructureSearchResult\nrankResultsForUser]
+    end
+
+    subgraph Processors["Processors"]
+        P1[filter.processor\nisRelevant]
+        P2[event.processor\nnormalizeEvent]
+        P3[matcher.processor\nmatchToExisting]
+    end
+
+    subgraph Jobs["Scheduled Jobs"]
+        J1[scheduler.js\nnode-cron every 6h]
+    end
+
+    subgraph DB["Database"]
+        D1[(Firestore\nevents)]
+        D2[(Firestore\nbusinesses)]
+        D3[(Firestore\ndaily_picks)]
+        D4[(Firestore\nprofessional_events)]
+        D5[(Firestore\njobs_internships)]
+    end
+
+    subgraph External["External APIs"]
+        E1[Apify\nGoogle Search Actor]
+        E2[Apify\nGoogle Maps Actor]
+        E3[Apify\nInstagram Actor]
+        E4[Gemini 2.0 Flash]
+    end
+
+    R1 --> S1 --> D1
+    R2 --> S1 --> D2
+    R3 --> S1
+    R4 --> S2
+    R5 --> S4
+    R6 --> S5 --> D4 & D5
+    J1 --> S3
+
+    S2 --> S6 --> E1 & E2
+    S3 --> S6 & E3
+    S4 --> E3
+
+    S2 --> A1 --> E4
+    S3 --> P1 & P2 & P3
+    S3 --> A1
+    S4 --> A1
+
+    S2 --> D1 & D2
+    S3 --> D1 & D2
+    S4 --> D3
+```
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js (ESM modules) |
-| Framework | Express 4 |
-| Database | Google Firestore (via Firebase Admin SDK) |
-| Auth | Firebase service account (no user auth yet) |
-| Config | dotenv |
+| Layer | Technology | Version |
+|---|---|---|
+| Runtime | Node.js (ESM modules) | 18+ |
+| Framework | Express | 4.18.2 |
+| Database | Google Firestore (Firebase Admin SDK) | 13.8.0 |
+| AI | Google Generative AI (Gemini 2.0 Flash) | latest |
+| Scraping | Apify Client | latest |
+| Cron | node-cron | 4.2.1 |
+| Rate Limiting | express-rate-limit | 8.3.2 |
+| Security | Helmet | 8.1.0 |
+| CORS | cors | 2.8.5 |
+| Config | dotenv | 17.4.2 |
 
 ---
 
@@ -20,36 +105,60 @@ Express.js REST API powering the Explore NYC application. Reads event data from 
 
 ```
 backend/
-├── server.js                  # Entry point — Express app + route mounting
+├── server.js                       # Express entry point — route mounting, middleware, PORT 3001
 ├── package.json
-├── .env                       # Secret config (NOT committed)
-├── .env.example               # Template — copy this to .env
+├── .env                            # Secret config (NOT committed)
+├── .env.example                    # Template — copy to .env
 │
 ├── routes/
-│   ├── events.js              # GET /api/events, GET /api/events/:id
-│   └── recommendations.js     # POST /api/recommendations
+│   ├── events.js                   # GET /api/events, GET /api/events/:id
+│   ├── businesses.js               # GET /api/businesses
+│   ├── recommendations.js          # POST /api/recommendations
+│   ├── pipeline.js                 # POST /api/pipeline/trigger
+│   ├── daily-pick.js               # GET /api/daily-pick, GET /api/daily-pick/week
+│   ├── education.js                # GET /api/education, POST /api/education/recommendations
+│   ├── suggestions.js              # POST /api/suggestions (placeholder)
+│   ├── map.js                      # GET /api/map (placeholder)
+│   └── search.js                   # GET /api/search (placeholder)
 │
 ├── services/
-│   └── events.service.js      # Firestore query layer (queryEvents, getAllEvents, getEventById)
-│
-├── database/
-│   ├── firestore.js           # Firebase Admin SDK initialisation — exports `db`
-│   ├── seed.js                # One-time seed script: uploads events.json → Firestore
-│   └── schemas/
-│       ├── event.schema.js    # Event document shape + validateEvent()
-│       ├── business.schema.js # Business document shape
-│       └── review.schema.js   # Review document shape
-│
-├── data/
-│   └── events.json            # Local event dataset (source of truth for seeding)
+│   ├── events.service.js           # queryEvents, getAllEvents, getEventById
+│   ├── demand-pipeline.service.js  # User-triggered async pipeline (fire-and-forget)
+│   ├── pipeline.service.js         # Scheduled pipeline (every 6h via cron)
+│   ├── daily-pick.service.js       # Cached daily-pick logic (once per day)
+│   ├── education.service.js        # Education query + recommendation scoring
+│   ├── apify-search.service.js     # Apify actor orchestration
+│   ├── business-checker.service.js # Business validation helpers
+│   ├── startup-check.service.js    # Startup validation
+│   └── map.service.js              # Map data helpers
 │
 ├── ai/
-│   └── gemini.service.js      # Placeholder — Gemini API integration (future)
+│   └── gemini.service.js           # Gemini 2.0 Flash integration
+│                                   #   validateLegitimacyBatch(items)
+│                                   #   structureSearchResult(rawText)
+│                                   #   rankResultsForUser(items, preferences)
+│
+├── processors/
+│   ├── filter.processor.js         # isRelevant(text) — keyword-based relevance check
+│   ├── event.processor.js          # normalizeEvent(aiResult) — shape normalization
+│   └── matcher.processor.js        # matchToExisting(aiResult) — deduplication
+│
+├── database/
+│   ├── firestore.js                # Firebase Admin SDK init — exports `db`
+│   ├── seed.js                     # One-time seed: default-data/ → Firestore
+│   └── schemas/
+│       ├── event.schema.js         # Event document shape + validateEvent()
+│       ├── business.schema.js      # Business document shape
+│       └── review.schema.js        # Review document shape
 │
 ├── jobs/
-│   └── scheduler.js           # Placeholder — scheduled jobs (future)
+│   └── scheduler.js                # node-cron: runs pipeline.service every 6 hours
 │
-└── processors/                # Placeholder — data processors (future)
+├── config/
+│   └── rateLimiter.js              # express-rate-limit configuration
+│
+└── scrapers/
+    └── apify.scraper.js            # Legacy scraper (superseded by apify-search.service)
 ```
 
 ---
@@ -59,15 +168,16 @@ backend/
 ### 1. Prerequisites
 
 - Node.js 18+
-- A Firebase project with Firestore enabled
-- A Firebase Admin SDK service account JSON
+- Firebase project with Firestore enabled
+- Firebase Admin SDK service account JSON
+- Gemini API key (`aistudio.google.com`)
+- Apify token (`apify.com`)
 
-### 2. Get Firebase credentials
+### 2. Firebase credentials
 
 1. Open [Firebase Console](https://console.firebase.google.com) → your project
-2. Go to **Project Settings → Service Accounts**
-3. Click **Generate new private key** — download the JSON file
-4. Place the JSON file inside `backend/database/`
+2. **Project Settings → Service Accounts → Generate new private key**
+3. Save the JSON file to `backend/database/`
 
 ### 3. Configure environment
 
@@ -75,124 +185,82 @@ backend/
 cp .env.example .env
 ```
 
-Edit `.env`:
-
 ```env
 GOOGLE_APPLICATION_CREDENTIALS=./database/YOUR-FILE-adminsdk-XXXXX.json
 FIREBASE_PROJECT_ID=your-firebase-project-id
+GEMINI_API_KEY=your-gemini-api-key
+APIFY_TOKEN=your-apify-token
 PORT=3001
+ALLOWED_ORIGINS=http://localhost:5173
 ```
 
-> **Never commit `.env` or the credential JSON.** Both are listed in `.gitignore`.
+> **Never commit `.env` or the credential JSON.**
 
-### 4. Install dependencies
+### 4. Install & seed
 
 ```bash
 npm install
+npm run seed      # uploads default-data/ JSON files into Firestore (safe to re-run)
 ```
 
-### 5. Seed Firestore
-
-Run once to upload `data/events.json` into the Firestore `events` collection:
+### 5. Start
 
 ```bash
-npm run seed
+npm run dev       # development — auto-restarts on change
+npm start         # production
 ```
 
-Safe to re-run — uses `{ merge: true }` so existing documents are updated, not duplicated.
-
-### 6. Start the server
-
-```bash
-# Development (auto-restarts on file change)
-npm run dev
-
-# Production
-npm start
-```
-
-The server starts at `http://localhost:3001`.
+Server starts at `http://localhost:3001`.
 
 ---
 
 ## API Reference
 
-### Health check
+### Health
 
 ```
 GET /api/health
-```
-
-**Response**
-```json
-{ "status": "ok", "service": "Explore NYC API" }
+→ { "status": "ok", "service": "Explore NYC API" }
 ```
 
 ---
 
-### List events
+### Events
 
 ```
 GET /api/events
 ```
 
-**Query parameters**
-
 | Param | Type | Description |
 |---|---|---|
-| `search` | string | Full-text search across name, description, location, tags |
-| `date` | string | Filter by exact date `YYYY-MM-DD` |
-| `time` | string | Filter events starting at or after this time `HH:MM` |
-| `category` | string | One of: `pop-up`, `educational`, `wellness`, `sports`, `festival`, `gaming` |
-| `is_free` | boolean | `true` or `false` |
-
-**Example**
-```
-GET /api/events?category=wellness&is_free=true
-```
-
-**Response**
-```json
-{
-  "events": [
-    {
-      "id": "3",
-      "name": "Central Park Morning Yoga",
-      "date": "2026-05-18",
-      "time": "08:00",
-      "description": "Guided yoga session...",
-      "category": "wellness",
-      "is_free": true,
-      "group_type": ["solo", "couple", "fitness"],
-      "location": "Central Park, Manhattan, NY",
-      "link": "https://example.com/central-park-yoga",
-      "tags": ["yoga", "wellness", "fitness", "outdoor", "meditation", "health"]
-    }
-  ],
-  "total": 1
-}
-```
-
----
-
-### Get event by ID
+| `search` | string | Full-text across name, description, location, tags |
+| `date` | string | `YYYY-MM-DD` exact match |
+| `time` | string | Events starting at or after `HH:MM` |
+| `category` | string | `festival`, `workshop`, `networking`, `wellness`, `sports`, `gaming`, ... |
+| `is_free` | boolean | `true` / `false` |
 
 ```
 GET /api/events/:id
 ```
 
-**Response** — single event object, or `404` if not found.
+---
+
+### Businesses
+
+```
+GET /api/businesses
+```
+
+Returns all active local businesses from Firestore `businesses` collection.
 
 ---
 
-### Get recommendations
+### Recommendations
 
 ```
 POST /api/recommendations
 Content-Type: application/json
 ```
-
-**Request body**
 
 ```json
 {
@@ -201,29 +269,75 @@ Content-Type: application/json
     "groupType": "Friends",
     "interests": ["yoga", "food"],
     "pricePreference": "free",
-    "customInput": "looking for outdoor activities"
+    "customInput": "outdoor activities near Central Park"
   }
 }
 ```
 
-| Field | Type | Values |
-|---|---|---|
-| `vibe` | string[] | `Outdoors`, `Food & Drinks`, `Arts & Culture`, `Sports & Fitness`, `Music & Entertainment`, `Shopping`, `Gaming & Tech`, `Wellness`, `Family Fun` |
-| `groupType` | string | `Solo`, `Friends`, `Couple`, `Family` |
-| `interests` | string[] | Free-form tags |
-| `pricePreference` | string | `free`, `up20`, `up50`, `any` |
-| `customInput` | string | Natural language input |
+Returns events sorted by `relevanceScore` (desc). Scoring weights:
 
-**Response** — same as event list, with an additional `relevanceScore` field on each event, sorted descending.
+| Signal | Points |
+|---|---|
+| Vibe keyword match | +3 per match |
+| Group type match | +2 per match |
+| Custom interest match | +2 per keyword |
+| Price preference match | +1–3 |
 
+---
+
+### Daily Pick
+
+```
+GET /api/daily-pick
+```
+
+Returns today's featured event/business. Computed once per day from Apify + Gemini, cached in `daily_picks/{YYYY-MM-DD}`.
+
+```
+GET /api/daily-pick/week
+```
+
+Returns picks for the past 7 days.
+
+---
+
+### Pipeline Trigger
+
+```
+POST /api/pipeline/trigger
+```
+
+Fires the demand pipeline in the background. Returns `200` immediately — does not wait for pipeline completion. The pipeline searches Apify for events/businesses matching the user's preferences, validates via Gemini, and saves new entries to Firestore.
+
+---
+
+### Education
+
+```
+GET /api/education?type=event&focusArea=Technology&search=NYC
+POST /api/education/recommendations
+```
+
+**POST body:**
 ```json
 {
-  "events": [
-    { "id": "3", "name": "Central Park Morning Yoga", "relevanceScore": 9, "..." : "..." }
-  ],
-  "total": 10
+  "preferences": {
+    "lookingFor": "both",
+    "whoAreYou": "college",
+    "focusArea": "Technology",
+    "experience": "0-1 years",
+    "keyword": "machine learning"
+  }
 }
 ```
+
+Scoring weights:
+
+| Signal | Points |
+|---|---|
+| Focus area match | +5 |
+| Experience fit | +4 |
+| Keyword match | +3 |
 
 ---
 
@@ -231,61 +345,121 @@ Content-Type: application/json
 
 ### `events`
 
-| Field | Type | Description |
+| Field | Type | Notes |
 |---|---|---|
-| `id` | string | Document ID (mirrored into the document) |
-| `name` | string | Event display name |
-| `date` | string | `YYYY-MM-DD` |
-| `time` | string | `HH:MM` 24-hour |
+| `id` | string | name-date slug |
+| `title` | string | Display name |
 | `description` | string | Full description |
-| `category` | string | Event category |
-| `focus` | string | Target audience |
-| `is_free` | boolean | Free entry |
-| `min_price` | number? | Minimum price (omitted when free) |
-| `max_price` | number? | Maximum price (omitted when free) |
-| `group_type` | string[] | Audience tags |
-| `location` | string | Venue and borough |
-| `link` | string | External event URL |
-| `tags` | string[] | Searchable keywords |
-| `created_at` | number | Unix timestamp (ms) when seeded |
+| `date` | string | `YYYY-MM-DD` |
+| `time` | string | `HH:MM` 24h |
+| `category` | string | festival, workshop, networking, etc. |
+| `is_free` | boolean | |
+| `min_price` / `max_price` | number? | When not free |
+| `location` | string | Venue + borough |
+| `coordinates` | `{lat, lng}` | |
+| `link` | string | External URL |
+| `tags` | string[] | Search keywords |
+| `group_type` | string[] | solo, friends, couple, family |
+| `is_legitimate` | boolean | Gemini-validated |
+| `gemini_checked` | boolean | |
+| `experience_type` | string | `event` or `local-business` |
+| `source` | string | apify, manual, etc. |
+| `addedAt` | ISO timestamp | |
 
-### `businesses` _(future)_
+### `businesses`
 
-Stores local NYC businesses linked to events.
+| Field | Type | Notes |
+|---|---|---|
+| `id` | string | name-slug |
+| `name` | string | |
+| `description` | string | |
+| `hours` | string | Operating hours |
+| `location` | string | |
+| `coordinates` | `{lat, lng}?` | |
+| `category` | string | |
+| `link` | string | |
+| `rating` | number? | |
+| `is_active` | boolean | |
+| `source` | string | |
 
-### `reviews` _(future)_
+### `daily_picks`
 
-Stores user-submitted reviews referencing an `event_id`.
+Document ID is `YYYY-MM-DD`. Caches the AI-picked event for each day.
+
+### `professional_events`
+
+Professional development events loaded from `default-data/professional-events.json`.
+
+### `jobs_internships`
+
+Internship and job listings loaded from `default-data/jobs-internships-program.json`.
+
+---
+
+## Pipeline Details
+
+### Demand Pipeline (user-triggered)
+
+```mermaid
+sequenceDiagram
+    participant BE as Backend
+    participant Apify
+    participant Gemini
+    participant DB as Firestore
+
+    BE->>Apify: Google Search Actor\n"NYC events {vibe} 2026"
+    Apify-->>BE: 10 web snippets
+    BE->>Apify: Google Maps Actor\n"{vibe} in New York City"
+    Apify-->>BE: 10 places
+    BE->>Gemini: rankResultsForUser(top 20, prefs)
+    Gemini-->>BE: Scored results
+    BE->>Gemini: validateLegitimacyBatch(top 5 each)
+    Gemini-->>BE: is_legitimate flags
+    BE->>DB: saveNewEvents + saveNewBusinesses\n(max 5 each, dedup by slug)
+```
+
+### Scheduled Pipeline (every 6 hours)
+
+```mermaid
+sequenceDiagram
+    participant Cron as node-cron
+    participant BE as Backend
+    participant Apify
+    participant Gemini
+    participant DB as Firestore
+
+    Cron->>BE: trigger runPipeline()
+    BE->>Apify: Fetch Instagram hashtag dataset
+    BE->>Apify: Google Search / Maps results
+    Apify-->>BE: Raw data
+    BE->>BE: filter.processor — isRelevant()
+    BE->>Gemini: structureSearchResult(text)
+    Gemini-->>BE: Structured event data
+    BE->>BE: event.processor — normalizeEvent()
+    BE->>BE: matcher.processor — matchToExisting()
+    BE->>DB: saveEvent() (3–5 per run)
+```
 
 ---
 
 ## Rate Limiting
 
-All endpoints are protected by `express-rate-limit` to prevent abuse and keep Firestore costs under control.
-
 | Scope | Limit | Window |
 |---|---|---|
-| All routes (global) | 100 requests | 15 minutes per IP |
-| `POST /api/recommendations` | 20 requests | 15 minutes per IP |
+| All routes (global) | 100 requests | 15 min / IP |
+| `POST /api/recommendations` | 20 requests | 15 min / IP |
 
-`/api/recommendations` has a stricter limit because each call reads every event document from Firestore.
-
-When the limit is exceeded the API returns:
-```json
-HTTP 429
-{ "error": "Too many requests — please wait before trying again.", "retryAfter": "..." }
-```
-
-Configured in [config/rateLimiter.js](config/rateLimiter.js) — adjust `max` and `windowMs` there.
+Returns HTTP `429` when exceeded.
 
 ---
 
 ## Security
 
-- `.env` and the Firebase credential JSON are listed in `.gitignore` and will never be committed.
-- Use `.env.example` as the template — fill in real values locally, share only the example file.
-- If a credential is ever accidentally committed, immediately rotate the key in Firebase Console → Service Accounts.
-- The server only accepts requests from `http://localhost:5173` (frontend dev origin) via CORS. Update `server.js` for production origins.
+- `.env` and Firebase credential JSON listed in `.gitignore`
+- Use `.env.example` as the template
+- CORS restricted to `ALLOWED_ORIGINS` env var
+- Helmet sets security headers (XSS, clickjacking protection)
+- If a credential is accidentally committed, rotate immediately in Firebase Console → Service Accounts
 
 ---
 
@@ -293,6 +467,6 @@ Configured in [config/rateLimiter.js](config/rateLimiter.js) — adjust `max` an
 
 | Command | Description |
 |---|---|
-| `npm run dev` | Start server with auto-restart (`node --watch`) |
-| `npm start` | Start server (production) |
-| `npm run seed` | Upload `data/events.json` into Firestore |
+| `npm run dev` | Start with auto-restart (`node --watch`) |
+| `npm start` | Production start |
+| `npm run seed` | Upload `default-data/` JSON → Firestore (safe to re-run) |
